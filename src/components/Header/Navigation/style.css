@@ -1,5 +1,6 @@
 .nav li .submenu {
   visibility: hidden;
+  z-index: 999;
 }
 .nav li:hover .submenu {
   opacity: 1 !important;

@@ -7,6 +7,7 @@ body {
   font-family: "Montserrat", sans-serif;
   font-optical-sizing: auto;
   background-color: #f5f0f0;
+  overflow-x: hidden;
 }
 .container {
   width: 90%;
@@ -14,4 +15,59 @@ body {
 }
 .link:hover {
   color: #ff5252;
+}
+.sliderHome {
+  overflow: inherit !important;
+}
+.swiper-button-prev,
+.swiper-button-next {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+
+  border-radius: 100%;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+.swiper-button-prev:after,
+.swiper-button-next:after {
+  font-size: 20px !important;
+  color: #000;
+}
+.categorySlider .item {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+.categorySlider .swiper-button-prev {
+  width: 30px;
+  height: 30px;
+  min-width: 30px;
+}
+.categorySlider .swiper-button-prev:after {
+  font-size: 15px !important;
+}
+.categorySlider .swiper-button-next {
+  width: 30px;
+  height: 30px;
+  min-width: 30px;
+}
+.categorySlider .swiper-button-next:after {
+  font-size: 15px !important;
+}
+.categorySlider .swiper-button-prev:hover {
+  background: #ff5252;
+}
+.categorySlider .swiper-button-next:hover {
+  background: #ff5252;
+}
+.categorySlider .swiper-button-next:hover::after {
+  color: #fff;
+}
+.categorySlider .swiper-button-prev:hover::after {
+  color: #fff;
+}
+.categorySlider .item:hover img {
+  transform: scale(1.1);
 }
