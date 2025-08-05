@@ -1,0 +1,7 @@
+.nav li .submenu {
+  visibility: hidden;
+}
+.nav li:hover .submenu {
+  opacity: 1 !important;
+  visibility: inherit;
+}
