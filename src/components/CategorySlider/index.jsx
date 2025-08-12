@@ -10,14 +10,14 @@ import { Navigation } from "swiper/modules";
 import { Link } from "react-router-dom";
 export default function CategorySlider() {
   return (
-    <div className="categorySlider">
+    <div className="categorySlider mb-6">
       <div className="container">
         <Swiper
-          slidesPerView={5}
-          spaceBetween={30}
+          slidesPerView={6}
+          spaceBetween={10}
           navigation={true}
           modules={[Navigation]}
-          className="sliderHome"
+          className=""
         >
           <SwiperSlide>
             <Link to="">

@@ -4,18 +4,23 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 // import required modules
-import { Pagination, Navigation } from "swiper/modules";
+import { Autoplay, Pagination, Navigation } from "swiper/modules";
 export default function HomeSlider() {
   return (
-    <div className="homeSlider py-4">
+    <div className="homeSlider py-6">
       <div className="container">
         <Swiper
           spaceBetween={15}
+          centeredSlides={true}
+          autoplay={{
+            delay: 2500,
+            disableOnInteraction: false,
+          }}
           pagination={{
             clickable: true,
           }}
           navigation={true}
-          modules={[Pagination, Navigation]}
+          modules={[Autoplay, Pagination, Navigation]}
           className="sliderHome"
         >
           <SwiperSlide>

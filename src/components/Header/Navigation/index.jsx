@@ -8,14 +8,14 @@ import "./style.css";
 export default function Navigation() {
   return (
     <>
-      <nav className="py-2">
+      <nav>
         <div className="container flex items-center gap-8">
           <div className="w-[20%]">
             <Category />
           </div>
           <div className="w-[60%]">
             <ul className="flex justify-around nav">
-              <li className="list-none relative">
+              <li className="list-none relative !py-3">
                 <Link
                   to="/"
                   className="font-[500] text-[14px]  link transition"
@@ -24,21 +24,21 @@ export default function Navigation() {
                 </Link>
                 <div className="submenu absolute top-[100%] left-[0%] min-w-[200px] bg-white shadow-md opacity-0 transition-all">
                   <ul>
-                    <li className="list-none w-full">
+                    <li className="list-none w-full ">
                       <Link to="/" className="w-full">
                         <Button className="!text-[rgba(0,0,0,0.8)] w-full !justify-start !rounded-none">
                           women
                         </Button>
                       </Link>
                     </li>
-                    <li className="list-none w-full">
+                    <li className="list-none w-full ">
                       <Link to="/" className="w-full">
                         <Button className="!text-[rgba(0,0,0,0.8)] w-full !justify-start !rounded-none">
                           women
                         </Button>
                       </Link>
                     </li>
-                    <li className="list-none w-full">
+                    <li className="list-none w-full ">
                       <Link to="/" className="w-full">
                         <Button className="!text-[rgba(0,0,0,0.8)] w-full !justify-start !rounded-none">
                           women
@@ -48,7 +48,7 @@ export default function Navigation() {
                   </ul>
                 </div>
               </li>
-              <li className="list-none ">
+              <li className="list-none !py-3">
                 <Link
                   to="/"
                   className="font-[500] text-[14px]  link transition"
@@ -56,7 +56,7 @@ export default function Navigation() {
                   Home
                 </Link>
               </li>
-              <li className="list-none ">
+              <li className="list-none !py-3">
                 <Link
                   to="/"
                   className="font-[500] text-[14px]  link transition"
@@ -64,7 +64,7 @@ export default function Navigation() {
                   Home
                 </Link>
               </li>
-              <li className="list-none ">
+              <li className="list-none !py-3">
                 <Link
                   to="/"
                   className="font-[500] text-[14px]  link transition"
@@ -72,7 +72,7 @@ export default function Navigation() {
                   Home
                 </Link>
               </li>
-              <li className="list-none ">
+              <li className="list-none !py-3">
                 <Link
                   to="/"
                   className="font-[500] text-[14px]  link transition"
@@ -80,7 +80,7 @@ export default function Navigation() {
                   Home
                 </Link>
               </li>
-              <li className="list-none ">
+              <li className="list-none !py-3">
                 <Link
                   to="/"
                   className="font-[500] text-[14px]  link transition"
@@ -88,7 +88,7 @@ export default function Navigation() {
                   Home
                 </Link>
               </li>
-              <li className="list-none ">
+              <li className="list-none !py-3">
                 <Link
                   to="/"
                   className="font-[500] text-[14px]  link transition"
@@ -96,7 +96,7 @@ export default function Navigation() {
                   Home
                 </Link>
               </li>
-              <li className="list-none ">
+              <li className="list-none !py-3">
                 <Link
                   to="/"
                   className="font-[500] text-[14px]  link transition"
@@ -104,7 +104,7 @@ export default function Navigation() {
                   Home
                 </Link>
               </li>
-              <li className="list-none ">
+              <li className="list-none !py-3">
                 <Link
                   to="/"
                   className="font-[500] text-[14px]  link transition"
