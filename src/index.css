@@ -88,3 +88,38 @@ body {
   padding: 15px;
   margin: 0 -15px;
 }
+.css-74d805-MuiButtonBase-root-MuiButton-root {
+  background-color: #ff5252 !important;
+}
+.css-74d805-MuiButtonBase-root-MuiButton-root:hover {
+  background-color: #000 !important;
+}
+.css-113d811-MuiFormLabel-root-MuiInputLabel-root.Mui-focused {
+  color: #ff5252 !important;
+}
+
+.MuiOutlinedInput-root.Mui-focused fieldset {
+  border-color: #ff5252 !important;
+}
+.swiper-pagination-bullet-active {
+  background: #ff5252 !important;
+}
+.homeSliderV2 .swiper-slide-active .info {
+  right: 0px !important;
+  opacity: 1;
+}
+.homeSliderV2 .swiper-slide-active .info h4 {
+  right: 0px !important;
+  opacity: 1;
+  transition-duration: 2.1s;
+}
+.homeSliderV2 .swiper-slide-active .info h2 {
+  right: 0px !important;
+  opacity: 1;
+  transition-duration: 2.5s;
+}
+.homeSliderV2 .swiper-slide-active .info h3 {
+  right: 0px !important;
+  opacity: 1;
+  transition-duration: 2.8s;
+}

@@ -1,5 +1,6 @@
 import LayoutDefault from "../Layout/LayoutDefault";
 import Home from "../pages/Home";
+import ProductList from "../pages/ProductList";
 
 export const routers = [
   {
@@ -9,6 +10,10 @@ export const routers = [
       {
         path: "/",
         element: <Home />,
+      },
+      {
+        path: "/product",
+        element: <ProductList />,
       },
     ],
   },

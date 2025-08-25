@@ -1,0 +1,10 @@
+.MuiCheckbox-root svg {
+  color: gray;
+}
+
+.MuiCheckbox-root.Mui-checked svg {
+  color: #ff5252 !important;
+}
+.css-cfd5wn-MuiListItem-root {
+  padding: 0 !important;
+}

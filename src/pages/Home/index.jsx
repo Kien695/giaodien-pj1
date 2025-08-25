@@ -8,6 +8,10 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import ProductSlider from "../../components/ProductSlider";
+import Blog from "../../components/Blog";
+import HomeSliderV2 from "../../components/HomeSliderV2";
+import BannerBoxV2 from "../../components/bannerBoxV2";
+import AllBannerSliderV2 from "../../components/AllBannerSliderV2";
 export default function Home() {
   const [value, setValue] = React.useState(0);
 
@@ -56,7 +60,30 @@ export default function Home() {
           <ProductSlider item={5} />
         </div>
       </section>
+      {/* bannerV2 */}
 
+      <section className="homeSliderV2 bg-white pb-8">
+        <div className="container flex gap-5">
+          <div className="part1 w-[70%]">
+            <HomeSliderV2 />
+          </div>
+          <div className="part2 flex flex-col gap-5 ">
+            <BannerBoxV2
+              info="right"
+              image={
+                "https://serviceapi.spicezgold.com/download/1741664665391_1741497254110_New_Project_50.jpg"
+              }
+            />
+            <BannerBoxV2
+              info="left"
+              image={
+                "https://serviceapi.spicezgold.com/download/1741664496923_1737020250515_New_Project_47.jpg"
+              }
+            />
+          </div>
+        </div>
+      </section>
+      {/* thanh box */}
       <div className="pt-2 pb-4 bg-white">
         <div className="container">
           <div className="free-ship w-full p-6 border-2 border-[red] flex items-center justify-between rounded-md w-[950px] m-auto">
@@ -70,7 +97,7 @@ export default function Home() {
               Tiết kiệm hơn 200K
             </p>
           </div>
-          <AllBannerSlider item={4} />
+          <AllBannerSliderV2 item={4} />
         </div>
       </div>
       {/* Product latest */}
@@ -92,7 +119,8 @@ export default function Home() {
           <ProductSlider item={5} />
         </div>
       </section>
-
+      {/* blog */}
+      <Blog item={3} />
       <br />
       <br />
     </>

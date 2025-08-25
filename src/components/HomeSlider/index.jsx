@@ -7,7 +7,7 @@ import "swiper/css/navigation";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 export default function HomeSlider() {
   return (
-    <div className="homeSlider py-6">
+    <div className="homeSlider py-6 ">
       <div className="container">
         <Swiper
           spaceBetween={15}
@@ -23,7 +23,7 @@ export default function HomeSlider() {
           modules={[Autoplay, Pagination, Navigation]}
           className="sliderHome"
         >
-          <SwiperSlide>
+          <SwiperSlide className="">
             <div className="item rounded-[20px] overflow-hidden">
               <img src="/src/assets/banner1.jpg" className="w-full" />
             </div>
