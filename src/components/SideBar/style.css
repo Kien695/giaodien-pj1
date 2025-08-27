@@ -5,6 +5,21 @@
 .MuiCheckbox-root.Mui-checked svg {
   color: #ff5252 !important;
 }
-.css-cfd5wn-MuiListItem-root {
-  padding: 0 !important;
+
+.range-slider .range-slider__range {
+  background-color: #ff5252 !important;
+}
+.range-slider .range-slider__thumb {
+  background-color: #ff5252 !important;
+  width: 17px;
+  height: 17px;
+}
+.range-slider {
+  height: 5px;
+}
+.rating .css-cfd5wn-MuiListItem-root {
+  padding: 0;
+}
+.css-2knotq-MuiButtonBase-root-MuiListItemButton-root {
+  padding: 0 16px !important;
 }

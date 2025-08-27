@@ -25,27 +25,42 @@ export default function HomeSlider() {
         >
           <SwiperSlide className="">
             <div className="item rounded-[20px] overflow-hidden">
-              <img src="/src/assets/banner1.jpg" className="w-full" />
+              <img
+                src="/src/assets/1751685130717_NewProject(8).jpg"
+                className="w-full"
+              />
             </div>
           </SwiperSlide>
           <SwiperSlide>
             <div className="item rounded-[20px] overflow-hidden">
-              <img src="/src/assets/banner1.jpg" className="w-full" />
+              <img
+                src="/src/assets/1751685130717_NewProject(8).jpg"
+                className="w-full"
+              />
             </div>
           </SwiperSlide>
           <SwiperSlide>
             <div className="item rounded-[20px] overflow-hidden">
-              <img src="/src/assets/banner1.jpg" className="w-full" />
+              <img
+                src="/src/assets/1751685130717_NewProject(8).jpg"
+                className="w-full"
+              />
             </div>
           </SwiperSlide>
           <SwiperSlide>
             <div className="item rounded-[20px] overflow-hidden">
-              <img src="/src/assets/banner1.jpg" className="w-full" />
+              <img
+                src="/src/assets/1751685130717_NewProject(8).jpg"
+                className="w-full"
+              />
             </div>
           </SwiperSlide>
           <SwiperSlide>
             <div className="item rounded-[20px] overflow-hidden">
-              <img src="/src/assets/banner1.jpg" className="w-full" />
+              <img
+                src="/src/assets/1751685130717_NewProject(8).jpg"
+                className="w-full"
+              />
             </div>
           </SwiperSlide>
         </Swiper>

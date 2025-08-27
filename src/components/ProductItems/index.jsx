@@ -6,7 +6,7 @@ import { Button } from "@mui/material";
 import { FaRegHeart } from "react-icons/fa6";
 import { MdOutlineZoomOutMap } from "react-icons/md";
 import { IoGitCompareOutline } from "react-icons/io5";
-
+import { BsCart3 } from "react-icons/bs";
 export default function ProductItems() {
   return (
     <div className="group productItems rounded-md overflow-hidden shadow-lg border-2 border-[rgba(0,0,0,0.1)] relative">
@@ -38,10 +38,26 @@ export default function ProductItems() {
           </Link>
         </h3>
         <Rating name="size-small" defaultValue={2} size="small" readOnly />
-        <div className="flex items-center justify-between font-[500]">
+        <div className="flex items-center justify-between font-[500] mb-3">
           <div className="priceOld line-through text-gray-500">$58.00</div>
           <div className="priceNew text-[#ff5252] ">$53.00</div>
         </div>
+        <Button
+          variant="outlined"
+          color="error"
+          sx={{
+            backgroundColor: "white",
+            color: "#ff5252",
+            "&:hover": {
+              backgroundColor: "black",
+              color: "#f1f1f1",
+            },
+          }}
+          className=" flex items-center justify-center gap-2 !text-[11px] !ml-6"
+        >
+          <BsCart3 />
+          <span>Thêm vào giỏ hàng</span>
+        </Button>
       </div>
       <div className="discount absolute top-[5px] left-[6px] rounded-md bg-[#ff5252] text-white">
         15%
