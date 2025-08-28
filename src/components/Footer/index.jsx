@@ -15,7 +15,7 @@ export default function Footer() {
   return (
     <footer className="bg-white">
       <div className="container">
-        <div className="flex items-center justify-center gap-2 pb-10">
+        <div className="flex items-center justify-center gap-2 py-8">
           <div className="col flex flex-col items-center group px-2 gap-1">
             <LiaShippingFastSolid className="text-[30px] group-hover:text-[#ff5252] transition-all duration-300 group-hover:-translate-y-1" />
             <h3>Free Shipping</h3>

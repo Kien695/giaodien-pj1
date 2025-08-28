@@ -1,0 +1,16 @@
+.action Button {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  color: black;
+}
+
+.MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline {
+  border-color: rgba(0, 0, 0, 0.23); /* nhạt mặc định */
+}
+
+.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+  border-color: rgba(0, 0, 0, 0.23) !important; /* giữ nguyên khi hover */
+}
+
+.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: #ff5252 !important;
+}
