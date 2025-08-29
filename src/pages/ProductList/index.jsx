@@ -12,6 +12,7 @@ import Pagination from "@mui/material/Pagination";
 export default function ProductList() {
   const [itemList, setItemList] = React.useState("grid");
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [colorButton, setColorButton] = React.useState(2);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -29,14 +30,24 @@ export default function ProductList() {
           <div className="bg-[#f1f1f1] w-full p-2 mb-3 flex items-center justify-between rounded-md">
             <div className="flex items-center ">
               <Button
-                className="!text-black !w-[40px] !h-[40px] !min-w-[40px] !rounded-full"
-                onClick={() => setItemList("list")}
+                className={`!w-[40px] !h-[40px] !min-w-[40px] !rounded-full ${
+                  colorButton == 1 ? "!text-[#ff5252]" : "!text-black"
+                }`}
+                onClick={() => {
+                  setItemList("list");
+                  setColorButton(1);
+                }}
               >
                 <GiHamburgerMenu />
               </Button>
               <Button
-                className="!text-black !w-[40px] !h-[40px] !min-w-[40px] !rounded-full"
-                onClick={() => setItemList("grid")}
+                className={` !w-[40px] !h-[40px] !min-w-[40px] !rounded-full ${
+                  colorButton === 2 ? "!text-[#ff5252]" : "!text-black"
+                }`}
+                onClick={() => {
+                  setItemList("list");
+                  setColorButton(2);
+                }}
               >
                 <IoGridSharp />
               </Button>
