@@ -1,10 +1,12 @@
 import LayoutDefault from "../Layout/LayoutDefault";
 import Cart from "../pages/Cart";
+import ForgotPassword from "../pages/ForgotPassword";
 import Home from "../pages/Home";
 import Login from "../pages/Login";
 import ProductDetail from "../pages/ProductDetail";
 import ProductList from "../pages/ProductList";
 import Register from "../pages/register";
+import Verify from "../pages/VerifyEmail";
 
 export const routers = [
   {
@@ -34,6 +36,14 @@ export const routers = [
       {
         path: "/cart",
         element: <Cart />,
+      },
+      {
+        path: "/verify",
+        element: <Verify />,
+      },
+      {
+        path: "/forgot-password",
+        element: <ForgotPassword />,
       },
     ],
   },

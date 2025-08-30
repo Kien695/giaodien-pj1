@@ -15,6 +15,7 @@ import Rating from "@mui/material/Rating";
 import { Button, TextField } from "@mui/material";
 import { BsCart3 } from "react-icons/bs";
 import { FaRegHeart } from "react-icons/fa6";
+import toast, { Toaster } from "react-hot-toast";
 import ZoomImage from "./components/ImageZoom";
 
 const MyContext = createContext();
@@ -29,14 +30,23 @@ export default function App() {
   const handleCloseDetail = () => {
     setOpenDetailProduct(false);
   };
+  const openAlertBox = (value, msg) => {
+    if (value == "success") {
+      toast.success(msg);
+    } else {
+      toast.error(msg);
+    }
+  };
   const value = {
     setOpenDetailProduct,
+    openAlertBox,
   };
   return (
     <>
       <MyContext.Provider value={value}>
         <AllRouter />
       </MyContext.Provider>
+      <Toaster />
       <Dialog
         onClose={handleCloseDetail}
         aria-labelledby="customized-dialog-title"
