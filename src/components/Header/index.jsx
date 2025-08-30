@@ -73,17 +73,17 @@ export default function Header() {
             <ul className="list-none flex items-center gap-3">
               <li>
                 <Link
-                  to="#"
+                  to="/login"
                   className="link transition text-[15px] font-[500] mr-1"
                 >
-                  Login
+                  Đăng nhập
                 </Link>
                 <span>|</span>
                 <Link
-                  to="#"
+                  to="/register"
                   className="link transition text-[15px] font-[500] ml-1"
                 >
-                  Register
+                  Đăng kí
                 </Link>
               </li>
               <li>

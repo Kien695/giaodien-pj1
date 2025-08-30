@@ -45,7 +45,7 @@ export default function ProductList() {
                   colorButton === 2 ? "!text-[#ff5252]" : "!text-black"
                 }`}
                 onClick={() => {
-                  setItemList("list");
+                  setItemList("grid");
                   setColorButton(2);
                 }}
               >
