@@ -9,6 +9,7 @@ import { GoGitCompare } from "react-icons/go";
 import { FaRegHeart } from "react-icons/fa";
 import Tooltip from "@mui/material/Tooltip";
 import Navigation from "./Navigation";
+import Cart from "./Cart";
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
@@ -105,13 +106,14 @@ export default function Header() {
                 </Tooltip>
               </li>
               <li>
-                <Tooltip title="Cart">
+                {/* <Tooltip title="Cart">
                   <IconButton aria-label="cart">
                     <StyledBadge badgeContent={4} color="error">
                       <MdOutlineShoppingCart />
                     </StyledBadge>
                   </IconButton>
-                </Tooltip>
+                </Tooltip> */}
+                <Cart/>
               </li>
             </ul>
           </div>
