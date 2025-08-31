@@ -24,6 +24,7 @@ export default function App() {
   const [active, setActive] = React.useState(null);
 
   const [maxWidth, setMaxWidth] = React.useState("lg");
+  const { isLogin, setIsLogin } = React.useState(false);
   // const handleClickOpenDetail = () => {
   //   setOpenDetailProduct(true);
   // };
@@ -40,6 +41,7 @@ export default function App() {
   const value = {
     setOpenDetailProduct,
     openAlertBox,
+    isLogin,
   };
   return (
     <>

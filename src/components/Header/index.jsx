@@ -1,15 +1,22 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import Search from "../Search";
 import Badge from "@mui/material/Badge";
 import { styled } from "@mui/material/styles";
 import IconButton from "@mui/material/IconButton";
-import { MdOutlineShoppingCart } from "react-icons/md";
+import { MdOutlineLocationOn, MdOutlineShoppingCart } from "react-icons/md";
 import { GoGitCompare } from "react-icons/go";
-import { FaRegHeart } from "react-icons/fa";
+
+import { FaRegHeart, FaRegUser } from "react-icons/fa";
 import Tooltip from "@mui/material/Tooltip";
 import Navigation from "./Navigation";
 import Cart from "./Cart";
+import { MyContext } from "../../App";
+import { Button, Menu, MenuItem } from "@mui/material";
+
+import { IoMdHeartEmpty } from "react-icons/io";
+import { FiLogOut } from "react-icons/fi";
+import { IoLockClosedOutline } from "react-icons/io5";
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
@@ -20,6 +27,15 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
   },
 }));
 export default function Header() {
+  const context = useContext(MyContext);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   return (
     <header className="bg-white">
       <div className="m-t-10 border-t-[1px] border-b-[1px] py-2 border-gray-250">
@@ -72,38 +88,135 @@ export default function Header() {
           {/* Icon + login */}
           <div className="flex items-center gap-3">
             <ul className="list-none flex items-center gap-3">
+              {context.isLogin ? (
+                <>
+                  <li>
+                    <Link
+                      to="/login"
+                      className="link transition text-[15px] font-[500] mr-1"
+                    >
+                      Đăng nhập
+                    </Link>
+                    <span>|</span>
+                    <Link
+                      to="/register"
+                      className="link transition text-[15px] font-[500] ml-1"
+                    >
+                      Đăng kí
+                    </Link>
+                  </li>
+                  <li>
+                    <Tooltip title="Compare">
+                      <IconButton aria-label="cart">
+                        <StyledBadge badgeContent={4} color="error">
+                          <GoGitCompare />
+                        </StyledBadge>
+                      </IconButton>
+                    </Tooltip>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <div
+                    className="flex items-center gap-2 hover:bg-[#f6fafd] p-2 rounded-md"
+                    id="basic-button"
+                    aria-controls={open ? "basic-menu" : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? "true" : undefined}
+                    onClick={handleClick}
+                  >
+                    <Button className="!w-[36px] !h-[36px] !min-w-[36px] !rounded-full !bg-[#f1f1f1]">
+                      <FaRegUser />
+                    </Button>
+                    <div className="flex flex-col">
+                      <div className="text-[14px] font-[500]">Tấn Kiên</div>
+                      <div className="text-[14px] text-[rgba(0,0,0,0.7)]">
+                        dp1.1a2kien@gmail.com
+                      </div>
+                    </div>
+                  </div>
+                  <Menu
+                    id="basic-menu"
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                    slotProps={{
+                      paper: {
+                        elevation: 0,
+                        sx: {
+                          overflow: "visible",
+                          filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                          mt: 1.5,
+                          "& .MuiAvatar-root": {
+                            width: 32,
+                            height: 32,
+                            ml: -0.5,
+                            mr: 1,
+                          },
+                          "&::before": {
+                            content: '""',
+                            display: "block",
+                            position: "absolute",
+                            top: 0,
+                            right: 14,
+                            width: 10,
+                            height: 10,
+                            bgcolor: "background.paper",
+                            transform: "translateY(-50%) rotate(45deg)",
+                            zIndex: 0,
+                          },
+                        },
+                      },
+                    }}
+                    transformOrigin={{ horizontal: "right", vertical: "top" }}
+                    anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+                  >
+                    <MenuItem onClick={handleClose}>
+                      <Link to="/my-account" className="flex items-center gap-2">
+                        <FaRegUser />
+                        Thông tin cá nhân
+                      </Link>
+                    </MenuItem>
+                    <MenuItem onClick={handleClose}>
+                      <div className="flex items-center gap-2">
+                        <MdOutlineLocationOn />
+                        Địa chỉ
+                      </div>
+                    </MenuItem>
+                    <MenuItem onClick={handleClose}>
+                      <div className="flex items-center gap-2">
+                        <IoLockClosedOutline />
+                        Đơn đặt hàng
+                      </div>
+                    </MenuItem>
+                    <MenuItem onClick={handleClose}>
+                      <Link to="/my-list">
+                        <div className="flex items-center gap-2">
+                          <FaRegHeart />
+                          Danh sách yêu thích
+                        </div>
+                      </Link>
+                    </MenuItem>
+                    <MenuItem onClick={handleClose}>
+                      <div className="flex items-center gap-2">
+                        <FiLogOut />
+                        Đăng xuất
+                      </div>
+                    </MenuItem>
+                  </Menu>
+                </>
+              )}
+
               <li>
-                <Link
-                  to="/login"
-                  className="link transition text-[15px] font-[500] mr-1"
-                >
-                  Đăng nhập
+                <Link to="/my-list">
+                  <Tooltip title="wishList">
+                    <IconButton aria-label="cart">
+                      <StyledBadge badgeContent={4} color="error">
+                        <FaRegHeart />
+                      </StyledBadge>
+                    </IconButton>
+                  </Tooltip>
                 </Link>
-                <span>|</span>
-                <Link
-                  to="/register"
-                  className="link transition text-[15px] font-[500] ml-1"
-                >
-                  Đăng kí
-                </Link>
-              </li>
-              <li>
-                <Tooltip title="Compare">
-                  <IconButton aria-label="cart">
-                    <StyledBadge badgeContent={4} color="error">
-                      <GoGitCompare />
-                    </StyledBadge>
-                  </IconButton>
-                </Tooltip>
-              </li>
-              <li>
-                <Tooltip title="wishList">
-                  <IconButton aria-label="cart">
-                    <StyledBadge badgeContent={4} color="error">
-                      <FaRegHeart />
-                    </StyledBadge>
-                  </IconButton>
-                </Tooltip>
               </li>
               <li>
                 {/* <Tooltip title="Cart">
@@ -113,7 +226,7 @@ export default function Header() {
                     </StyledBadge>
                   </IconButton>
                 </Tooltip> */}
-                <Cart/>
+                <Cart />
               </li>
             </ul>
           </div>

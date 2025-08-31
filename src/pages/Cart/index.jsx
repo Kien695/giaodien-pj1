@@ -392,22 +392,24 @@ export default function Cart() {
             </div>
             <hr className="mb-3" />
 
-            <Button
-              variant="contained"
-              color="error"
-              sx={{
-                backgroundColor: "#ff5252",
-                color: "#black",
-                "&:hover": {
-                  backgroundColor: "black",
-                  color: "#f1f1f1",
-                },
-              }}
-              className=" flex items-center justify-center gap-2 "
-            >
-              <IoBagCheckOutline className="text-[20px]" />
-              <span>Thanh toán</span>
-            </Button>
+            <Link to="/checkout" className="flex justify-center">
+              <Button
+                variant="contained"
+                color="error"
+                sx={{
+                  backgroundColor: "#ff5252",
+                  color: "#black",
+                  "&:hover": {
+                    backgroundColor: "black",
+                    color: "#f1f1f1",
+                  },
+                }}
+                className=" flex items-center gap-2 "
+              >
+                <IoBagCheckOutline className="text-[20px]" />
+                <span>Thanh toán</span>
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
