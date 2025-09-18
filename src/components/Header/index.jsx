@@ -17,6 +17,7 @@ import { Button, Menu, MenuItem } from "@mui/material";
 import { IoMdHeartEmpty } from "react-icons/io";
 import { FiLogOut } from "react-icons/fi";
 import { IoLockClosedOutline } from "react-icons/io5";
+import { postData } from "../../untils/api";
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
@@ -35,6 +36,30 @@ export default function Header() {
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+  const handleLogout = async () => {
+    setAnchorEl(null);
+    try {
+      const res = await postData(
+        `/api/user/logout`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+      if (res.success) {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        context.openAlertBox("success", res?.message || "Đăng xuất thành công");
+        context.setIsLogin(false);
+      }
+    } catch (error) {
+      if (error.response) {
+        context.openAlertBox("error", error.response.data.message);
+      } else {
+        context.openAlertBox("error", "Đăn xuất không thành công");
+      }
+    }
   };
   return (
     <header className="bg-white">
@@ -90,33 +115,6 @@ export default function Header() {
             <ul className="list-none flex items-center gap-3">
               {context.isLogin ? (
                 <>
-                  <li>
-                    <Link
-                      to="/login"
-                      className="link transition text-[15px] font-[500] mr-1"
-                    >
-                      Đăng nhập
-                    </Link>
-                    <span>|</span>
-                    <Link
-                      to="/register"
-                      className="link transition text-[15px] font-[500] ml-1"
-                    >
-                      Đăng kí
-                    </Link>
-                  </li>
-                  <li>
-                    <Tooltip title="Compare">
-                      <IconButton aria-label="cart">
-                        <StyledBadge badgeContent={4} color="error">
-                          <GoGitCompare />
-                        </StyledBadge>
-                      </IconButton>
-                    </Tooltip>
-                  </li>
-                </>
-              ) : (
-                <>
                   <div
                     className="flex items-center gap-2 hover:bg-[#f6fafd] p-2 rounded-md"
                     id="basic-button"
@@ -129,9 +127,11 @@ export default function Header() {
                       <FaRegUser />
                     </Button>
                     <div className="flex flex-col">
-                      <div className="text-[14px] font-[500]">Tấn Kiên</div>
+                      <div className="text-[14px] font-[500]">
+                        {context?.userData?.name}
+                      </div>
                       <div className="text-[14px] text-[rgba(0,0,0,0.7)]">
-                        dp1.1a2kien@gmail.com
+                        {context?.userData?.email}
                       </div>
                     </div>
                   </div>
@@ -172,22 +172,29 @@ export default function Header() {
                     anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
                   >
                     <MenuItem onClick={handleClose}>
-                      <Link to="/my-account" className="flex items-center gap-2">
+                      <Link
+                        to="/my-account"
+                        className="flex items-center gap-2"
+                      >
                         <FaRegUser />
                         Thông tin cá nhân
                       </Link>
                     </MenuItem>
                     <MenuItem onClick={handleClose}>
-                      <div className="flex items-center gap-2">
-                        <MdOutlineLocationOn />
-                        Địa chỉ
-                      </div>
+                      <Link to="/address">
+                        <div className="flex items-center gap-2">
+                          <MdOutlineLocationOn />
+                          Địa chỉ
+                        </div>
+                      </Link>
                     </MenuItem>
                     <MenuItem onClick={handleClose}>
-                      <div className="flex items-center gap-2">
-                        <IoLockClosedOutline />
-                        Đơn đặt hàng
-                      </div>
+                      <Link to="/order">
+                        <div className="flex items-center gap-2">
+                          <IoLockClosedOutline />
+                          Đơn đặt hàng
+                        </div>
+                      </Link>
                     </MenuItem>
                     <MenuItem onClick={handleClose}>
                       <Link to="/my-list">
@@ -197,13 +204,40 @@ export default function Header() {
                         </div>
                       </Link>
                     </MenuItem>
-                    <MenuItem onClick={handleClose}>
+                    <MenuItem onClick={handleLogout}>
                       <div className="flex items-center gap-2">
                         <FiLogOut />
                         Đăng xuất
                       </div>
                     </MenuItem>
                   </Menu>
+                </>
+              ) : (
+                <>
+                  <li>
+                    <Link
+                      to="/login"
+                      className="link transition text-[15px] font-[500] mr-1"
+                    >
+                      Đăng nhập
+                    </Link>
+                    <span>|</span>
+                    <Link
+                      to="/register"
+                      className="link transition text-[15px] font-[500] ml-1"
+                    >
+                      Đăng kí
+                    </Link>
+                  </li>
+                  <li>
+                    <Tooltip title="Compare">
+                      <IconButton aria-label="cart">
+                        <StyledBadge badgeContent={4} color="error">
+                          <GoGitCompare />
+                        </StyledBadge>
+                      </IconButton>
+                    </Tooltip>
+                  </li>
                 </>
               )}
 

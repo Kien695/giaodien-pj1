@@ -1,12 +1,72 @@
-import { Button, TextField } from "@mui/material";
+import { Button, CircularProgress, TextField } from "@mui/material";
 import React from "react";
+import { useContext } from "react";
+import { MyContext } from "../../App";
+import { useRef } from "react";
+import { postData } from "../../untils/api";
+import { useNavigate } from "react-router-dom";
 
 export default function ForgotPassword() {
+  const context = useContext(MyContext);
+  const navigate = useNavigate();
+  const [loading, setLoading] = React.useState(false);
   const [formFields, setFormFields] = React.useState({
-    email: "",
-    password: "",
+    email: localStorage.getItem("userEmail"),
+    newPassword: "",
+    confirmPassword: "",
   });
-
+  const inputRefs = {
+    newPassword: useRef(),
+    confirmPassword: useRef(),
+  };
+  const handleInput = (e) => {
+    const { name, value } = e.target;
+    setFormFields((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (loading) return;
+    setLoading(true);
+    if (formFields.newPassword == "") {
+      context.openAlertBox("error", "Vui lòng nhập mật khẩu mới");
+      setLoading(false);
+      inputRefs.password.current.focus();
+      return;
+    }
+    if (formFields.confirmPassword == "") {
+      context.openAlertBox("error", "Vui lòng nhập mật xác nhận khẩu mới");
+      setLoading(false);
+      inputRefs.confirmPassword.current.focus();
+      return;
+    }
+    if (formFields.confirmPassword !== formFields.newPassword) {
+      context.openAlertBox(
+        "error",
+        "Mật khẩu mới và xác nhận mật khẩu mới không trùng khớp"
+      );
+      inputRefs.confirmPassword.current.focus();
+      return;
+    }
+    try {
+      const res = await postData("/api/user/reset-password", formFields);
+      if (res.success) {
+        context.openAlertBox("success", res?.message);
+        localStorage.removeItem("userEmail");
+        navigate("/login");
+      }
+    } catch (error) {
+      if (error.response) {
+        context.openAlertBox("error", error.response.data.message);
+      } else {
+        context.openAlertBox("error", "Không thể kết nối server!");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className="py-10">
       <div className="container">
@@ -16,39 +76,29 @@ export default function ForgotPassword() {
           </div>
 
           {/* FORM LOGIN */}
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              console.log("Submit login:", formFields);
-              // TODO: call API login
-            }}
-            className="flex flex-col gap-4"
-          >
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <TextField
               label="Mật khẩu mới *"
               name="newPassword"
+              inputRef={inputRefs.password}
               autoComplete="new-password"
               fullWidth
-              value={formFields.email}
-              onChange={(e) =>
-                setFormFields({ ...formFields, email: e.target.value })
-              }
+              onChange={handleInput}
             />
             <TextField
               label="Xác nhận mật khẩu mới *"
               type="password"
+              inputRef={inputRefs.confirmPassword}
               autoComplete="confirm-password"
               name="confirmPassword"
               fullWidth
-              value={formFields.password}
-              onChange={(e) =>
-                setFormFields({ ...formFields, password: e.target.value })
-              }
+              onChange={handleInput}
             />
 
             <Button
               variant="contained"
               type="submit"
+              disabled={loading}
               sx={{
                 background: "#ff5252",
 
@@ -59,7 +109,13 @@ export default function ForgotPassword() {
                 },
               }}
             >
-              Đổi mật khẩu
+              {loading ? (
+                <div className="flex gap-2">
+                  <CircularProgress size={20} color="inherit" /> Đang xử lí...
+                </div>
+              ) : (
+                "Đăng nhập"
+              )}
             </Button>
           </form>
           {/* END FORM LOGIN */}

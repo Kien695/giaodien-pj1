@@ -1,21 +1,106 @@
-import { Button, TextField } from "@mui/material";
-import React, { useContext } from "react";
+import { Button, CircularProgress, TextField } from "@mui/material";
+import React, { useContext, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { MyContext } from "../../App";
+import { postData } from "../../untils/api";
 export default function Login() {
   const context = useContext(MyContext);
+
+  const inputRefs = {
+    email: useRef(),
+    password: useRef(),
+  };
+  const [loading, setLoading] = useState(false);
   const [formFields, setFormFields] = React.useState({
     email: "",
     password: "",
   });
-  const history = useNavigate();
-  const handleClickForgot = () => {
+  const navigate = useNavigate();
+
+  const handleClickForgot = async () => {
     if (formFields.email != "") {
-      history("/verify");
-      context.openAlertBox("success", "Đã gửi OTP qua email");
+      try {
+        const res = await postData("/api/user/forgot-password", {
+          email: formFields.email,
+        });
+
+        // kiểm tra status BE trả về
+        if (res.success) {
+          context.openAlertBox("success", res.message);
+          localStorage.setItem("userEmail", formFields.email);
+          localStorage.setItem("actionType", "forgot-password");
+          navigate("/verify");
+        } else {
+          context.openAlertBox("error", res.message);
+        }
+      } catch (error) {
+        if (error.response) {
+          context.openAlertBox("error", error.response.data.message);
+        } else {
+          context.openAlertBox("error", "Không thể kết nối server!");
+        }
+      }
+      // navigate("/verify");
+      // localStorage.setItem("userEmail", formFields.email);
+      //  localStorage.setItem("actionType", "forgot-password");
+      // context.openAlertBox("success", `Đã gửi OTP đến ${formFields.email}`);
     } else {
       context.openAlertBox("error", "Vui lòng nhập email");
+      return;
+    }
+  };
+  const handleInput = (e) => {
+    const { name, value } = e.target;
+    setFormFields((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (loading) return;
+    setLoading(true);
+    if (formFields.email == "") {
+      context.openAlertBox("error", "Vui lòng nhập email");
+      setLoading(false);
+      inputRefs.email.current.focus();
+      return;
+    }
+    if (formFields.password == "") {
+      context.openAlertBox("error", "Vui lòng nhập mật khẩu");
+      setLoading(false);
+      inputRefs.password.current.focus();
+      return;
+    }
+
+    try {
+      const res = await postData(
+        `/api/user/login?token=${localStorage.getItem("accessToken")}`,
+        formFields,
+        {
+          withCredentials: true,
+        }
+      );
+      if (res.success) {
+        localStorage.setItem("accessToken", res?.data?.accessToken);
+        localStorage.setItem("refreshToken", res?.data?.refreshToken);
+        setFormFields({ email: "", password: "" });
+        context.openAlertBox("success", res.message);
+        context.setIsLogin(true);
+        navigate("/");
+      } else {
+        context.openAlertBox("error", res.message);
+      }
+    } catch (error) {
+      if (error.response) {
+        context.openAlertBox("error", error.response.data.message);
+      } else {
+        context.openAlertBox("error", "Không thể kết nối server!");
+      }
+    } finally {
+      setLoading(false);
     }
   };
   return (
@@ -27,35 +112,24 @@ export default function Login() {
           </div>
 
           {/* FORM LOGIN */}
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              console.log("Submit login:", formFields);
-              // TODO: call API login
-            }}
-            className="flex flex-col gap-4"
-          >
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <TextField
               label="Email"
               type="email"
               name="email"
-              fullWidth
+              inputRef={inputRefs.email}
               value={formFields.email}
               autoComplete="email"
-              onChange={(e) =>
-                setFormFields({ ...formFields, email: e.target.value })
-              }
+              onChange={handleInput}
             />
             <TextField
               label="Mật khẩu"
               type="password"
               name="password"
-              fullWidth
+              inputRef={inputRefs.password}
               value={formFields.password}
               autoComplete="password"
-              onChange={(e) =>
-                setFormFields({ ...formFields, password: e.target.value })
-              }
+              onChange={handleInput}
             />
 
             <div
@@ -65,8 +139,20 @@ export default function Login() {
               Quên mật khẩu ?
             </div>
 
-            <Button type="submit" variant="contained" color="error" fullWidth>
-              Đăng nhập
+            <Button
+              type="submit"
+              variant="contained"
+              color="error"
+              disabled={loading}
+            >
+              {loading ? (
+                <div className="flex gap-2">
+                  <CircularProgress size={20} color="inherit" /> Đang đăng
+                  nhập...
+                </div>
+              ) : (
+                "Đăng nhập"
+              )}
             </Button>
           </form>
           {/* END FORM LOGIN */}

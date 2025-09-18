@@ -1,4 +1,4 @@
-import React, { createContext } from "react";
+import React, { createContext, useEffect } from "react";
 import Header from "./components/Header";
 import AllRouter from "./components/AllRouter";
 
@@ -17,6 +17,7 @@ import { BsCart3 } from "react-icons/bs";
 import { FaRegHeart } from "react-icons/fa6";
 import toast, { Toaster } from "react-hot-toast";
 import ZoomImage from "./components/ImageZoom";
+import { getData } from "./untils/api";
 
 const MyContext = createContext();
 export default function App() {
@@ -24,31 +25,62 @@ export default function App() {
   const [active, setActive] = React.useState(null);
 
   const [maxWidth, setMaxWidth] = React.useState("lg");
-  const { isLogin, setIsLogin } = React.useState(false);
-  // const handleClickOpenDetail = () => {
-  //   setOpenDetailProduct(true);
-  // };
+  const [isLogin, setIsLogin] = React.useState(false);
+  const [userData, setUserData] = React.useState(null);
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = localStorage.getItem("accessToken");
+      if (token) {
+        setIsLogin(true);
+        try {
+          const res = await getData(`/api/user/user-detail?token=${token}`);
+          if (res.success) {
+            setUserData(res.data);
+          }
+        } catch (error) {
+          console.error("Lỗi khi fetch user:", error);
+          setIsLogin(false);
+        }
+      } else {
+        setIsLogin(false);
+      }
+    };
+
+    fetchUser();
+  }, []); // chỉ chạy 1 lần khi App mount
+
   const handleCloseDetail = () => {
     setOpenDetailProduct(false);
   };
   const openAlertBox = (value, msg) => {
     if (value == "success") {
-      toast.success(msg);
+      toast.success(msg, { duration: 4000, dismissible: true });
     } else {
-      toast.error(msg);
+      toast.error(msg, { duration: 4000, dismissible: true });
     }
   };
   const value = {
     setOpenDetailProduct,
     openAlertBox,
     isLogin,
+    setIsLogin,
+    userData,
   };
   return (
     <>
       <MyContext.Provider value={value}>
         <AllRouter />
       </MyContext.Provider>
-      <Toaster />
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          style: {
+            borderRadius: "8px",
+            background: "#333",
+            color: "#fff",
+          },
+        }}
+      />
       <Dialog
         onClose={handleCloseDetail}
         aria-labelledby="customized-dialog-title"

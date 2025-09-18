@@ -1,17 +1,69 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import OtpInputs from "../../components/inputOTP";
 import { Button } from "@mui/material";
+import { postData } from "../../untils/api";
+import { MyContext } from "../../App";
+import { useNavigate } from "react-router-dom";
 
 export default function Verify() {
+  const context = useContext(MyContext);
+  const navigate = useNavigate();
   const [otp, setOtp] = React.useState("");
   const handleComplete = (code) => {
     setOtp(code);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("OTP nhập:", otp);
-    // call API xác minh OTP ở đây
+    if (localStorage.getItem("actionType") !== "forgot-password") {
+      try {
+        const res = await postData("/api/user/verify-password", {
+          email: localStorage.getItem("userEmail"),
+          otp: otp,
+        });
+
+        // kiểm tra status BE trả về
+        if (res.success) {
+          context.openAlertBox("success", res.message);
+          localStorage.removeItem("userEmail");
+          navigate("/login");
+        } else {
+          context.openAlertBox(
+            "error",
+            res.message || "Mã OTP không chính xác!"
+          );
+        }
+      } catch (error) {
+        if (error.response) {
+          context.openAlertBox("error", error.response.data.message);
+        } else {
+          context.openAlertBox("error", "Không thể kết nối server!");
+        }
+      }
+    } else {
+      try {
+        const res = await postData("/api/user/verify-password", {
+          email: localStorage.getItem("userEmail"),
+          otp: otp,
+        });
+
+        // kiểm tra status BE trả về
+        if (res.success) {
+          context.openAlertBox("success", res.message);
+
+          localStorage.removeItem("actionType");
+          navigate("/forgot-password");
+        } else {
+          context.openAlertBox("error", res.message);
+        }
+      } catch (error) {
+        if (error.response) {
+          context.openAlertBox("error", error.response.data.message);
+        } else {
+          context.openAlertBox("error", "Không thể kết nối server!");
+        }
+      }
+    }
   };
 
   return (
@@ -29,7 +81,7 @@ export default function Verify() {
           <div className="text-[15px] mb-3">
             OTP gửi đến{" "}
             <span className="text-[#ff5252] font-[500]">
-              dp1.1a2kien@gmail.com
+              {localStorage.getItem("userEmail")}
             </span>
           </div>
           <form onSubmit={handleSubmit}>
@@ -37,9 +89,11 @@ export default function Verify() {
             <Button
               variant="contained"
               type="submit"
+              onSubmit={handleSubmit}
               sx={{
                 background: "#ff5252",
                 width: "328px",
+
                 marginTop: "10px",
                 "&:hover": {
                   backgroundColor: "black",

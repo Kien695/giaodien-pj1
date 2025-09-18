@@ -1,8 +1,74 @@
-import { Button, TextField } from "@mui/material";
-import React from "react";
-import { Link } from "react-router-dom";
+import { Button, CircularProgress, TextField } from "@mui/material";
+import React, { useContext, useState } from "react";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
+import { MyContext } from "../../App";
+import { useRef } from "react";
+import { postData } from "../../untils/api";
 export default function Register() {
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const inputRefs = {
+    name: useRef(),
+    email: useRef(),
+    password: useRef(),
+  };
+  const context = useContext(MyContext);
+  const [formInput, setFormInput] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+  const handleChangeInput = (e) => {
+    const { name, value } = e.target;
+    setFormInput(() => {
+      return { ...formInput, [name]: value };
+    });
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (loading) return;
+    setLoading(true);
+    if (formInput.name === "") {
+      context.openAlertBox("error", "Vui lòng nhập họ tên");
+      inputRefs.name.current.focus();
+      setLoading(false);
+      return;
+    }
+    if (formInput.email === "") {
+      context.openAlertBox("error", "Vui lòng nhập email");
+      inputRefs.email.current.focus();
+      setLoading(false);
+      return;
+    }
+    if (formInput.password === "") {
+      context.openAlertBox("error", "Vui lòng nhập mật khẩu");
+      inputRefs.password.current.focus();
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const res = await postData("/api/user/register", formInput);
+      if (res.success) {
+        // Chỉ chạy khi status 200
+        localStorage.setItem("userEmail", formInput.email);
+        setFormInput({ name: "", email: "", password: "" });
+        context.openAlertBox("success", res.message);
+        navigate("/verify");
+      }
+    } catch (error) {
+      if (error.response) {
+        // lấy message do BE trả về
+        context.openAlertBox("error", error.response.data.message);
+      } else {
+        context.openAlertBox("error", "Không thể kết nối server!");
+      }
+    } finally {
+      setLoading(false); // luôn chạy
+    }
+  };
+
   return (
     <div className="py-10">
       <div className="container">
@@ -10,17 +76,49 @@ export default function Register() {
           <div className="text-center text-[20px] text-[#ff5252] font-[600] mb-6">
             Đăng kí
           </div>
-          <div className="flex flex-col gap-4 mb-4">
-            <TextField label="Họ tên" type="text" fullWidth />
-            <TextField label="Email" type="email" fullWidth />
-            <TextField label="Mật khẩu" type="password" fullWidth />
-          </div>
-
-          <div className="flex flex-col items-center  gap-3">
-            <Button variant="contained" color="error" fullWidth>
-              Đăng kí
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <TextField
+              label="Họ tên"
+              type="text"
+              name="name"
+              size="small"
+              inputRef={inputRefs.name}
+              onChange={handleChangeInput}
+            />
+            <TextField
+              label="Email"
+              type="email"
+              name="email"
+              size="small"
+              inputRef={inputRefs.email}
+              onChange={handleChangeInput}
+            />
+            <TextField
+              label="Mật khẩu"
+              type="password"
+              name="password"
+              size="small"
+              inputRef={inputRefs.password}
+              onChange={handleChangeInput}
+            />
+            <Button
+              variant="contained"
+              color="error"
+              fullWidth
+              type="submit"
+              disabled={loading} // disable khi loading
+            >
+              {loading ? (
+                <div className="flex gap-2">
+                  <CircularProgress size={20} color="inherit" /> Đang xử lí...
+                </div>
+              ) : (
+                "Đăng kí"
+              )}
             </Button>
+          </form>
 
+          <div className="flex flex-col items-center  gap-3 mt-3">
             <div className="flex items-center w-full">
               <div className="flex-grow border-t border-gray-300"></div>
               <span className="mx-3 text-gray-500 text-sm">HOẶC</span>
