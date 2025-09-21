@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Search from "../Search";
 import Badge from "@mui/material/Badge";
 import { styled } from "@mui/material/styles";
@@ -29,6 +29,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 }));
 export default function Header() {
   const context = useContext(MyContext);
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -52,6 +53,8 @@ export default function Header() {
         localStorage.removeItem("refreshToken");
         context.openAlertBox("success", res?.message || "Đăng xuất thành công");
         context.setIsLogin(false);
+        context.setUserData(null);
+        navigate("/login");
       }
     } catch (error) {
       if (error.response) {

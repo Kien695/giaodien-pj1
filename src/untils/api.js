@@ -33,17 +33,20 @@ export const postData = async (url, formData, config = {}) => {
   }
 };
 // PUT
-export const putData = async (url, formData, token) => {
+export const putData = async (url, formData, config = {}) => {
   try {
     const response = await axios.put(apiUrl + url, formData, {
       headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("accessToken") || ""}`,
+        ...(formData instanceof FormData
+          ? {}
+          : { "Content-Type": "application/json" }),
       },
+      ...config,
     });
     return response.data;
   } catch (error) {
-    console.error("PUT error:", error);
+    console.error(error);
     throw error;
   }
 };

@@ -47,7 +47,7 @@ export default function App() {
     };
 
     fetchUser();
-  }, []); // chỉ chạy 1 lần khi App mount
+  }, [isLogin]);
 
   const handleCloseDetail = () => {
     setOpenDetailProduct(false);
@@ -65,6 +65,7 @@ export default function App() {
     isLogin,
     setIsLogin,
     userData,
+    setUserData,
   };
   return (
     <>

@@ -1,3 +1,4 @@
+import PrivateRouters from "../components/PrivateRouters";
 import LayoutDefault from "../Layout/LayoutDefault";
 import Cart from "../pages/Cart";
 import Checkout from "../pages/Checkout";
@@ -55,7 +56,11 @@ export const routers = [
       },
       {
         path: "/my-account",
-        element: <MyAccount />,
+        element: (
+          <PrivateRouters>
+            <MyAccount />
+          </PrivateRouters>
+        ),
       },
       {
         path: "/my-list",
