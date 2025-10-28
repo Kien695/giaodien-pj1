@@ -3,9 +3,41 @@ import { Button } from "@mui/material";
 import { GoRocket } from "react-icons/go";
 import { Link } from "react-router-dom";
 import Category from "./Category";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import "./style.css";
+import { MyContext } from "../../../App";
 export default function Navigation() {
+  const context = useContext(MyContext);
+  const renderSubmenu = (children, level = 1) => {
+    if (!children || children.length === 0) return null;
+
+    const positionClass =
+      level === 1 ? "top-[100%] left-0" : "top-0 left-[100%]";
+
+    return (
+      <ul
+        className={`absolute ${positionClass} min-w-[150px] bg-white shadow-md opacity-0 invisible transition-all z-[999]
+        peer-hover:opacity-100 peer-hover:visible hover:opacity-100 hover:visible`}
+      >
+        {children.map((sub) => (
+          <li key={sub._id} className="relative">
+            {/* Nút hiển thị submenu */}
+            <Link to={`/category/${sub._id}`} className="block peer">
+              <div className="text-[13px] hover:text-[#ff5252] font-[500] w-full justify-start hover:bg-gray-100 px-3 py-2">
+                {sub.name}
+              </div>
+            </Link>
+
+            {/* Gọi đệ quy nếu có con */}
+            {sub.children &&
+              sub.children.length > 0 &&
+              renderSubmenu(sub.children, level + 1)}
+          </li>
+        ))}
+      </ul>
+    );
+  };
+
   return (
     <>
       <nav>
@@ -15,105 +47,24 @@ export default function Navigation() {
           </div>
           <div className="w-[60%]">
             <ul className="flex justify-around nav">
-              <li className="list-none relative !py-3">
-                <Link
-                  to="/"
-                  className="font-[500] text-[14px]  link transition"
-                >
-                  Home
-                </Link>
-                <div className="submenu absolute top-[100%] left-[0%] min-w-[200px] bg-white shadow-md opacity-0 transition-all">
-                  <ul>
-                    <li className="list-none w-full ">
-                      <Link to="/" className="w-full">
-                        <Button className="!text-[rgba(0,0,0,0.8)] w-full !justify-start !rounded-none">
-                          women
-                        </Button>
-                      </Link>
-                    </li>
-                    <li className="list-none w-full ">
-                      <Link to="/" className="w-full">
-                        <Button className="!text-[rgba(0,0,0,0.8)] w-full !justify-start !rounded-none">
-                          women
-                        </Button>
-                      </Link>
-                    </li>
-                    <li className="list-none w-full ">
-                      <Link to="/" className="w-full">
-                        <Button className="!text-[rgba(0,0,0,0.8)] w-full !justify-start !rounded-none">
-                          women
-                        </Button>
-                      </Link>
-                    </li>
-                  </ul>
-                </div>
-              </li>
-              <li className="list-none !py-3">
-                <Link
-                  to="/"
-                  className="font-[500] text-[14px]  link transition"
-                >
-                  Home
-                </Link>
-              </li>
-              <li className="list-none !py-3">
-                <Link
-                  to="/"
-                  className="font-[500] text-[14px]  link transition"
-                >
-                  Home
-                </Link>
-              </li>
-              <li className="list-none !py-3">
-                <Link
-                  to="/"
-                  className="font-[500] text-[14px]  link transition"
-                >
-                  Home
-                </Link>
-              </li>
-              <li className="list-none !py-3">
-                <Link
-                  to="/"
-                  className="font-[500] text-[14px]  link transition"
-                >
-                  Home
-                </Link>
-              </li>
-              <li className="list-none !py-3">
-                <Link
-                  to="/"
-                  className="font-[500] text-[14px]  link transition"
-                >
-                  Home
-                </Link>
-              </li>
-              <li className="list-none !py-3">
-                <Link
-                  to="/"
-                  className="font-[500] text-[14px]  link transition"
-                >
-                  Home
-                </Link>
-              </li>
-              <li className="list-none !py-3">
-                <Link
-                  to="/"
-                  className="font-[500] text-[14px]  link transition"
-                >
-                  Home
-                </Link>
-              </li>
-              <li className="list-none !py-3">
-                <Link
-                  to="/"
-                  className="font-[500] text-[14px]  link transition"
-                >
-                  Home
-                </Link>
-              </li>
+              {context?.catData.map((cat) => (
+                <li key={cat._id} className="relative">
+                  <Link
+                    to={`/category/${cat._id}`}
+                    className="font-[500] text-[14px] link transition peer"
+                  >
+                    {cat.name}
+                  </Link>
+
+                  {/* Submenu */}
+                  {cat.children &&
+                    cat.children.length > 0 &&
+                    renderSubmenu(cat.children)}
+                </li>
+              ))}
             </ul>
           </div>
+
           <div className="w-[20%] flex gap-3 items-center justify-end">
             <GoRocket />
             Miễn phí vận chuyển

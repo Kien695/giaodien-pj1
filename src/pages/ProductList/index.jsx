@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import SideBar from "../../components/SideBar";
 import ProductItems from "../../components/ProductItems";
 import { GiHamburgerMenu } from "react-icons/gi";
@@ -9,10 +9,19 @@ import MenuItem from "@mui/material/MenuItem";
 import Fade from "@mui/material/Fade";
 import ProductItemsRow from "../../components/ProductItemsRow";
 import Pagination from "@mui/material/Pagination";
+import { MyContext } from "../../App";
+import { getData } from "../../untils/api";
+import { useSearchParams } from "react-router-dom";
 export default function ProductList() {
+  const context = useContext(MyContext);
   const [itemList, setItemList] = React.useState("grid");
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [colorButton, setColorButton] = React.useState(2);
+  const [productData, setProductData] = React.useState([]);
+  const [productPage, setTotalPage] = useState();
+  const [totalProduct, setTotalProduct] = useState();
+  const [searchParams, setSearchparams] = useSearchParams();
+  const page = parseInt(searchParams.get("page")) || 1;
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -20,13 +29,37 @@ export default function ProductList() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const handlePageChange = (event, newPage) => {
+    const params = new URLSearchParams(searchParams);
+    params.set("page", newPage);
+    setSearchparams(params);
+  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await getData(`/api/productClient/all?page=${page}`);
+        if (res.success) {
+          setProductData(res.data);
+          setTotalPage(res.totalPage);
+          setTotalProduct(res.totalProduct);
+        }
+      } catch (error) {
+        if (error.response) {
+          context.openAlertBox("error", error.response.data.message);
+        } else {
+          context.openAlertBox("error", "Không thể kết nối server!");
+        }
+      }
+    };
+    fetchData();
+  }, [page]);
   return (
     <div className="py-8 bg-white rounded-md">
       <div className="container flex gap-3">
-        <div className="sideBar w-[20%] h-full bg-white p-3 shadow-md">
+        <div className="sideBar w-[15%] h-full bg-white p-3 shadow-md">
           <SideBar />
         </div>
-        <div className="product w-[80%] mx-auto">
+        <div className="product w-[85%] mx-auto">
           <div className="bg-[#f1f1f1] w-full p-2 mb-3 flex items-center justify-between rounded-md">
             <div className="flex items-center ">
               <Button
@@ -52,7 +85,7 @@ export default function ProductList() {
                 <IoGridSharp />
               </Button>
               <span className="font-[500] pl-3 text-[rgba(0,0,0,0.7)]">
-                Có 10 sản phẩm
+                Có {totalProduct} sản phẩm
               </span>
             </div>
             <div className="flex items-center justify-center pr-4">
@@ -92,29 +125,21 @@ export default function ProductList() {
           </div>
           {itemList == "grid" ? (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
-              <ProductItems />
-              <ProductItems />
-              <ProductItems />
-              <ProductItems />
-              <ProductItems />
-              <ProductItems />
-              <ProductItems />
-              <ProductItems />
-              <ProductItems />
-              <ProductItems />
+              {productData?.map((item, index) => (
+                <ProductItems product={item} key={index} />
+              ))}
             </div>
           ) : (
             <div className="flex flex-col gap-4 ">
-              <ProductItemsRow />
-              <ProductItemsRow />
-              <ProductItemsRow />
-              <ProductItemsRow />
-              <ProductItemsRow />
-              <ProductItemsRow />
+              {productData?.map((item, index) => (
+                <ProductItemsRow product={item} key={index} />
+              ))}
             </div>
           )}
           <Pagination
-            count={10}
+            count={productPage}
+            page={page}
+            onChange={handlePageChange}
             color="error"
             showFirstButton
             showLastButton

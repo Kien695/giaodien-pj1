@@ -1,4 +1,5 @@
 import { Swiper, SwiperSlide } from "swiper/react";
+import bannerBoxV2Image2 from "../../assets/1756273096312_1737036773579_sample-1.jpg";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
@@ -48,10 +49,7 @@ export default function HomeSliderV2() {
       </SwiperSlide>
       <SwiperSlide>
         <div className="item rounded-[5px] overflow-hidden">
-          <img
-            src="https://serviceapi.spicezgold.com/download/1742439896581_1737036773579_sample-1.jpg"
-            className="w-full"
-          />
+          <img src={bannerBoxV2Image2} className="w-full" />
         </div>
         <div className="info absolute top-0 -right-[100%] p-8 w-[50%] h-[100%] flex items-center flex-col gap-2 justify-center opacity-0 transition-all duration-700">
           <h4 className="text-[20px] font-[500] text-left w-full relative -right-[100%] opacity-0">

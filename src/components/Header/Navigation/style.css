@@ -6,3 +6,10 @@
   opacity: 1 !important;
   visibility: inherit;
 }
+.submenu {
+  transform: translateY(10px);
+}
+.group:hover .submenu {
+  transform: translateY(0);
+  transition: all 0.25s ease;
+}

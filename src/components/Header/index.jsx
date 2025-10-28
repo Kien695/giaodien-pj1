@@ -60,12 +60,13 @@ export default function Header() {
       if (error.response) {
         context.openAlertBox("error", error.response.data.message);
       } else {
-        context.openAlertBox("error", "Đăn xuất không thành công");
+        context.openAlertBox("error", "Đăng xuất không thành công");
       }
     }
   };
+
   return (
-    <header className="bg-white">
+    <header className="bg-white sticky -top-[42px] z-50">
       <div className="m-t-10 border-t-[1px] border-b-[1px] py-2 border-gray-250">
         <div className="container">
           <div className="flex justify-between items-center">
@@ -97,17 +98,20 @@ export default function Header() {
           </div>
         </div>
       </div>
-      <div className="header py-4 border-b-[1px] border-gray-200">
+      <div className="header py-1 border-b-[1px] border-gray-200">
         <div className="container flex items-center justify-between py-3">
           {/* Logo */}
           <div className="">
             <Link to="#">
-              <img src="/src/assets/1750047766437_logo.jpg" className="h-10" />
+              <img
+                src={context?.logoData?.images}
+                className="w-full h-[60px]"
+              />
             </Link>
           </div>
 
           {/* Search - tự co giãn, có giới hạn max-width */}
-          <div className="flex-1 px-4">
+          <div className="flex-1 px-2">
             <div className="max-w-[600px] mx-auto">
               <Search />
             </div>

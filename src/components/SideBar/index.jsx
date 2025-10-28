@@ -2,7 +2,7 @@ import * as React from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
-
+import { TiArrowDownThick } from "react-icons/ti";
 import ListItemText from "@mui/material/ListItemText";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
@@ -14,9 +14,11 @@ import RangeSlider from "react-range-slider-input";
 import "react-range-slider-input/dist/style.css";
 import Rating from "@mui/material/Rating";
 import "./style.css";
-import { Button } from "@mui/material";
+import { Button, TextField } from "@mui/material";
+import { MyContext } from "../../App";
 
 export default function SideBar() {
+  const context = React.useContext(MyContext);
   const [checkedCategory, setCheckedCategory] = React.useState([0]);
   const [checkedSize, setCheckedSize] = React.useState([0]);
   const [checkedRating, setCheckedRating] = React.useState([0]);
@@ -61,7 +63,7 @@ export default function SideBar() {
   return (
     <div className="sideBar">
       <div className="">
-        <div className="flex box text-[20px] font-[500] mb-4 text-[rgba(0,0,0,0.9)] items-center justify-between">
+        <div className="flex box text-[16px] font-[500] mb-2 text-[rgba(0,0,0,0.9)] items-center justify-between">
           Danh mục
           <Button
             className="!text-black !rounded-full !w-[30px] !h-[30px] !min-w-[30px]"
@@ -74,34 +76,31 @@ export default function SideBar() {
           <List
             sx={{
               width: "100%",
-              maxWidth: 360,
+              maxWidth: 300,
               bgcolor: "background.paper",
               position: "relative",
               overflow: "auto",
               maxHeight: 250,
             }}
           >
-            {[0, 1, 2, 3, 4, 5, 6].map((value) => {
-              const labelId = `checkbox-list-label-${value}`;
+            {context?.catData.map((item, index) => {
+              const labelId = `checkbox-list-label-${index}`;
 
               return (
-                <ListItem key={value}>
+                <ListItem key={index}>
                   <ListItemButton
                     role={undefined}
-                    onClick={handleToggle(value)}
+                    onClick={handleToggle(index)}
                     dense
                   >
                     <Checkbox
                       edge="start"
-                      checked={checkedCategory.includes(value)}
+                      checked={checkedCategory.includes(index)}
                       tabIndex={-1}
                       disableRipple
                     />
 
-                    <ListItemText
-                      id={labelId}
-                      primary={`Line item ${value + 1}`}
-                    />
+                    <ListItemText id={index} primary={item.name} />
                   </ListItemButton>
                 </ListItem>
               );
@@ -110,8 +109,8 @@ export default function SideBar() {
         </Collapse>
       </div>
       <div className="mt-5">
-        <div className="flex box text-[20px] font-[500] mb-4 text-[rgba(0,0,0,0.9)] items-center justify-between">
-          Kích thước
+        <div className="flex box text-[16px] font-[500] mb-2 text-[rgba(0,0,0,0.9)] items-center justify-between">
+          Giá tiền
           <Button
             className="!text-black !rounded-full !w-[30px] !h-[30px] !min-w-[30px]"
             onClick={() => setIsOpenedFilter(!isOpenedFilter)}
@@ -130,42 +129,42 @@ export default function SideBar() {
               maxHeight: 250,
             }}
           >
-            {[0, 1, 2, 3, 4, 5].map((value) => {
-              const labelId = `checkbox-list-label-${value}`;
+            <div className="flex flex-col gap-1 items-center justify-center">
+              <TextField
+                error
+                id="outlined-basic"
+                label="Giá thấp nhất"
+                size="small"
+                variant="filled"
+              />
+              <TiArrowDownThick className="text-[17px]" />
+              <TextField
+                error
+                id="outlined-basic"
+                label="Giá cao nhất"
+                size="small"
+                variant="filled"
+              />
+              <Button
+                sx={{
+                  marginTop: "10px",
 
-              return (
-                <ListItem key={value}>
-                  <ListItemButton
-                    role={undefined}
-                    onClick={handleToggleSize(value)}
-                    dense
-                  >
-                    <Checkbox
-                      edge="start"
-                      checked={checkedSize.includes(value)}
-                      tabIndex={-1}
-                      disableRipple
-                    />
-
-                    <ListItemText id={labelId} primary={`Size ${value + 1}`} />
-                  </ListItemButton>
-                </ListItem>
-              );
-            })}
+                  "&:hover": {
+                    background: "#ff5252",
+                    color: "white",
+                  },
+                }}
+                size="small"
+                color="error"
+                variant="outlined"
+              >
+                Tìm kiếm
+              </Button>
+            </div>
           </List>
         </Collapse>
       </div>
-      <div className="mt-5">
-        <div className="text-[20px] font-[500] mb-4 text-[rgba(0,0,0,0.9)] ">
-          Giá tiền
-        </div>
-        <RangeSlider />
-        <div className="flex items-center justify-between mt-5">
-          <div className="font-[500]">0Đ</div>
-          <div>Đến</div>
-          <div className="font-[500]">100000Đ</div>
-        </div>
-      </div>
+
       <div className="mt-5 rating">
         <div className="text-[20px] font-[500] mb-1 text-[rgba(0,0,0,0.9)]">
           Đánh giá

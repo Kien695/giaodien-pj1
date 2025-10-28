@@ -4,3 +4,6 @@
 .productItems .discount {
   padding: 0 9px;
 }
+.css-2knotq-MuiButtonBase-root-MuiListItemButton-root {
+  padding: 0 0px !important;
+}

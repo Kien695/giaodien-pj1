@@ -17,7 +17,7 @@ export default function Verify() {
     e.preventDefault();
     if (localStorage.getItem("actionType") !== "forgot-password") {
       try {
-        const res = await postData("/api/user/verify-password", {
+        const res = await postData("/api/user/verifyEmail", {
           email: localStorage.getItem("userEmail"),
           otp: otp,
         });
@@ -89,7 +89,6 @@ export default function Verify() {
             <Button
               variant="contained"
               type="submit"
-              onSubmit={handleSubmit}
               sx={{
                 background: "#ff5252",
                 width: "328px",

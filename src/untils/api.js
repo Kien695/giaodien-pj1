@@ -2,6 +2,7 @@ import axios from "axios";
 const apiUrl = import.meta.env.VITE_API_URL;
 // GET
 export const getData = async (url, token) => {
+  console.log(apiUrl + url);
   try {
     const response = await axios.get(apiUrl + url, {
       headers: {

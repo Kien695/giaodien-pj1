@@ -1,28 +1,53 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import Rating from "@mui/material/Rating";
 import ZoomImage from "../../components/ImageZoom";
 import { Button, TextField } from "@mui/material";
 import { BsCart3 } from "react-icons/bs";
 import { FaRegHeart } from "react-icons/fa6";
 import "./style.css";
-import ProductSlider from "../../components/ProductSlider";
+import ProductSlider from "../../components/ProductLasted";
+import { MyContext } from "../../App";
+import { getData } from "../../untils/api";
+import { useParams } from "react-router-dom";
 export default function ProductDetail() {
+  const context = useContext(MyContext);
   const [active, setActive] = React.useState(null);
   const [activeDes, setActiveDes] = React.useState(1);
+  const [product, getProduct] = React.useState("");
+  const { id } = useParams();
+  console.log(id);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await getData(`/api/productClient/${id}`);
+        if (res.success) {
+          getProduct(res.data);
+        }
+      } catch (error) {
+        if (error.response) {
+          context.openAlertBox("error", error.response.data.message);
+        } else {
+          context.openAlertBox("error", "Không thể kết nối server!");
+        }
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
     <div className="container ">
       <div className=" flex gap-5 mt-5 p-4 bg-white rounded-md">
         <div className="imageZoom w-[30%]">
-          <ZoomImage />
+          <ZoomImage images={product.images || []} />
         </div>
         <div className=" p-6 infoProduct w-[70%] flex flex-col gap-5">
           <div className="font-[600] text-[25px] text-[rgba(0,0,0,0.8)]">
-            ÁO POLO THOM NƠ CHẤT LEN HÀNG QC FULL TAG MÁC, ÁO PHONG CÁCH GƠN PHỐ
-            SIÊU CHOÁY SIÊU HOT
+            {product.name}
           </div>
           <div className="info flex gap-5">
             <div>
-              <span className="text-[rgba(0,0,0,0.5)]">Thương hiệu:</span> fff
+              <span className="text-[rgba(0,0,0,0.5)]">Thương hiệu:</span>{" "}
+              {product.brand}
             </div>
             <Rating name="read-only" size="small" value={3} readOnly />
             <div>Đánh giá(0)</div>
@@ -30,65 +55,54 @@ export default function ProductDetail() {
           <div className="flex items-center gap-4">
             <span className="text-[rgba(0,0,0,0.6)]">Voucher của shop:</span>
             <span className="w-[70px] h-[30px]  bg-[#F45930] text-[13px] flex items-center justify-center text-white rounded-md">
-              Giảm 15%
+              Giảm {product.discountPercentage + "%"}
             </span>
           </div>
           <div className="flex items-center  font-[500]  gap-5">
             <div className="flex items-center gap-3">
-              <div className="priceOld line-through text-gray-500">$58.00</div>
-              <div className="priceNew text-[#ff5252] ">$53.00</div>
+              <div className="priceOld line-through text-gray-500">
+                {Number(product.price).toLocaleString("vi-VN") + " đ"}
+              </div>
+              <div className="priceNew text-[#ff5252] ">
+                {(
+                  product.price -
+                  product.price * (product.discountPercentage / 100)
+                ).toLocaleString("vi-VN") + " đ"}
+              </div>
             </div>
             <div>
               <span className="text-[rgba(0,0,0,0.5)]">Còn:</span>{" "}
-              <span className="text-[#ff5252]">100 sản phẩm</span>
+              <span className="text-[#ff5252]">
+                {product.countInStock} sản phẩm
+              </span>
             </div>
           </div>
-          <div className="text-[rgba(0,0,0,0.6)] text-[15px] line-clamp-3">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Voluptatibus doloribus cupiditate dolorem repellendus dicta nostrum
-            in, dolorum tempore iste, non fugiat veritatis ex veniam explicabo
-            quisquam minus quas deleniti. Dicta.Lorem ipsum dolor sit amet
-            consectetur adipisicing elit. Voluptatibus doloribus cupiditate
-            dolorem repellendus dicta nostrum in, dolorum tempore iste, non
-            fugiat veritatis ex veniam explicabo quisquam minus quas deleniti.
-            Dicta.
-          </div>
+          <div
+            className="text-[rgba(0,0,0,0.6)] text-[15px] line-clamp-3"
+            dangerouslySetInnerHTML={{
+              __html: product.description || "",
+            }}
+          ></div>
           <div className="flex items-center gap-3 mb-6">
-            <div>Kích thước:</div>
-            <div className="flex !w-[30px] !h-[30px] !min-w-[30px] gap-2 action ">
-              <Button
-                className={`${
-                  active == 1 ? "!bg-[#ff5252] !text-white !border-none" : ""
-                }`}
-                onClick={() => setActive(1)}
-              >
-                S
-              </Button>
-              <Button
-                className={`${
-                  active == 2 ? "!bg-[#ff5252] !text-white !border-none" : ""
-                }`}
-                onClick={() => setActive(2)}
-              >
-                M
-              </Button>
-              <Button
-                className={`${
-                  active == 3 ? "!bg-[#ff5252] !text-white !border-none" : ""
-                }`}
-                onClick={() => setActive(3)}
-              >
-                L
-              </Button>
-              <Button
-                className={`${
-                  active == 4 ? "!bg-[#ff5252] !text-white !border-none" : ""
-                }`}
-                onClick={() => setActive(4)}
-              >
-                XL
-              </Button>
-            </div>
+            {product?.size?.length > 0 && (
+              <div className="flex items-center gap-3">
+                <div>Kích thước:</div>
+                <div className="flex !w-[30px] !h-[30px] !min-w-[30px] gap-2 action ">
+                  {product.size.map((size, index) => (
+                    <Button
+                      className={`${
+                        active == index
+                          ? "!bg-[#ff5252] !text-white !border-none"
+                          : ""
+                      }`}
+                      onClick={() => setActive(index)}
+                    >
+                      {size}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
           <div className="flex gap-3">
             <TextField
@@ -155,18 +169,12 @@ export default function ProductDetail() {
         </div>
 
         {activeDes == 2 && (
-          <div className="shadow-lg w-full p-5 bg-white rounded-md">
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Voluptatibus doloribus cupiditate dolorem repellendus dicta
-              nostrum in, dolorum tempore iste, non fugiat veritatis ex veniam
-              explicabo quisquam minus quas deleniti. Dicta.Lorem ipsum dolor
-              sit amet consectetur adipisicing elit. Voluptatibus doloribus
-              cupiditate dolorem repellendus dicta nostrum in, dolorum tempore
-              iste, non fugiat veritatis ex veniam explicabo quisquam minus quas
-              deleniti. Dicta.
-            </p>
-          </div>
+          <div
+            className="shadow-lg w-full p-5 bg-white rounded-md"
+            dangerouslySetInnerHTML={{
+              __html: product.description || "",
+            }}
+          ></div>
         )}
         {activeDes == 1 && (
           <div className="shadow-lg w-full p-5 bg-white rounded-md">
@@ -179,10 +187,9 @@ export default function ProductDetail() {
                     </th>
                     <th
                       scope="row"
-                      class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                      class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white uppercase"
                     >
-                      ÁO POLO THOM NƠ CHẤT LEN HÀNG QC FULL TAG MÁC, ÁO PHONG
-                      CÁCH GƠN PHỐ SIÊU CHOÁY SIÊU HOT
+                      {product.name}
                     </th>
                   </tr>
                   <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
@@ -193,7 +200,7 @@ export default function ProductDetail() {
                       scope="row"
                       class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
-                      Còn hàng
+                      {product?.countInStock > 0 ? "Còn hàng" : "Hết hàng"}
                     </td>
                   </tr>
                   <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
@@ -204,18 +211,18 @@ export default function ProductDetail() {
                       scope="row"
                       class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
-                      Thời trang
+                      {product?.category?.name}
                     </td>
                   </tr>
                   <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
                     <th scope="col" class="px-6 py-3">
-                      Chất liệu
+                      Thương hiệu
                     </th>
                     <td
                       scope="row"
                       class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
-                      len
+                      {product.brand}
                     </td>
                   </tr>
                   <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
@@ -226,13 +233,13 @@ export default function ProductDetail() {
                       scope="row"
                       class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
-                      $53.00
+                      {Number(product.price).toLocaleString("vi-VN") + " đ"}
                     </td>
                   </tr>
 
                   <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
                     <th scope="col" class="px-6 py-3">
-                      Gửi từ
+                      Địa chỉ
                     </th>
                     <td
                       scope="row"

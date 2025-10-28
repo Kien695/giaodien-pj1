@@ -1,18 +1,27 @@
 import * as React from "react";
+
 import CategorySlider from "../../components/CategorySlider";
-import HomeSlider from "../../components/HomeSlider";
+import HomeSlider from "../../components/BannerSilder";
 import { HiOutlineTruck } from "react-icons/hi2";
 import { BsFillLightningChargeFill } from "react-icons/bs";
 import AllBannerSlider from "../../components/AllBannerSlider";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
-import ProductSlider from "../../components/ProductSlider";
+import ProductSlider from "../../components/ProductLasted";
 import Blog from "../../components/Blog";
 import HomeSliderV2 from "../../components/HomeSliderV2";
 import BannerBoxV2 from "../../components/bannerBoxV2";
 import AllBannerSliderV2 from "../../components/AllBannerSliderV2";
+import { MyContext } from "../../App";
+import { useContext } from "react";
+import ProductFeatured from "../../components/ProductFeatured";
+import ProductLasted from "../../components/ProductLasted";
+import ProductSale from "../../components/ProductSale";
+import { Link } from "react-router-dom";
+import { MdKeyboardDoubleArrowRight } from "react-icons/md";
 export default function Home() {
+  const context = useContext(MyContext);
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -32,7 +41,7 @@ export default function Home() {
                 Đừng bỏ lở các ưu đãi cho đến cuối tháng.
               </p>
             </div>
-            <div className="rightSec w-[60%]">
+            <div className="rightSec w-[50%]">
               <Tabs
                 value={value}
                 onChange={handleChange}
@@ -40,24 +49,16 @@ export default function Home() {
                 scrollButtons="auto"
                 aria-label="scrollable auto tabs example"
               >
-                <Tab label="Item One" />
-                <Tab label="Item Two" />
-                <Tab label="Item Three" />
-                <Tab label="Item Four" />
-                <Tab label="Item Five" />
-                <Tab label="Item Six" />
-                <Tab label="Item Seven" />
-                <Tab label="Item One" />
-                <Tab label="Item Two" />
-                <Tab label="Item Three" />
-                <Tab label="Item Four" />
-                <Tab label="Item Five" />
-                <Tab label="Item Six" />
-                <Tab label="Item Seven" />
+                {context?.catData.map((item, index) => (
+                  <Tab key={index} label={item.name} />
+                ))}
               </Tabs>
             </div>
+            <Link to="/product" className="flex items-center link">
+              Xem tất cả <MdKeyboardDoubleArrowRight />
+            </Link>
           </div>
-          <ProductSlider item={5} />
+          <ProductSale item={5} />
         </div>
       </section>
       {/* bannerV2 */}
@@ -106,7 +107,7 @@ export default function Home() {
           <div className="flex items-center justify-between">
             <h2 className="text-[22px] font-[600]">Sản phẩm gần nhất</h2>
           </div>
-          <ProductSlider item={5} />
+          <ProductLasted item={5} />
           <AllBannerSlider item={3} />
         </div>
       </section>
@@ -116,7 +117,7 @@ export default function Home() {
           <div className="flex items-center justify-between">
             <h2 className="text-[22px] font-[600]">Sản phẩm nổi bật</h2>
           </div>
-          <ProductSlider item={5} />
+          <ProductFeatured item={5} />
         </div>
       </section>
       {/* blog */}

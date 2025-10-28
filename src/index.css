@@ -47,6 +47,9 @@ body {
 .categorySlider .item {
   border: 1px solid rgba(0, 0, 0, 0.1);
 }
+header {
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+}
 .categorySlider .swiper-button-prev {
   width: 30px;
   height: 30px;
