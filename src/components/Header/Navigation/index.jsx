@@ -22,7 +22,10 @@ export default function Navigation() {
         {children.map((sub) => (
           <li key={sub._id} className="relative">
             {/* Nút hiển thị submenu */}
-            <Link to={`/category/${sub._id}`} className="block peer">
+            <Link
+              to={`/product?catId=${sub.slug || sub._id}`}
+              className="block peer"
+            >
               <div className="text-[13px] hover:text-[#ff5252] font-[500] w-full justify-start hover:bg-gray-100 px-3 py-2">
                 {sub.name}
               </div>
@@ -50,7 +53,7 @@ export default function Navigation() {
               {context?.catData.map((cat) => (
                 <li key={cat._id} className="relative">
                   <Link
-                    to={`/category/${cat._id}`}
+                    to={`/product?catId=${cat.slug || cat._id}`}
                     className="font-[500] text-[14px] link transition peer"
                   >
                     {cat.name}

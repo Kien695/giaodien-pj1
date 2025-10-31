@@ -24,7 +24,7 @@ export default function CategorySlider() {
         >
           {context?.catData.map((item) => (
             <SwiperSlide key={item._id}>
-              <Link to="">
+              <Link to={`/product?catId=${item.slug || item._id}`}>
                 <div className="item bg-white rounded-md  text-center flex items-center justify-center flex-col h-[170px]">
                   <div className="w-full h-full rounded-md overflow-hidden flex items-center justify-center">
                     <img
@@ -40,62 +40,6 @@ export default function CategorySlider() {
               </Link>
             </SwiperSlide>
           ))}
-
-          {/* <SwiperSlide>
-            <Link to="">
-              <div className="item bg-white p-3 rounded-sm text-center flex items-center justify-center flex-col">
-                <img
-                  src="/src/assets/ap001.webp"
-                  className="w-70px transition-all"
-                />
-                <h3 className="text-[18px] font-[600px] mt-3">Áo nam</h3>
-              </div>
-            </Link>
-          </SwiperSlide>
-          <SwiperSlide>
-            <Link to="">
-              <div className="item bg-white p-3 rounded-sm text-center flex items-center justify-center flex-col">
-                <img
-                  src="/src/assets/ap001.webp"
-                  className="w-70px transition-all"
-                />
-                <h3 className="text-[18px] font-[600px] mt-3">Áo nam</h3>
-              </div>
-            </Link>
-          </SwiperSlide>
-          <SwiperSlide>
-            <Link to="">
-              <div className="item bg-white p-3 rounded-sm text-center flex items-center justify-center flex-col">
-                <img
-                  src="/src/assets/ap001.webp"
-                  className="w-70px transition-all"
-                />
-                <h3 className="text-[18px] font-[600px] mt-3">Áo nam</h3>
-              </div>
-            </Link>
-          </SwiperSlide>
-          <SwiperSlide>
-            <Link to="">
-              <div className="item bg-white p-3 rounded-sm text-center flex items-center justify-center flex-col">
-                <img
-                  src="/src/assets/ap001.webp"
-                  className="w-70px transition-all"
-                />
-                <h3 className="text-[18px] font-[600px] mt-3">Áo nam</h3>
-              </div>
-            </Link>
-          </SwiperSlide>
-          <SwiperSlide>
-            <Link to="">
-              <div className="item bg-white p-3 rounded-sm text-center flex items-center justify-center flex-col">
-                <img
-                  src="/src/assets/ap001.webp"
-                  className="w-70px transition-all"
-                />
-                <h3 className="text-[18px] font-[600px] mt-3">Áo nam</h3>
-              </div>
-            </Link>
-          </SwiperSlide> */}
         </Swiper>
       </div>
     </div>

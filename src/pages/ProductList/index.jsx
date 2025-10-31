@@ -3,7 +3,7 @@ import SideBar from "../../components/SideBar";
 import ProductItems from "../../components/ProductItems";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IoGridSharp } from "react-icons/io5";
-import { Button } from "@mui/material";
+import { Button, FormControl, InputLabel, NativeSelect } from "@mui/material";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Fade from "@mui/material/Fade";
@@ -21,7 +21,13 @@ export default function ProductList() {
   const [productPage, setTotalPage] = useState();
   const [totalProduct, setTotalProduct] = useState();
   const [searchParams, setSearchparams] = useSearchParams();
+
   const page = parseInt(searchParams.get("page")) || 1;
+  const minPrice = parseInt(searchParams.get("minPrice")) || "";
+  const maxPrice = parseInt(searchParams.get("maxPrice")) || "";
+  const sortKey = searchParams.get("sortKey") || "";
+  const sortValue = searchParams.get("sortValue") || "";
+  const catId = searchParams.get("catId") || "";
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -34,10 +40,13 @@ export default function ProductList() {
     params.set("page", newPage);
     setSearchparams(params);
   };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await getData(`/api/productClient/all?page=${page}`);
+        const res = await getData(
+          `/api/productClient/all?page=${page}&catId=${catId}&minPrice=${minPrice}&maxPrice=${maxPrice}&sortKey=${sortKey}&sortValue=${sortValue}`
+        );
         if (res.success) {
           setProductData(res.data);
           setTotalPage(res.totalPage);
@@ -52,12 +61,19 @@ export default function ProductList() {
       }
     };
     fetchData();
-  }, [page]);
+  }, [page, catId, minPrice, maxPrice, sortKey, sortValue]);
+  const handleChange = (e) => {
+    const params = new URLSearchParams(searchParams);
+    const [sortKey, sortValue] = e.target.value.split("-");
+    params.set("sortKey", sortKey);
+    params.set("sortValue", sortValue);
+    setSearchparams(params);
+  };
   return (
     <div className="py-8 bg-white rounded-md">
       <div className="container flex gap-3">
         <div className="sideBar w-[15%] h-full bg-white p-3 shadow-md">
-          <SideBar />
+          <SideBar minPrice={minPrice} maxPrice={maxPrice} catId={catId} />
         </div>
         <div className="product w-[85%] mx-auto">
           <div className="bg-[#f1f1f1] w-full p-2 mb-3 flex items-center justify-between rounded-md">
@@ -89,38 +105,26 @@ export default function ProductList() {
               </span>
             </div>
             <div className="flex items-center justify-center pr-4">
-              <span className="mr-2">Sắp xếp: </span>
-              <Button
-                id="fade-button"
-                aria-controls={open ? "fade-menu" : undefined}
-                aria-expanded={open ? "true" : undefined}
-                onClick={handleClick}
-                className="!text-[#ff5252] !bg-white shadow-md !text-[14px] !capitalize"
-              >
-                Giá tăng dần
-              </Button>
-              <Menu
-                id="fade-menu"
-                slotProps={{
-                  list: {
-                    "aria-labelledby": "fade-button",
-                  },
-                }}
-                slots={{ transition: Fade }}
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-              >
-                <MenuItem onClick={handleClose} className="!text-[15px]">
-                  Giá giảm dần
-                </MenuItem>
-                <MenuItem onClick={handleClose} className="!text-[15px]">
-                  Tên từ A đến Z
-                </MenuItem>
-                <MenuItem onClick={handleClose} className="!text-[15px]">
-                  Tên từ Z đến A
-                </MenuItem>
-              </Menu>
+              <FormControl fullWidth>
+                <InputLabel
+                  color="error"
+                  variant="standard"
+                  htmlFor="uncontrolled-native"
+                >
+                  Sắp xếp
+                </InputLabel>
+                <NativeSelect
+                  value={
+                    sortKey && sortValue ? `${sortKey}-${sortValue}` : undefined
+                  }
+                  onChange={handleChange}
+                >
+                  <option value="price-asc">Giá tăng dần</option>
+                  <option value="price-desc">Giá giảm dần</option>
+                  <option value="name-asc">Tiêu đề A đến Z</option>
+                  <option value="name-desc">Tiêu đề Z đến A</option>
+                </NativeSelect>
+              </FormControl>
             </div>
           </div>
           {itemList == "grid" ? (

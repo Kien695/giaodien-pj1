@@ -2,7 +2,6 @@ import axios from "axios";
 const apiUrl = import.meta.env.VITE_API_URL;
 // GET
 export const getData = async (url, token) => {
-  console.log(apiUrl + url);
   try {
     const response = await axios.get(apiUrl + url, {
       headers: {
@@ -55,9 +54,10 @@ export const putData = async (url, formData, config = {}) => {
 // DELETE
 export const deleteData = async (url, token) => {
   try {
+    console.log(apiUrl + url);
     const response = await axios.delete(apiUrl + url, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${localStorage.getItem("accessToken") || ""}`,
       },
     });
     return response.data;

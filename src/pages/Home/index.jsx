@@ -20,13 +20,29 @@ import ProductLasted from "../../components/ProductLasted";
 import ProductSale from "../../components/ProductSale";
 import { Link } from "react-router-dom";
 import { MdKeyboardDoubleArrowRight } from "react-icons/md";
+import { useState } from "react";
+import { useEffect } from "react";
 export default function Home() {
   const context = useContext(MyContext);
   const [value, setValue] = React.useState(0);
+  const [selectCat, setSelectCat] = useState("");
+  // Khi context.catData load xong, set mặc định danh mục đầu tiên
+  useEffect(() => {
+    if (context?.catData?.length > 0 && !selectCat) {
+      setSelectCat(context.catData[0]._id);
+      setValue(0); // cũng set tab đầu tiên
+    }
+  }, [context?.catData]);
 
+  // Khi user click tab
   const handleChange = (event, newValue) => {
+    const cat = context?.catData[newValue];
+    if (!cat) return; // phòng trường hợp newValue invalid
+
     setValue(newValue);
+    setSelectCat(cat._id); // set danh mục được chọn
   };
+
   return (
     <>
       <HomeSlider />
@@ -54,11 +70,11 @@ export default function Home() {
                 ))}
               </Tabs>
             </div>
-            <Link to="/product" className="flex items-center link">
+            <Link to="/product" className="flex items-center link font-[500]">
               Xem tất cả <MdKeyboardDoubleArrowRight />
             </Link>
           </div>
-          <ProductSale item={5} />
+          <ProductSale item={5} catId={selectCat} />
         </div>
       </section>
       {/* bannerV2 */}

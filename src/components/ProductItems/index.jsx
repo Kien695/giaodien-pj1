@@ -3,12 +3,13 @@ import "./style.css";
 import { Link } from "react-router-dom";
 import Rating from "@mui/material/Rating";
 import { Button } from "@mui/material";
-import { FaRegHeart } from "react-icons/fa6";
+
 import { MdOutlineZoomOutMap } from "react-icons/md";
 import { IoGitCompareOutline } from "react-icons/io5";
 import { BsCart3 } from "react-icons/bs";
 import { MyContext } from "../../App";
 import DetailProductMini from "../DetailProductMini";
+import ListLikeProduct from "../ListLikeProduct";
 export default function ProductItems({ product }) {
   const context = useContext(MyContext);
   return (
@@ -74,9 +75,7 @@ export default function ProductItems({ product }) {
         <Button className="!w-[40px] !h-[40px] !min-w-[40px] !rounded-full !bg-white !text-black hover:!bg-[#ff5252] hover:!text-white">
           <IoGitCompareOutline className="text-[18px]" />
         </Button>
-        <Button className="!w-[40px] !h-[40px] !min-w-[40px] !rounded-full !bg-white !text-black hover:!bg-[#ff5252] hover:!text-white">
-          <FaRegHeart className="text-[18px]" />
-        </Button>
+        <ListLikeProduct item={product} />
       </div>
     </div>
   );

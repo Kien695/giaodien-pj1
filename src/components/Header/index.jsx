@@ -102,7 +102,7 @@ export default function Header() {
         <div className="container flex items-center justify-between py-3">
           {/* Logo */}
           <div className="">
-            <Link to="#">
+            <Link to="/">
               <img
                 src={context?.logoData?.images}
                 className="w-full h-[60px]"
@@ -123,7 +123,7 @@ export default function Header() {
               {context.isLogin ? (
                 <>
                   <div
-                    className="flex items-center gap-2 hover:bg-[#f6fafd] p-2 rounded-md"
+                    className="flex items-center gap-2 cursor-pointer hover:bg-[#f6fafd] p-2 rounded-md"
                     id="basic-button"
                     aria-controls={open ? "basic-menu" : undefined}
                     aria-haspopup="true"

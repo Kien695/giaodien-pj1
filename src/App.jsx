@@ -15,7 +15,7 @@ export default function App() {
   const [catData, setCatData] = React.useState([]);
   const [productNewData, setProductNewData] = React.useState([]);
   const [productFeaturedData, setProductFeaturedData] = React.useState([]);
-  const [productSaleData, setProductSaleData] = React.useState([]);
+
   useEffect(() => {
     const fetchUser = async () => {
       const token = localStorage.getItem("accessToken");
@@ -38,7 +38,6 @@ export default function App() {
           if (resProduct.success) {
             setProductFeaturedData(resProduct.dataFeatured);
             setProductNewData(resProduct.dataNew);
-            setProductSaleData(resProduct.dataSale);
           }
         } catch (error) {
           console.error("Lỗi khi fetch user:", error);
@@ -72,7 +71,6 @@ export default function App() {
     logoData,
     productFeaturedData,
     productNewData,
-    productSaleData,
   };
   return (
     <>

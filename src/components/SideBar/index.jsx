@@ -16,37 +16,22 @@ import Rating from "@mui/material/Rating";
 import "./style.css";
 import { Button, TextField } from "@mui/material";
 import { MyContext } from "../../App";
+import { Link, useSearchParams } from "react-router-dom";
+import { useState } from "react";
 
-export default function SideBar() {
+export default function SideBar({ minPrice, maxPrice,catId }) {
   const context = React.useContext(MyContext);
   const [checkedCategory, setCheckedCategory] = React.useState([0]);
   const [checkedSize, setCheckedSize] = React.useState([0]);
   const [checkedRating, setCheckedRating] = React.useState([0]);
   const [isOpenedCategory, setIsOpenedCategory] = React.useState(true);
   const [isOpenedFilter, setIsOpenedFilter] = React.useState(true);
-  const handleToggle = (value) => () => {
-    const currentIndex = checkedCategory.indexOf(value);
-    const newChecked = [...checkedCategory];
+  const [searchParams, setSearchParams] = useSearchParams();
 
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
-
-    setCheckedCategory(newChecked);
-  };
-  const handleToggleSize = (value) => () => {
-    const currentIndex = checkedSize.indexOf(value);
-    const newChecked = [...checkedSize];
-
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
-
-    setCheckedSize(newChecked);
+  const handleChangeCat = (id) => {
+    const params = new URLSearchParams(searchParams);
+    params.set("catId", id);
+    setSearchParams(params);
   };
   const handleToggleRating = (value) => () => {
     const currentIndex = checkedRating.indexOf(value);
@@ -60,10 +45,37 @@ export default function SideBar() {
 
     setCheckedRating(newChecked);
   };
+  const [priceData, setPriceData] = useState({
+    minPrice: minPrice || "",
+    maxPrice: maxPrice || "",
+  });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setPriceData((prev) => ({ ...prev, [name]: value }));
+  };
+  const handleClick = () => {
+    if (priceData.minPrice == "") {
+      context.openAlertBox("error", "Vui lòng nhập giá thấp nhất!");
+      return;
+    }
+    if (priceData.maxPrice == "") {
+      context.openAlertBox("error", "Vui lòng nhập giá cao nhất!");
+      return;
+    }
+
+    const params = new URLSearchParams(searchParams);
+    if (priceData.minPrice) {
+      params.set("minPrice", priceData.minPrice);
+    }
+    if (priceData.maxPrice) {
+      params.set("maxPrice", priceData.maxPrice);
+    }
+    setSearchParams(params);
+  };
   return (
     <div className="sideBar">
       <div className="">
-        <div className="flex box text-[16px] font-[500] mb-2 text-[rgba(0,0,0,0.9)] items-center justify-between">
+        <div className="flex box text-[16px] font-[600] mb-2 text-[rgba(0,0,0,0.9)] items-center justify-between">
           Danh mục
           <Button
             className="!text-black !rounded-full !w-[30px] !h-[30px] !min-w-[30px]"
@@ -80,36 +92,32 @@ export default function SideBar() {
               bgcolor: "background.paper",
               position: "relative",
               overflow: "auto",
-              maxHeight: 250,
+              maxHeight: 230,
             }}
           >
-            {context?.catData.map((item, index) => {
-              const labelId = `checkbox-list-label-${index}`;
-
-              return (
-                <ListItem key={index}>
-                  <ListItemButton
-                    role={undefined}
-                    onClick={handleToggle(index)}
-                    dense
-                  >
-                    <Checkbox
-                      edge="start"
-                      checked={checkedCategory.includes(index)}
-                      tabIndex={-1}
-                      disableRipple
-                    />
-
-                    <ListItemText id={index} primary={item.name} />
-                  </ListItemButton>
-                </ListItem>
-              );
-            })}
+            {context?.catData.map((item, index) => (
+              <div
+                key={index}
+                className={`text-[15px] ${
+                  catId === item._id
+                    ? "text-[#ff5252] "
+                    : "hover:text-[#ff5252] hover:bg-gray-100"
+                }  font-[500] w-full justify-start cursor-pointer py-1`}
+                onClick={() => handleChangeCat(item._id)}
+              >
+                <Checkbox
+                  checked={catId === item._id}
+                  size="small"
+                  color="error"
+                />
+                {item.name}
+              </div>
+            ))}
           </List>
         </Collapse>
       </div>
       <div className="mt-5">
-        <div className="flex box text-[16px] font-[500] mb-2 text-[rgba(0,0,0,0.9)] items-center justify-between">
+        <div className="flex box text-[16px] font-[600] mb-2 text-[rgba(0,0,0,0.9)] items-center justify-between">
           Giá tiền
           <Button
             className="!text-black !rounded-full !w-[30px] !h-[30px] !min-w-[30px]"
@@ -133,17 +141,27 @@ export default function SideBar() {
               <TextField
                 error
                 id="outlined-basic"
+                name="minPrice"
                 label="Giá thấp nhất"
                 size="small"
+                type="number"
                 variant="filled"
+                InputProps={{ inputProps: { min: 1 } }}
+                value={priceData.minPrice}
+                onChange={handleChange}
               />
               <TiArrowDownThick className="text-[17px]" />
               <TextField
                 error
+                name="maxPrice"
                 id="outlined-basic"
                 label="Giá cao nhất"
                 size="small"
+                type="number"
+                InputProps={{ inputProps: { min: 1 } }}
                 variant="filled"
+                value={priceData.maxPrice}
+                onChange={handleChange}
               />
               <Button
                 sx={{
@@ -157,6 +175,7 @@ export default function SideBar() {
                 size="small"
                 color="error"
                 variant="outlined"
+                onClick={handleClick}
               >
                 Tìm kiếm
               </Button>
@@ -166,7 +185,7 @@ export default function SideBar() {
       </div>
 
       <div className="mt-5 rating">
-        <div className="text-[20px] font-[500] mb-1 text-[rgba(0,0,0,0.9)]">
+        <div className="flex box text-[16px] font-[600] mb-2 text-[rgba(0,0,0,0.9)] items-center justify-between">
           Đánh giá
         </div>
         <List
@@ -202,6 +221,16 @@ export default function SideBar() {
             );
           })}
         </List>
+      </div>
+      <div className="flex justify-center mt-4">
+        <Button
+          color="error"
+          size="small"
+          variant="contained"
+          onClick={() => setSearchParams(new URLSearchParams())}
+        >
+          Xóa lọc tất cả
+        </Button>
       </div>
     </div>
   );

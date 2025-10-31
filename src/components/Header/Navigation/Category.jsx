@@ -34,15 +34,13 @@ export default function Category() {
           <React.Fragment key={cat._id}>
             <ListItem disablePadding>
               <ListItemButton sx={{ pl: 2 + level * 2 }}>
-                {/* 👇 Chỉ chữ mới là Link */}
                 <Link
-                  to={`/category/${cat._id}`}
+                  to={`/product?catId=${cat.slug || cat._id}`}
                   className="flex-1 text-[14px] hover:text-[#ff5252]"
                 >
                   {cat.name}
                 </Link>
 
-                {/* 👇 Nút mở submenu */}
                 {cat.children && cat.children.length > 0 && (
                   <div
                     onClick={(e) => {
@@ -58,7 +56,7 @@ export default function Category() {
               </ListItemButton>
             </ListItem>
 
-            {/* 👇 Danh mục con hiển thị khi mở */}
+            {/* Danh mục con hiển thị khi mở */}
             {cat.children && cat.children.length > 0 && openItems[cat._id] && (
               <div className="ml-3 border-l border-gray-200">
                 {renderCategories(cat.children, level + 1)}
