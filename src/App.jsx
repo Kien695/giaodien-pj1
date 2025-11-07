@@ -12,9 +12,12 @@ export default function App() {
   const [isLogin, setIsLogin] = React.useState(false);
   const [userData, setUserData] = React.useState(null);
   const [logoData, setLogoData] = React.useState(null);
+  const [addressData, setAddressData] = React.useState([]);
   const [catData, setCatData] = React.useState([]);
   const [productNewData, setProductNewData] = React.useState([]);
   const [productFeaturedData, setProductFeaturedData] = React.useState([]);
+  const [wishlist, setWishlist] = React.useState([]);
+  const [countList, setCountList] = React.useState(0);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -23,21 +26,30 @@ export default function App() {
         setIsLogin(true);
         try {
           const resUser = await getData(`/api/user/user-detail?token=${token}`);
-          if (resUser.success) {
-            setUserData(resUser.data);
-          }
+          if (resUser.success) setUserData(resUser.data);
+
           const resLogo = await getData("/api/logo");
-          if (resLogo.success) {
-            setLogoData(resLogo.data);
-          }
+          if (resLogo.success) setLogoData(resLogo.data);
+
           const resCat = await getData("/api/category/");
-          if (resCat.success) {
-            setCatData(resCat.data);
-          }
+          if (resCat.success) setCatData(resCat.data);
+
           const resProduct = await getData("/api/productClient");
           if (resProduct.success) {
             setProductFeaturedData(resProduct.dataFeatured);
             setProductNewData(resProduct.dataNew);
+          }
+
+          const resAddress = await getData("/api/address");
+          if (resAddress.success) {
+            setAddressData(resAddress.data);
+          }
+
+          //  Fetch wishlist luôn
+          const resWishList = await getData("/api/myList/");
+          if (resWishList.success) {
+            setWishlist(resWishList.data);
+            setCountList(resWishList.countList);
           }
         } catch (error) {
           console.error("Lỗi khi fetch user:", error);
@@ -49,7 +61,7 @@ export default function App() {
     };
 
     fetchUser();
-  }, []);
+  }, [countList]);
 
   const handleCloseDetail = () => {
     setOpenDetailProduct(false);
@@ -71,6 +83,11 @@ export default function App() {
     logoData,
     productFeaturedData,
     productNewData,
+    addressData,
+    wishlist,
+
+    countList,
+    setCountList,
   };
   return (
     <>

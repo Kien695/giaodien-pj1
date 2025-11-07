@@ -3,7 +3,7 @@ import React from "react";
 import { deleteData } from "../../untils/api";
 import { MyContext } from "../../App";
 
-export default function DeleteAllListLove({ onSuccess }) {
+export default function DeleteAllListLove({ onSuccess, countList }) {
   const context = React.useContext(MyContext);
   const handleClick = async () => {
     try {
@@ -31,6 +31,7 @@ export default function DeleteAllListLove({ onSuccess }) {
           color: "#f1f1f1",
         },
       }}
+      disabled={countList === 0}
       className=" flex items-center justify-center gap-2 "
       onClick={handleClick}
     >

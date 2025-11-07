@@ -1,3 +1,4 @@
+import Address from "../pages/Address";
 import PrivateRouters from "../components/PrivateRouters";
 import LayoutDefault from "../Layout/LayoutDefault";
 import Cart from "../pages/Cart";
@@ -12,6 +13,7 @@ import ProductDetail from "../pages/ProductDetail";
 import ProductList from "../pages/ProductList";
 import Register from "../pages/register";
 import Verify from "../pages/VerifyEmail";
+import AuthSuccess from "../pages/AuthSuccess";
 
 export const routers = [
   {
@@ -33,6 +35,10 @@ export const routers = [
       {
         path: "/login",
         element: <Login />,
+      },
+      {
+        path: "/auth-success",
+        element: <AuthSuccess />,
       },
       {
         path: "/register",
@@ -69,6 +75,10 @@ export const routers = [
       {
         path: "/order",
         element: <MyOrder />,
+      },
+      {
+        path: "/address",
+        element: <Address />,
       },
     ],
   },

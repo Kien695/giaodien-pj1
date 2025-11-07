@@ -28,6 +28,7 @@ export default function ProductList() {
   const sortKey = searchParams.get("sortKey") || "";
   const sortValue = searchParams.get("sortValue") || "";
   const catId = searchParams.get("catId") || "";
+  const keyword = searchParams.get("keyword") || "";
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -45,7 +46,7 @@ export default function ProductList() {
     const fetchData = async () => {
       try {
         const res = await getData(
-          `/api/productClient/all?page=${page}&catId=${catId}&minPrice=${minPrice}&maxPrice=${maxPrice}&sortKey=${sortKey}&sortValue=${sortValue}`
+          `/api/productClient/all?keyword=${keyword}&page=${page}&catId=${catId}&minPrice=${minPrice}&maxPrice=${maxPrice}&sortKey=${sortKey}&sortValue=${sortValue}`
         );
         if (res.success) {
           setProductData(res.data);
@@ -61,7 +62,7 @@ export default function ProductList() {
       }
     };
     fetchData();
-  }, [page, catId, minPrice, maxPrice, sortKey, sortValue]);
+  }, [page, catId, minPrice, maxPrice, sortKey, sortValue, keyword]);
   const handleChange = (e) => {
     const params = new URLSearchParams(searchParams);
     const [sortKey, sortValue] = e.target.value.split("-");

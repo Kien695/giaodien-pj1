@@ -12,6 +12,7 @@ import DetailProductMini from "../DetailProductMini";
 import ListLikeProduct from "../ListLikeProduct";
 export default function ProductItems({ product }) {
   const context = useContext(MyContext);
+
   return (
     <div className="group productItems rounded-md overflow-hidden shadow-lg border-2 border-[rgba(0,0,0,0.1)] relative">
       <div className="imgWrap w-[100%] overflow-hidden rounded-md relative ">

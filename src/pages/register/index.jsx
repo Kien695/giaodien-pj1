@@ -1,10 +1,12 @@
 import { Button, CircularProgress, TextField } from "@mui/material";
+
 import React, { useContext, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { MyContext } from "../../App";
 import { useRef } from "react";
 import { postData } from "../../untils/api";
+
 export default function Register() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -129,9 +131,12 @@ export default function Register() {
               fullWidth
               variant="outlined"
               className="!flex !items-center !justify-center gap-2 "
+              onClick={() => {
+                window.open("http://localhost:3000/auth/google", "_self");
+              }}
             >
               <FcGoogle className="text-xl" />
-              <span>Đăng kí với Google</span>
+              <span>Đăng nhập với Google</span>
             </Button>
           </div>
         </div>

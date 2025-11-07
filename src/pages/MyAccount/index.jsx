@@ -58,7 +58,7 @@ export default function MyAccount() {
               <div className="flex gap-3 ">
                 <div className="flex items-end">Họ tên:</div>
                 <TextField
-                  value={context?.userData?.name}
+                  value={context?.userData?.name || ""}
                   type="text"
                   name="name"
                   autoComplete="current-name"
@@ -71,7 +71,7 @@ export default function MyAccount() {
                 <div className="flex items-end">Email:</div>
                 <TextField
                   disabled
-                  value={context?.userData?.email}
+                  value={context?.userData?.email || ""}
                   variant="standard"
                   slotProps={{
                     input: {
@@ -85,7 +85,7 @@ export default function MyAccount() {
               <div className="flex gap-3">
                 <div className="flex items-end">Số điện thoại: </div>
                 <TextField
-                  value={context?.userData?.mobile}
+                  value={context?.userData?.mobile || ""}
                   name="mobile"
                   type="text"
                   autoComplete="current-phone"

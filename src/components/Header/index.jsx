@@ -236,23 +236,17 @@ export default function Header() {
                       Đăng kí
                     </Link>
                   </li>
-                  <li>
-                    <Tooltip title="Compare">
-                      <IconButton aria-label="cart">
-                        <StyledBadge badgeContent={4} color="error">
-                          <GoGitCompare />
-                        </StyledBadge>
-                      </IconButton>
-                    </Tooltip>
-                  </li>
                 </>
               )}
 
               <li>
                 <Link to="/my-list">
-                  <Tooltip title="wishList">
+                  <Tooltip title="Danh sách yêu thích">
                     <IconButton aria-label="cart">
-                      <StyledBadge badgeContent={4} color="error">
+                      <StyledBadge
+                        badgeContent={context.wishlist.length}
+                        color="error"
+                      >
                         <FaRegHeart />
                       </StyledBadge>
                     </IconButton>

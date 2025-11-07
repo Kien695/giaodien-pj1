@@ -10,6 +10,7 @@ export default function DeleteListLove({ item, onSuccess }) {
       const res = await deleteData(`/api/myList/remove/${item._id}`);
       if (res.success) {
         context.openAlertBox("success", res.message);
+        context.setCountList(res.countList);
         if (onSuccess) onSuccess();
       }
     } catch (error) {

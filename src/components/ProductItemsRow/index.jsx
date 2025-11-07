@@ -9,6 +9,7 @@ import { IoGitCompareOutline } from "react-icons/io5";
 import { BsCart3 } from "react-icons/bs";
 import { MyContext } from "../../App";
 import DetailProductMini from "../DetailProductMini";
+import ListLikeProduct from "../ListLikeProduct";
 export default function ProductItemsRow({ product }) {
   const context = useContext(MyContext);
   return (
@@ -28,9 +29,7 @@ export default function ProductItemsRow({ product }) {
               <Button className="!w-[40px] !h-[40px] !min-w-[40px] !rounded-full !bg-white !text-black hover:!bg-[#ff5252] hover:!text-white">
                 <IoGitCompareOutline className="text-[18px]" />
               </Button>
-              <Button className="!w-[40px] !h-[40px] !min-w-[40px] !rounded-full !bg-white !text-black hover:!bg-[#ff5252] hover:!text-white">
-                <FaRegHeart className="text-[18px]" />
-              </Button>
+              <ListLikeProduct item={product} />
             </div>
             <div className="discount absolute top-[5px] left-[6px] rounded-md bg-[#ff5252] text-white">
               15%
@@ -43,7 +42,9 @@ export default function ProductItemsRow({ product }) {
           <Link className="link transition-all">{product.brand || "..."}</Link>
         </h6>
         <h3 className="title text-[17px] mt-2 mb-4 font-[500] text-[rgba(0,0,0,0.9)]">
-          <Link to={`/product/${product._id}`} className="link transition-all">{product.name}</Link>
+          <Link to={`/product/${product._id}`} className="link transition-all">
+            {product.name}
+          </Link>
         </h3>
         <div
           className="title mb-4 line-clamp-3 text-[14px] mt-2  font-[500] text-[rgba(0,0,0,0.6)]"

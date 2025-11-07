@@ -114,6 +114,7 @@ export default function Login() {
           {/* FORM LOGIN */}
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <TextField
+              size="small"
               label="Email"
               type="email"
               name="email"
@@ -123,6 +124,7 @@ export default function Login() {
               onChange={handleInput}
             />
             <TextField
+              size="small"
               label="Mật khẩu"
               type="password"
               name="password"
@@ -180,6 +182,9 @@ export default function Login() {
               variant="outlined"
               type="button" // tránh submit form
               className="!flex !items-center !justify-center gap-2 "
+              onClick={() => {
+                window.open("http://localhost:3000/auth/google", "_self");
+              }}
             >
               <FcGoogle className="text-xl" />
               <span>Đăng nhập với Google</span>

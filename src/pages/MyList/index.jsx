@@ -29,6 +29,7 @@ export default function MyList() {
   useEffect(() => {
     fetchData();
   }, []);
+
   return (
     <div className="container flex py-10 gap-10">
       <Profile />
@@ -37,7 +38,10 @@ export default function MyList() {
           <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <caption className="p-5 text-lg font-semibold text-left bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 flex justify-between">
               Có {countList} sản phẩm trong danh sách yêu thích của bạn
-              <DeleteAllListLove onSuccess={() => fetchData()} />
+              <DeleteAllListLove
+                onSuccess={() => fetchData()}
+                countList={countList}
+              />
             </caption>
 
             <tbody>
