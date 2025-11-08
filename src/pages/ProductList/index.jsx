@@ -7,7 +7,7 @@ import { Button, FormControl, InputLabel, NativeSelect } from "@mui/material";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Fade from "@mui/material/Fade";
-import ProductItemsRow from "../../components/ProductItemsRow";
+
 import Pagination from "@mui/material/Pagination";
 import { MyContext } from "../../App";
 import { getData } from "../../untils/api";
@@ -128,19 +128,9 @@ export default function ProductList() {
               </FormControl>
             </div>
           </div>
-          {itemList == "grid" ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
-              {productData?.map((item, index) => (
-                <ProductItems product={item} key={index} />
-              ))}
-            </div>
-          ) : (
-            <div className="flex flex-col gap-4 ">
-              {productData?.map((item, index) => (
-                <ProductItemsRow product={item} key={index} />
-              ))}
-            </div>
-          )}
+
+          <ProductItems productData={productData} type={itemList} />
+
           <Pagination
             count={productPage}
             page={page}

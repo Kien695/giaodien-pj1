@@ -1,21 +1,25 @@
 import React, { useContext, useEffect } from "react";
 import Rating from "@mui/material/Rating";
 import ZoomImage from "../../components/ImageZoom";
-import { Button, TextField } from "@mui/material";
+import { Button, List, TextField } from "@mui/material";
 import { BsCart3 } from "react-icons/bs";
 import { FaRegHeart } from "react-icons/fa6";
 import "./style.css";
 import ProductSlider from "../../components/ProductLasted";
 import { MyContext } from "../../App";
-import { getData } from "../../untils/api";
+import { getData, postData } from "../../untils/api";
 import { useParams } from "react-router-dom";
+import ListLikeProduct from "../../components/ListLikeProduct";
 export default function ProductDetail() {
   const context = useContext(MyContext);
   const [active, setActive] = React.useState(null);
   const [activeDes, setActiveDes] = React.useState(1);
   const [product, getProduct] = React.useState("");
+  const [quantity, setQuantity] = React.useState(1);
+  const [size, setSize] = React.useState("");
+
   const { id } = useParams();
-  console.log(id);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -34,6 +38,25 @@ export default function ProductDetail() {
     fetchData();
   }, []);
 
+  const handleAddToCart = async (idCart) => {
+    try {
+      const res = await postData("/api/cart/add", {
+        productId: idCart,
+        quantity: quantity,
+        size: size,
+      });
+      if (res.success) {
+        context.openAlertBox("success", res.message);
+        context.setCountList((prev) => prev + 1);
+      }
+    } catch (error) {
+      if (error.response?.data?.message) {
+        context.openAlertBox("error", error.response.data.message);
+      } else {
+        context.openAlertBox("error", "Không thể kết nối server!");
+      }
+    }
+  };
   return (
     <div className="container ">
       <div className=" flex gap-5 mt-5 p-4 bg-white rounded-md">
@@ -90,12 +113,16 @@ export default function ProductDetail() {
                 <div className="flex !w-[30px] !h-[30px] !min-w-[30px] gap-2 action ">
                   {product.size.map((size, index) => (
                     <Button
+                      key={index}
                       className={`${
                         active == index
                           ? "!bg-[#ff5252] !text-white !border-none"
                           : ""
                       }`}
-                      onClick={() => setActive(index)}
+                      onClick={() => {
+                        setActive(index);
+                        setSize(size);
+                      }}
                     >
                       {size}
                     </Button>
@@ -108,6 +135,8 @@ export default function ProductDetail() {
             <TextField
               size="small"
               type="number"
+              name="quantity"
+              onChange={(e) => setQuantity(e.target.value)}
               defaultValue={1}
               InputProps={{ inputProps: { min: 1 } }}
               sx={{ width: "70px", fontSize: "14px" }}
@@ -124,6 +153,9 @@ export default function ProductDetail() {
                 },
               }}
               className=" flex items-center justify-center gap-2 !text-[15px] !ml-6"
+              onClick={() => {
+                handleAddToCart(product._id);
+              }}
             >
               <BsCart3 />
               <span>Thêm vào giỏ hàng</span>
@@ -132,12 +164,7 @@ export default function ProductDetail() {
               Mua ngay
             </Button>
           </div>
-          <div className="flex">
-            <div className="flex items-center gap-1 cursor-pointer hover:text-[#ff5252] text-[15px]">
-              <FaRegHeart />
-              Thêm vào yêu thích
-            </div>
-          </div>
+          <ListLikeProduct item={product} type="heartSmall" />
         </div>
       </div>
       <div className="py-8">
@@ -178,72 +205,72 @@ export default function ProductDetail() {
         )}
         {activeDes == 1 && (
           <div className="shadow-lg w-full p-5 bg-white rounded-md">
-            <div class="relative overflow-x-auto">
-              <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <div className="relative overflow-x-auto">
+              <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <tbody>
-                  <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
-                    <th scope="col" class="px-6 py-3">
+                  <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
+                    <th scope="col" className="px-6 py-3">
                       Tên sản phẩm
                     </th>
                     <th
                       scope="row"
-                      class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white uppercase"
+                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white uppercase"
                     >
                       {product.name}
                     </th>
                   </tr>
-                  <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
-                    <th scope="col" class="px-6 py-3">
+                  <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
+                    <th scope="col" className="px-6 py-3">
                       Kho
                     </th>
                     <td
                       scope="row"
-                      class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
                       {product?.countInStock > 0 ? "Còn hàng" : "Hết hàng"}
                     </td>
                   </tr>
-                  <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
-                    <th scope="col" class="px-6 py-3">
+                  <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
+                    <th scope="col" className="px-6 py-3">
                       Danh mục
                     </th>
                     <td
                       scope="row"
-                      class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
                       {product?.category?.name}
                     </td>
                   </tr>
-                  <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
-                    <th scope="col" class="px-6 py-3">
+                  <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
+                    <th scope="col" className="px-6 py-3">
                       Thương hiệu
                     </th>
                     <td
                       scope="row"
-                      class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
                       {product.brand}
                     </td>
                   </tr>
-                  <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
-                    <th scope="col" class="px-6 py-3">
+                  <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
+                    <th scope="col" className="px-6 py-3">
                       Giá
                     </th>
                     <td
                       scope="row"
-                      class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
                       {Number(product.price).toLocaleString("vi-VN") + " đ"}
                     </td>
                   </tr>
 
-                  <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
-                    <th scope="col" class="px-6 py-3">
+                  <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
+                    <th scope="col" className="px-6 py-3">
                       Địa chỉ
                     </th>
                     <td
                       scope="row"
-                      class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
                       TP.HCM
                     </td>

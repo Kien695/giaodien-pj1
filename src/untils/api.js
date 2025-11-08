@@ -52,9 +52,10 @@ export const putData = async (url, formData, config = {}) => {
 };
 
 // DELETE
-export const deleteData = async (url, token) => {
+export const deleteData = async (url, data, token) => {
   try {
     const response = await axios.delete(apiUrl + url, {
+      data: data, // body gửi lên
       headers: {
         Authorization: `Bearer ${localStorage.getItem("accessToken") || ""}`,
       },
@@ -65,6 +66,7 @@ export const deleteData = async (url, token) => {
     throw error;
   }
 };
+
 // PATCH
 export const patchData = async (url, formData, config = {}) => {
   try {

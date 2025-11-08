@@ -17,8 +17,11 @@ import IconButton from "@mui/material/IconButton";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { styled } from "@mui/material/styles";
 import Badge from "@mui/material/Badge";
-import { RiDeleteBin6Line } from "react-icons/ri";
+
+import { MyContext } from "../../../App";
+import DeleteCart from "../../DeleteCart";
 export default function Cart() {
+  const context = React.useContext(MyContext);
   const [open, setOpen] = React.useState(false);
 
   const toggleDrawer = (newOpen) => () => {
@@ -32,11 +35,17 @@ export default function Cart() {
       padding: "0 4px",
     },
   }));
+  const totalPrice = context?.cart.reduce((total, item) => {
+    const discountedPrice =
+      item.productId.price -
+      item.productId.price * (item.productId.discountPercentage / 100);
+    return total + discountedPrice * item.quantity;
+  }, 0);
   const DrawerList = (
     <Box sx={{ width: 380 }} role="presentation">
       <div className="p-2 mt-2 flex items-center justify-between">
         <div className="text-[18px] font-[500] text-[#ff5252]">
-          Giỏ hàng (3)
+          Giỏ hàng ({context.countCart})
         </div>
         <IoClose
           className="cursor-pointer text-[20px] font-[600]"
@@ -45,156 +54,47 @@ export default function Cart() {
       </div>
       <hr />
       <List sx={{ height: 420, overflowY: "auto", padding: 2 }}>
-        <div className="flex items-center  py-2">
-          <div className="img w-[20%] mr-5">
-            <img
-              src="https://serviceapi.spicezgold.com/download/1753722939206_125c18d6-592d-4082-84e5-49707ae9a4fd1749366193911-Flying-Machine-Women-Wide-Leg-High-Rise-Light-Fade-Stretchab-1.jpg"
-              alt=""
-              className="w-full rounded-md"
-            />
-          </div>
-          <div className="info w-[65%] ">
-            <Link className="line-clamp-1 text-[15px] font-[500] hover:text-[#ff5252] mb-2">
-              Women Wide Leg High-Rise Light Fade Stretchable Jeans
-            </Link>
-            <div className="flex gap-6">
-              <div className="text-[15px] ">
-                Số lượng: <span>5</span>
+        {context?.cart.map((item, index) => (
+          <React.Fragment key={index}>
+            <div className="flex items-center  py-2">
+              <div className="img w-[20%] mr-5">
+                <img
+                  src={item?.productId?.images[0].url}
+                  alt=""
+                  className="w-full rounded-md"
+                />
               </div>
-              <div className="text-[#ff5252]">100k</div>
-            </div>
-          </div>
-          <Link className="w-[15%] text-[20px] font-[500] hover:text-[#ff5252] flex justify-end">
-            <RiDeleteBin6Line />
-          </Link>
-        </div>
-        <hr />
-        <div className="flex items-center  py-2">
-          <div className="img w-[20%] mr-5">
-            <img
-              src="https://serviceapi.spicezgold.com/download/1753722939206_125c18d6-592d-4082-84e5-49707ae9a4fd1749366193911-Flying-Machine-Women-Wide-Leg-High-Rise-Light-Fade-Stretchab-1.jpg"
-              alt=""
-              className="w-full rounded-md"
-            />
-          </div>
-          <div className="info w-[65%] ">
-            <Link className="line-clamp-1 text-[15px] font-[500] hover:text-[#ff5252] mb-2">
-              Women Wide Leg High-Rise Light Fade Stretchable Jeans
-            </Link>
-            <div className="flex gap-6">
-              <div className="text-[15px] ">
-                Số lượng: <span>5</span>
+              <div className="info w-[65%] ">
+                <Link className="line-clamp-1 text-[15px] font-[500] hover:text-[#ff5252] mb-2">
+                  {item?.productId?.name}
+                </Link>
+                <div className="flex gap-6">
+                  <div className="text-[15px] ">
+                    Số lượng: <span>{item?.quantity}</span>
+                  </div>
+                  <div className="text-[#ff5252]">
+                    {(
+                      item?.productId?.price -
+                      item?.productId?.price *
+                        (item?.productId?.discountPercentage / 100)
+                    ).toLocaleString("vi-VN") + " đ"}
+                  </div>
+                </div>
               </div>
-              <div className="text-[#ff5252]">100k</div>
+
+              <DeleteCart cart={item} />
             </div>
-          </div>
-          <Link className="w-[15%] text-[20px] font-[500] hover:text-[#ff5252] flex justify-end">
-            <RiDeleteBin6Line />
-          </Link>
-        </div>
-        <hr />
-        <div className="flex items-center  py-2">
-          <div className="img w-[20%] mr-5">
-            <img
-              src="https://serviceapi.spicezgold.com/download/1753722939206_125c18d6-592d-4082-84e5-49707ae9a4fd1749366193911-Flying-Machine-Women-Wide-Leg-High-Rise-Light-Fade-Stretchab-1.jpg"
-              alt=""
-              className="w-full rounded-md"
-            />
-          </div>
-          <div className="info w-[65%] ">
-            <Link className="line-clamp-1 text-[15px] font-[500] hover:text-[#ff5252] mb-2">
-              Women Wide Leg High-Rise Light Fade Stretchable Jeans
-            </Link>
-            <div className="flex gap-6">
-              <div className="text-[15px] ">
-                Số lượng: <span>5</span>
-              </div>
-              <div className="text-[#ff5252]">100k</div>
-            </div>
-          </div>
-          <Link className="w-[15%] text-[20px] font-[500] hover:text-[#ff5252] flex justify-end">
-            <RiDeleteBin6Line />
-          </Link>
-        </div>
-        <hr />
-        <div className="flex items-center  py-2">
-          <div className="img w-[20%] mr-5">
-            <img
-              src="https://serviceapi.spicezgold.com/download/1753722939206_125c18d6-592d-4082-84e5-49707ae9a4fd1749366193911-Flying-Machine-Women-Wide-Leg-High-Rise-Light-Fade-Stretchab-1.jpg"
-              alt=""
-              className="w-full rounded-md"
-            />
-          </div>
-          <div className="info w-[65%] ">
-            <Link className="line-clamp-1 text-[15px] font-[500] hover:text-[#ff5252] mb-2">
-              Women Wide Leg High-Rise Light Fade Stretchable Jeans
-            </Link>
-            <div className="flex gap-6">
-              <div className="text-[15px] ">
-                Số lượng: <span>5</span>
-              </div>
-              <div className="text-[#ff5252]">100k</div>
-            </div>
-          </div>
-          <Link className="w-[15%] text-[20px] font-[500] hover:text-[#ff5252] flex justify-end">
-            <RiDeleteBin6Line />
-          </Link>
-        </div>
-        <hr />
-        <div className="flex items-center  py-2">
-          <div className="img w-[20%] mr-5">
-            <img
-              src="https://serviceapi.spicezgold.com/download/1753722939206_125c18d6-592d-4082-84e5-49707ae9a4fd1749366193911-Flying-Machine-Women-Wide-Leg-High-Rise-Light-Fade-Stretchab-1.jpg"
-              alt=""
-              className="w-full rounded-md"
-            />
-          </div>
-          <div className="info w-[65%] ">
-            <Link className="line-clamp-1 text-[15px] font-[500] hover:text-[#ff5252] mb-2">
-              Women Wide Leg High-Rise Light Fade Stretchable Jeans
-            </Link>
-            <div className="flex gap-6">
-              <div className="text-[15px] ">
-                Số lượng: <span>5</span>
-              </div>
-              <div className="text-[#ff5252]">100k</div>
-            </div>
-          </div>
-          <Link className="w-[15%] text-[20px] font-[500] hover:text-[#ff5252] flex justify-end">
-            <RiDeleteBin6Line />
-          </Link>
-        </div>
-        <hr />
-        <div className="flex items-center  py-2">
-          <div className="img w-[20%] mr-5">
-            <img
-              src="https://serviceapi.spicezgold.com/download/1753722939206_125c18d6-592d-4082-84e5-49707ae9a4fd1749366193911-Flying-Machine-Women-Wide-Leg-High-Rise-Light-Fade-Stretchab-1.jpg"
-              alt=""
-              className="w-full rounded-md"
-            />
-          </div>
-          <div className="info w-[65%] ">
-            <Link className="line-clamp-1 text-[15px] font-[500] hover:text-[#ff5252] mb-2">
-              Women Wide Leg High-Rise Light Fade Stretchable Jeans
-            </Link>
-            <div className="flex gap-6">
-              <div className="text-[15px] ">
-                Số lượng: <span>5</span>
-              </div>
-              <div className="text-[#ff5252]">100k</div>
-            </div>
-          </div>
-          <Link className="w-[15%] text-[20px] font-[500] hover:text-[#ff5252] flex justify-end">
-            <RiDeleteBin6Line />
-          </Link>
-        </div>
-        <hr />
+            <hr />
+          </React.Fragment>
+        ))}
       </List>
       <hr />
       <List sx={{ paddingX: 2 }}>
         <div className="flex items-center justify-between p-2">
-          5 mặt hàng
-          <span className="text-[#ff5252] font-[600]">1000k</span>
+          {context?.countCart} mặt hàng
+          <span className="text-[#ff5252] font-[600]">
+            {Number(totalPrice).toLocaleString("vi-VN") + " đ"}
+          </span>
         </div>
         <hr />
 
@@ -210,9 +110,9 @@ export default function Cart() {
   return (
     <div>
       <div onClick={toggleDrawer(true)}>
-        <Tooltip title="Cart">
+        <Tooltip title="Giỏ hàng">
           <IconButton aria-label="cart">
-            <StyledBadge badgeContent={4} color="error">
+            <StyledBadge badgeContent={context.countCart} color="error">
               <MdOutlineShoppingCart />
             </StyledBadge>
           </IconButton>

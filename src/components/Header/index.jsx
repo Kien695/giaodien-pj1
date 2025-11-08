@@ -130,9 +130,15 @@ export default function Header() {
                     aria-expanded={open ? "true" : undefined}
                     onClick={handleClick}
                   >
-                    <Button className="!w-[36px] !h-[36px] !min-w-[36px] !rounded-full !bg-[#f1f1f1]">
-                      <FaRegUser />
-                    </Button>
+                    {context?.userData?.avatar ? (
+                      <div className="w-[36px] h-[36px] rounded-full overflow-hidden">
+                        <img src={context?.userData?.avatar}></img>
+                      </div>
+                    ) : (
+                      <Button className="!w-[36px] !h-[36px] !min-w-[36px] !rounded-full !bg-[#f1f1f1]">
+                        <FaRegUser />
+                      </Button>
+                    )}
                     <div className="flex flex-col">
                       <div className="text-[14px] font-[500]">
                         {context?.userData?.name}
@@ -254,13 +260,6 @@ export default function Header() {
                 </Link>
               </li>
               <li>
-                {/* <Tooltip title="Cart">
-                  <IconButton aria-label="cart">
-                    <StyledBadge badgeContent={4} color="error">
-                      <MdOutlineShoppingCart />
-                    </StyledBadge>
-                  </IconButton>
-                </Tooltip> */}
                 <Cart />
               </li>
             </ul>

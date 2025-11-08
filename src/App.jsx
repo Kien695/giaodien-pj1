@@ -18,7 +18,8 @@ export default function App() {
   const [productFeaturedData, setProductFeaturedData] = React.useState([]);
   const [wishlist, setWishlist] = React.useState([]);
   const [countList, setCountList] = React.useState(0);
-
+  const [cart, setCart] = React.useState([]);
+  const [countCart, setCountCart] = React.useState(0);
   useEffect(() => {
     const fetchUser = async () => {
       const token = localStorage.getItem("accessToken");
@@ -51,6 +52,11 @@ export default function App() {
             setWishlist(resWishList.data);
             setCountList(resWishList.countList);
           }
+          const resCart = await getData("/api/cart/getItem");
+          if (resCart.success) {
+            setCart(resCart.data);
+            setCountCart(resCart.countCart);
+          }
         } catch (error) {
           console.error("Lỗi khi fetch user:", error);
           setIsLogin(false);
@@ -61,7 +67,7 @@ export default function App() {
     };
 
     fetchUser();
-  }, [countList]);
+  }, [countList, countCart]);
 
   const handleCloseDetail = () => {
     setOpenDetailProduct(false);
@@ -85,9 +91,11 @@ export default function App() {
     productNewData,
     addressData,
     wishlist,
-
     countList,
     setCountList,
+    countCart,
+    cart,
+    setCountCart,
   };
   return (
     <>

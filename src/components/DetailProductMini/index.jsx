@@ -6,19 +6,44 @@ import {
   Rating,
   TextField,
 } from "@mui/material";
-import React from "react";
+import React, { useContext } from "react";
 import { BsCart3 } from "react-icons/bs";
 import { FaRegHeart } from "react-icons/fa6";
 import { IoMdClose } from "react-icons/io";
 import { MdOutlineZoomOutMap } from "react-icons/md";
 import ZoomImage from "../ImageZoom";
+import { MyContext } from "../../App";
+import { postData } from "../../untils/api";
 
 export default function DetailProductMini({ item }) {
+  const context = useContext(MyContext);
+  const [quantity, setQuantity] = React.useState(1);
   const [openDetailProduct, setOpenDetailProduct] = React.useState(false);
   const [maxWidth, setMaxWidth] = React.useState("lg");
   const [active, setActive] = React.useState(null);
+  const [size, setSize] = React.useState("");
   const handleCloseDetail = () => {
     setOpenDetailProduct(false);
+  };
+
+  const handleAddToCart = async (id) => {
+    try {
+      const res = await postData("/api/cart/add", {
+        productId: id,
+        quantity: quantity,
+        size: size,
+      });
+      if (res.success) {
+        context.openAlertBox("success", res.message);
+        context.setCountList((prev) => prev + 1);
+      }
+    } catch (error) {
+      if (error.response?.data?.message) {
+        context.openAlertBox("error", error.response.data.message);
+      } else {
+        context.openAlertBox("error", "Không thể kết nối server!");
+      }
+    }
   };
   return (
     <>
@@ -107,7 +132,10 @@ export default function DetailProductMini({ item }) {
                               ? "!bg-[#ff5252] !text-white !border-none"
                               : ""
                           }`}
-                          onClick={() => setActive(index)}
+                          onClick={() => {
+                            setActive(index);
+                            setSize(size);
+                          }}
                         >
                           {size}
                         </Button>
@@ -136,6 +164,9 @@ export default function DetailProductMini({ item }) {
                     },
                   }}
                   className=" flex items-center justify-center gap-2 !text-[15px] !ml-6"
+                  onClick={() => {
+                    handleAddToCart(item._id);
+                  }}
                 >
                   <BsCart3 />
                   <span>Thêm vào giỏ hàng</span>

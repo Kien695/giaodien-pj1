@@ -12,6 +12,16 @@ export default function MyAccount() {
     name: "",
     mobile: "",
   });
+
+  React.useEffect(() => {
+    if (context?.userData) {
+      setFormInput({
+        name: context.userData.name || "",
+        mobile: context.userData.mobile || "",
+      });
+    }
+  }, [context?.userData]);
+
   const handleInput = (e) => {
     const { name, value } = e.target;
     setFormInput((prev) => ({
@@ -31,7 +41,6 @@ export default function MyAccount() {
         }
       );
       if (res.success) {
-        setFormInput({ name: "", mobile: "" });
         context.openAlertBox("success", res.message);
       } else {
         context.openAlertBox("error", res.message);
@@ -58,7 +67,7 @@ export default function MyAccount() {
               <div className="flex gap-3 ">
                 <div className="flex items-end">Họ tên:</div>
                 <TextField
-                  value={context?.userData?.name || ""}
+                  value={formInput.name}
                   type="text"
                   name="name"
                   autoComplete="current-name"
@@ -85,7 +94,7 @@ export default function MyAccount() {
               <div className="flex gap-3">
                 <div className="flex items-end">Số điện thoại: </div>
                 <TextField
-                  value={context?.userData?.mobile || ""}
+                  value={formInput.mobile}
                   name="mobile"
                   type="text"
                   autoComplete="current-phone"
