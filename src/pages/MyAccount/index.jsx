@@ -82,10 +82,8 @@ export default function MyAccount() {
                   disabled
                   value={context?.userData?.email || ""}
                   variant="standard"
-                  slotProps={{
-                    input: {
-                      readOnly: true,
-                    },
+                  InputProps={{
+                    readOnly: true, // chỉ đọc
                   }}
                   sx={{ width: 200 }}
                 />

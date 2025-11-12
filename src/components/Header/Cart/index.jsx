@@ -72,7 +72,7 @@ export default function Cart() {
                   <div className="text-[15px] ">
                     Số lượng: <span>{item?.quantity}</span>
                   </div>
-                  <div className="text-[#ff5252]">
+                  <div className="text-[#ff5252] text-[14px]">
                     {(
                       item?.productId?.price -
                       item?.productId?.price *

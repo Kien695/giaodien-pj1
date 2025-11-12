@@ -8,10 +8,11 @@ import "./style.css";
 import ProductSlider from "../../components/ProductLasted";
 import { MyContext } from "../../App";
 import { getData, postData } from "../../untils/api";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ListLikeProduct from "../../components/ListLikeProduct";
 export default function ProductDetail() {
   const context = useContext(MyContext);
+  const navigate = useNavigate();
   const [active, setActive] = React.useState(null);
   const [activeDes, setActiveDes] = React.useState(1);
   const [product, getProduct] = React.useState("");
@@ -38,12 +39,18 @@ export default function ProductDetail() {
     fetchData();
   }, []);
 
-  const handleAddToCart = async (idCart) => {
+  const handleAddToCart = async (product) => {
     try {
+      let totalPrice =
+        (product.price -
+          product.price * ((product.discountPercentage || 0) / 100)) *
+        quantity;
+
       const res = await postData("/api/cart/add", {
-        productId: idCart,
+        productId: product._id,
         quantity: quantity,
         size: size,
+        price: totalPrice,
       });
       if (res.success) {
         context.openAlertBox("success", res.message);
@@ -57,6 +64,10 @@ export default function ProductDetail() {
       }
     }
   };
+  const handleBuy = (item, qty, size) => {
+    navigate("/checkout", { state: { item, quantity: qty, size: size || "" } });
+  };
+
   return (
     <div className="container ">
       <div className=" flex gap-5 mt-5 p-4 bg-white rounded-md">
@@ -154,13 +165,17 @@ export default function ProductDetail() {
               }}
               className=" flex items-center justify-center gap-2 !text-[15px] !ml-6"
               onClick={() => {
-                handleAddToCart(product._id);
+                handleAddToCart(product);
               }}
             >
               <BsCart3 />
               <span>Thêm vào giỏ hàng</span>
             </Button>
-            <Button variant="contained" color="error">
+            <Button
+              variant="contained"
+              color="error"
+              onClick={() => handleBuy(product, quantity, size)}
+            >
               Mua ngay
             </Button>
           </div>

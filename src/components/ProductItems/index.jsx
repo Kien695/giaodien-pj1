@@ -14,11 +14,16 @@ import { postData } from "../../untils/api";
 export default function ProductItems({ productData, type }) {
   const context = useContext(MyContext);
   const [quantity, setQuantity] = React.useState(1);
-  const handleAddToCart = async (id) => {
+
+  const handleAddToCart = async (item) => {
+    let totalPrice =
+      (item.price - item.price * ((item.discountPercentage || 0) / 100)) *
+      quantity;
     try {
       const res = await postData("/api/cart/add", {
-        productId: id,
+        productId: item._id,
         quantity: quantity,
+        price: totalPrice,
       });
       if (res.success) {
         context.openAlertBox("success", res.message);
@@ -88,7 +93,7 @@ export default function ProductItems({ productData, type }) {
               }}
               className=" flex items-center justify-center gap-2 !text-[11px] !ml-6"
               onClick={() => {
-                handleAddToCart(item._id);
+                handleAddToCart(item);
               }}
             >
               <BsCart3 />
@@ -178,7 +183,7 @@ export default function ProductItems({ productData, type }) {
               }}
               className="w-auto self-start flex items-center justify-center gap-2"
               onClick={() => {
-                handleAddToCart(item._id);
+                handleAddToCart(item);
               }}
             >
               <BsCart3 />

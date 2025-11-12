@@ -8,6 +8,7 @@ import { MyContext } from "../../App";
 import { FaMinus, FaPlus } from "react-icons/fa6";
 import { useEffect } from "react";
 import DeleteCart from "../../components/DeleteCart";
+import DeleteCartAll from "../../components/DeleteCartAll";
 
 export default function Cart() {
   const context = React.useContext(MyContext);
@@ -74,20 +75,7 @@ export default function Cart() {
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
               <caption className="p-5 text-lg font-semibold text-left bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 flex justify-between">
                 Có {context?.countCart} sản phẩm trong giỏ hàng của bạn
-                <Button
-                  variant="outlined"
-                  color="error"
-                  sx={{
-                    color: "#black",
-                    "&:hover": {
-                      backgroundColor: "black",
-                      color: "#f1f1f1",
-                    },
-                  }}
-                  className=" flex items-center justify-center gap-2 "
-                >
-                  <span>Xóa tất cả</span>
-                </Button>
+                <DeleteCartAll />
               </caption>
 
               <tbody>
@@ -244,18 +232,17 @@ export default function Cart() {
             <hr />
             <div className="flex items-center justify-between">
               <div className="text-[15px]">Tổng phụ</div>
-              <span className="text-[#ff5252] font-[600]">
-                {" "}
+              <span className="text-[15px] font-[500]">
                 {Number(totalPrice).toLocaleString("vi-VN") + " đ"}
               </span>
             </div>
             <div className="flex items-center justify-between">
               <div className="text-[15px]">Vận chuyển</div>
-              <span className="font-[600]">Free</span>
+              <span className="text-[15px] font-[600]">Free</span>
             </div>
             <div className="flex items-center justify-between">
               <div className="text-[15px] italic font-[500]">Tổng tiền</div>
-              <span className="text-[#ff5252] font-[600]">
+              <span className="text-[16px] text-[#ff5252] font-[600] italic">
                 {" "}
                 {Number(totalPrice).toLocaleString("vi-VN") + " đ"}
               </span>
@@ -277,7 +264,7 @@ export default function Cart() {
                 className=" flex items-center gap-2 "
               >
                 <IoBagCheckOutline className="text-[20px]" />
-                <span>Thanh toán</span>
+                <span>Đặt hàng</span>
               </Button>
             </Link>
           </div>

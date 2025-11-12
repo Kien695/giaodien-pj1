@@ -14,6 +14,7 @@ import ProductList from "../pages/ProductList";
 import Register from "../pages/register";
 import Verify from "../pages/VerifyEmail";
 import AuthSuccess from "../pages/AuthSuccess";
+import CheckoutResult from "../pages/CheckoutResult";
 
 export const routers = [
   {
@@ -59,6 +60,10 @@ export const routers = [
       {
         path: "/checkout",
         element: <Checkout />,
+      },
+      {
+        path: "/result",
+        element: <CheckoutResult />,
       },
       {
         path: "/my-account",

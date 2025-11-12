@@ -82,7 +82,7 @@ export default function Profile() {
           )}
         </div>
 
-        <div className="">
+        <div className="flex flex-col items-center">
           <div className="text-[14px] font-[500]">
             {context?.userData?.name}
           </div>

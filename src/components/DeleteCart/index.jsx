@@ -6,8 +6,9 @@ export default function DeleteCart({ cart }) {
   const context = React.useContext(MyContext);
   const handleDelete = async () => {
     try {
-      const res = await deleteData(`/api/cart/deleteCart/${cart._id}`, {
-        productId: cart.productId._id,
+      const res = await deleteData(`/api/cart/deleteCart`, {
+        productId: cart?.productId._id,
+        size: cart?.size,
       });
       if (res.success) {
         context.openAlertBox(
