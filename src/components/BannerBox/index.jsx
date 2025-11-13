@@ -6,7 +6,7 @@ export default function BannerBox(props) {
       <Link to="/">
         <img
           src={props.img}
-          className=" w-full transition group-hover:scale-105 group-hover:rotate-1"
+          className=" h-[225px] transition group-hover:scale-105 group-hover:rotate-1"
           alt="banner"
         />
       </Link>

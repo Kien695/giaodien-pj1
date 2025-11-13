@@ -6,6 +6,7 @@ import "swiper/css/navigation";
 // import required modules
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import { Button } from "@mui/material";
+import { Link } from "react-router-dom";
 export default function HomeSliderV2() {
   return (
     <Swiper
@@ -43,7 +44,7 @@ export default function HomeSliderV2() {
             </span>
           </h3>
           <Button variant="contained" className="w-auto self-start ">
-            MUA NGAY
+            <Link to="/product?catId=68f663db9aba3f9e0331954f">MUA NGAY</Link>
           </Button>
         </div>
       </SwiperSlide>
@@ -63,7 +64,7 @@ export default function HomeSliderV2() {
             <span className="text-[#ff5252] text-[25px] font-[600]">59k</span>
           </h3>
           <Button variant="contained" className="w-auto self-start">
-            MUA NGAY
+            <Link to="/product?catId=68dbe8681ada8a2729ecd824">MUA NGAY</Link>
           </Button>
         </div>
       </SwiperSlide>

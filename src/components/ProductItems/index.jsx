@@ -105,9 +105,7 @@ export default function ProductItems({ productData, type }) {
           </div>
           <div className="action flex absolute top-[-200px] right-[1px] gap-2 flex-col w-[50px] transition-all duration-500 group-hover:top-[12px]">
             <DetailProductMini item={item} />
-            <Button className="!w-[40px] !h-[40px] !min-w-[40px] !rounded-full !bg-white !text-black hover:!bg-[#ff5252] hover:!text-white">
-              <IoGitCompareOutline className="text-[18px]" />
-            </Button>
+
             <ListLikeProduct item={item} type="heartBig" />
           </div>
         </div>

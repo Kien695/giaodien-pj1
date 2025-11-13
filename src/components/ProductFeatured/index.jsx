@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-
+import { postData } from "../../untils/api";
 import Rating from "@mui/material/Rating";
 import { Button } from "@mui/material";
 import { FaRegHeart } from "react-icons/fa6";
@@ -17,8 +17,33 @@ import { Link } from "react-router-dom";
 
 import { MyContext } from "../../App";
 import DetailProductMini from "../DetailProductMini";
+import ListLikeProduct from "../ListLikeProduct";
 export default function ProductFeatured(props) {
   const context = useContext(MyContext);
+  const [quantity, setQuantity] = React.useState(1);
+
+  const handleAddToCart = async (item) => {
+    let totalPrice =
+      (item.price - item.price * ((item.discountPercentage || 0) / 100)) *
+      quantity;
+    try {
+      const res = await postData("/api/cart/add", {
+        productId: item._id,
+        quantity: quantity,
+        price: totalPrice,
+      });
+      if (res.success) {
+        context.openAlertBox("success", res.message);
+        context.setCountList((prev) => prev + 1);
+      }
+    } catch (error) {
+      if (error.response?.data?.message) {
+        context.openAlertBox("error", error.response.data.message);
+      } else {
+        context.openAlertBox("error", "Không thể kết nối server!");
+      }
+    }
+  };
   return (
     <div className="productSlider py-4">
       <Swiper
@@ -89,6 +114,9 @@ export default function ProductFeatured(props) {
                     },
                   }}
                   className=" flex items-center justify-center gap-2 !text-[11px] !ml-6 "
+                  onClick={() => {
+                    handleAddToCart(item);
+                  }}
                 >
                   <BsCart3 />
                   <span>Thêm vào giỏ hàng</span>
@@ -99,12 +127,8 @@ export default function ProductFeatured(props) {
               </div>
               <div className="action flex absolute top-[-200px] right-[1px] gap-2 flex-col w-[50px] transition-all duration-500 group-hover:top-[12px]">
                 <DetailProductMini item={item} />
-                <Button className="!w-[40px] !h-[40px] !min-w-[40px] !rounded-full !bg-white !text-black hover:!bg-[#ff5252] hover:!text-white">
-                  <IoGitCompareOutline className="text-[18px]" />
-                </Button>
-                <Button className="!w-[40px] !h-[40px] !min-w-[40px] !rounded-full !bg-white !text-black hover:!bg-[#ff5252] hover:!text-white">
-                  <FaRegHeart className="text-[18px]" />
-                </Button>
+
+                <ListLikeProduct item={item} type="heartBig" />
               </div>
             </div>
           </SwiperSlide>

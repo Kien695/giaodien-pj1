@@ -30,17 +30,17 @@ export default function Home() {
   useEffect(() => {
     if (context?.catData?.length > 0 && !selectCat) {
       setSelectCat(context.catData[0]._id);
-      setValue(0); // cũng set tab đầu tiên
+      setValue(0);
     }
   }, [context?.catData]);
 
   // Khi user click tab
   const handleChange = (event, newValue) => {
     const cat = context?.catData[newValue];
-    if (!cat) return; // phòng trường hợp newValue invalid
+    if (!cat) return;
 
     setValue(newValue);
-    setSelectCat(cat._id); // set danh mục được chọn
+    setSelectCat(cat._id);
   };
 
   return (
@@ -86,15 +86,21 @@ export default function Home() {
           </div>
           <div className="part2 flex flex-col gap-5 ">
             <BannerBoxV2
-              info="right"
+              info="left"
+              link="product?catId=68f663e49aba3f9e03319552"
+              name="Laptop chính hãng"
+              price={Number(15000000).toLocaleString("vi-VN") + "đ"}
               image={
-                "https://serviceapi.spicezgold.com/download/1741664665391_1741497254110_New_Project_50.jpg"
+                "https://images.unsplash.com/photo-1539376248633-cf94fa8b7bd8?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDF8fGxhcHRvcHxlbnwwfHwwfHx8MA%3D%3D"
               }
             />
             <BannerBoxV2
-              info="left"
+              info="right"
+              link="product?catId=691550ef962c06d59923ae46"
+              name="Balo da phong cách"
+              price={Number(500000).toLocaleString("vi-VN") + "đ"}
               image={
-                "https://serviceapi.spicezgold.com/download/1741664496923_1737020250515_New_Project_47.jpg"
+                "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YmFja3BhY2t8ZW58MHx8MHx8fDA%3D"
               }
             />
           </div>
@@ -138,8 +144,6 @@ export default function Home() {
       </section>
       {/* blog */}
       <Blog item={3} />
-      <br />
-      <br />
     </>
   );
 }

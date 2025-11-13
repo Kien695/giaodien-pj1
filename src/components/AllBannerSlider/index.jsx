@@ -8,7 +8,29 @@ import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
 import { Link } from "react-router-dom";
 import BannerBox from "../BannerBox";
+import { useContext, useEffect, useState } from "react";
+import { MyContext } from "../../App";
+import { getData } from "../../untils/api";
 export default function AllBannerSlider(props) {
+  const context = useContext(MyContext);
+  const [bannerData, setBanner] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await getData("/api/bannerList/");
+        if (res.success) {
+          setBanner(res.data);
+        }
+      } catch (error) {
+        if (error.response) {
+          context.openAlertBox("error", error.response.data.message);
+        } else {
+          context.openAlertBox("error", "Không thể kết nối server!");
+        }
+      }
+    };
+    fetchData();
+  }, []);
   return (
     <div className="categorySlider py-5 w-full mt-6">
       <Swiper
@@ -18,24 +40,11 @@ export default function AllBannerSlider(props) {
         modules={[Navigation]}
         className=""
       >
-        <SwiperSlide>
-          <BannerBox img="/src/assets/1741669012402_banner1.webp" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <BannerBox img="/src/assets/1741669012402_banner1.webp" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <BannerBox img="/src/assets/1741669012402_banner1.webp" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <BannerBox img="/src/assets/1741669012402_banner1.webp" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <BannerBox img="/src/assets/1741669012402_banner1.webp" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <BannerBox img="/src/assets/1741669012402_banner1.webp" />
-        </SwiperSlide>
+        {bannerData.map((item) => (
+          <SwiperSlide className="">
+            <BannerBox img={item.images} />
+          </SwiperSlide>
+        ))}
       </Swiper>
     </div>
   );

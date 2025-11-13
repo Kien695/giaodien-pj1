@@ -22,24 +22,22 @@ export default function App() {
   const [countCart, setCountCart] = React.useState(0);
   useEffect(() => {
     const fetchUser = async () => {
+      const resLogo = await getData("/api/logo");
+      if (resLogo.success) setLogoData(resLogo.data);
+
+      const resCat = await getData("/api/category/");
+      if (resCat.success) setCatData(resCat.data);
+      const resProduct = await getData("/api/productClient");
+      if (resProduct.success) {
+        setProductFeaturedData(resProduct.dataFeatured);
+        setProductNewData(resProduct.dataNew);
+      }
       const token = localStorage.getItem("accessToken");
       if (token) {
         setIsLogin(true);
         try {
           const resUser = await getData(`/api/user/user-detail?token=${token}`);
           if (resUser.success) setUserData(resUser.data);
-
-          const resLogo = await getData("/api/logo");
-          if (resLogo.success) setLogoData(resLogo.data);
-
-          const resCat = await getData("/api/category/");
-          if (resCat.success) setCatData(resCat.data);
-
-          const resProduct = await getData("/api/productClient");
-          if (resProduct.success) {
-            setProductFeaturedData(resProduct.dataFeatured);
-            setProductNewData(resProduct.dataNew);
-          }
 
           const resAddress = await getData("/api/address");
           if (resAddress.success) {
@@ -67,7 +65,7 @@ export default function App() {
     };
 
     fetchUser();
-  }, [countList, countCart]);
+  }, [countList, countCart, isLogin]);
 
   const handleCloseDetail = () => {
     setOpenDetailProduct(false);

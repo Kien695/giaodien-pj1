@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import avatar from "../../assets/avatar-user.png";
 import { CircularProgress } from "@mui/material";
 import { Link, NavLink } from "react-router-dom";
 import { FaRegHeart, FaRegUser } from "react-icons/fa";
@@ -31,8 +32,6 @@ export default function Profile() {
 
         if (updatedUser.success) {
           context.setUserData(updatedUser.data);
-
-          // ✅ Reset preview để quay lại dùng avatar từ DB
           setPreview(null);
         }
       }
@@ -48,7 +47,7 @@ export default function Profile() {
       <div className="img h-[50%] flex flex-col gap-3 items-center justify-center bg-white py-6 rounded-md ">
         <div className="relative w-[90px] h-[90px]">
           <img
-            src={preview ? preview : context?.userData?.avatar}
+            src={preview ? preview : context?.userData?.avatar || avatar}
             alt="avatar"
             className="w-full h-full rounded-full object-cover"
           />

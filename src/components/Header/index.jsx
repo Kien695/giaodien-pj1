@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Search from "../Search";
 import Badge from "@mui/material/Badge";
@@ -7,7 +7,7 @@ import IconButton from "@mui/material/IconButton";
 import { MdOutlineLocationOn, MdOutlineShoppingCart } from "react-icons/md";
 import { GoGitCompare } from "react-icons/go";
 
-import { FaRegHeart, FaRegUser } from "react-icons/fa";
+import { FaRegBell, FaRegHeart, FaRegUser } from "react-icons/fa";
 import Tooltip from "@mui/material/Tooltip";
 import Navigation from "./Navigation";
 import Cart from "./Cart";
@@ -18,6 +18,7 @@ import { IoMdHeartEmpty } from "react-icons/io";
 import { FiLogOut } from "react-icons/fi";
 import { IoLockClosedOutline } from "react-icons/io5";
 import { postData } from "../../untils/api";
+import NotificationPopup from "../Notification";
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
@@ -27,10 +28,12 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
     padding: "0 4px",
   },
 }));
+
 export default function Header() {
   const context = useContext(MyContext);
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [showPopup, setShowPopup] = useState(false);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -244,11 +247,29 @@ export default function Header() {
                   </li>
                 </>
               )}
+              <li>
+                {context?.isLogin == true && (
+                  <div className="relative">
+                    <Tooltip>
+                      <IconButton>
+                        <Badge badgeContent=" " variant="dot" color="error">
+                          <FaRegBell onClick={() => setShowPopup(!showPopup)} />
+                        </Badge>
+                      </IconButton>
+                    </Tooltip>
 
+                    {/* Popup thông báo */}
+                    <NotificationPopup
+                      isOpen={showPopup}
+                      onClose={() => setShowPopup(false)}
+                    />
+                  </div>
+                )}
+              </li>
               <li>
                 <Link to="/my-list">
                   <Tooltip title="Danh sách yêu thích">
-                    <IconButton aria-label="cart">
+                    <IconButton>
                       <StyledBadge
                         badgeContent={context.wishlist.length}
                         color="error"
