@@ -45,32 +45,30 @@ export default function Navigation() {
     <>
       <nav>
         <div className="container flex items-center gap-8">
-          <div className="w-[20%]">
+          <div className="md:w-[20%] ">
             <Category />
           </div>
-          <div className="w-[60%]">
-            <ul className="flex justify-around nav">
-              {context?.catData.map((cat) => (
-                <li key={cat._id} className="relative">
-                  <Link
-                    to={`/product?catId=${cat.slug || cat._id}`}
-                    className="font-[500] text-[14px] link transition peer"
-                  >
-                    {cat.name}
-                  </Link>
+          <div className="w-[60%] hidden  md:flex justify-around">
+            {context?.catData.map((cat) => (
+              <div key={cat._id} className="relative">
+                <Link
+                  to={`/product?catId=${cat.slug || cat._id}`}
+                  className="font-[500] text-[14px] link transition peer"
+                >
+                  {cat.name}
+                </Link>
 
-                  {/* Submenu */}
-                  {cat.children &&
-                    cat.children.length > 0 &&
-                    renderSubmenu(cat.children)}
-                </li>
-              ))}
-            </ul>
+                {/* Submenu */}
+                {cat.children &&
+                  cat.children.length > 0 &&
+                  renderSubmenu(cat.children)}
+              </div>
+            ))}
           </div>
 
-          <div className="w-[20%] flex gap-3 items-center justify-end">
+          <div className=" flex gap-2 items-center justify-end">
             <GoRocket />
-            Miễn phí vận chuyển
+            <div className="text-[14px]">Miễn phí vận chuyển</div>
           </div>
         </div>
       </nav>

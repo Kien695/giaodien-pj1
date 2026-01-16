@@ -31,15 +31,15 @@ export default function HomeSliderV2() {
           />
         </div>
         <div className="info absolute top-0 -right-[100%] p-8 w-[50%] h-[100%] flex items-center flex-col gap-2 justify-center opacity-0 transition-all duration-700">
-          <h4 className="text-[20px] font-[500] text-left w-full relative -right-[100%] opacity-0">
+          <h4 className="md:text-[20px] text-[12px] font-[500] text-left w-full relative -right-[100%] opacity-0">
             Giảm giá mạnh
           </h4>
-          <h2 className="text-[30px] font-[700] relative -right-[100%] opacity-0">
+          <h2 className="md:text-[30px] text-[22x] font-[700] relative -right-[100%] opacity-0">
             Xu hướng điện thoại hiện nay
           </h2>
-          <h3 className="text-[20px] font-[500] text-left w-full relative -right-[100%] opacity-0">
+          <h3 className="md:text-[20px] text-[15px] font-[500] text-left w-full relative -right-[100%] opacity-0">
             Chỉ từ{" "}
-            <span className="text-[#ff5252] text-[25px] font-[600]">
+            <span className="text-[#ff5252] md:text-[25px] text-[20px] font-[600]">
               1 triệu
             </span>
           </h3>
@@ -53,15 +53,17 @@ export default function HomeSliderV2() {
           <img src={bannerBoxV2Image2} className="w-full" />
         </div>
         <div className="info absolute top-0 -right-[100%] p-8 w-[50%] h-[100%] flex items-center flex-col gap-2 justify-center opacity-0 transition-all duration-700">
-          <h4 className="text-[20px] font-[500] text-left w-full relative -right-[100%] opacity-0">
+          <h4 className="md:text-[20px] text-[12px] font-[500] text-left w-full relative -right-[100%] opacity-0">
             Giảm giá mạnh
           </h4>
-          <h2 className="text-[30px] font-[700] relative -right-[100%] opacity-0">
+          <h2 className="md:text-[30px] text-[22x] font-[700] relative -right-[100%] opacity-0">
             Xu hướng thời trang nữ hiện nay
           </h2>
-          <h3 className="text-[20px] font-[500] text-left w-full relative -right-[100%] opacity-0">
+          <h3 className="md:text-[20px] text-[15px]  font-[500] text-left w-full relative -right-[100%] opacity-0">
             Chỉ từ{" "}
-            <span className="text-[#ff5252] text-[25px] font-[600]">59k</span>
+            <span className="text-[#ff5252] md:text-[25px] text-[20px] font-[600]">
+              59k
+            </span>
           </h3>
           <Button variant="contained" className="w-auto self-start">
             <Link to="/product?catId=68dbe8681ada8a2729ecd824">MUA NGAY</Link>

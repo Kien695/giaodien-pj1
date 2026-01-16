@@ -91,10 +91,15 @@ export default function Category() {
 
   return (
     <div>
-      <Button className="!text-black gap-2 w-full" onClick={toggleDrawer(true)}>
-        <RiMenu2Fill className="text-[18px]" />
-        Mua với danh mục
-        <FaAngleDown className="ml-auto" />
+      <Button
+        className="!text-black gap-2 w-full flex !justify-start"
+        onClick={toggleDrawer(true)}
+      >
+        <div className="flex gap-3 items-center">
+          <RiMenu2Fill className="text-[18px]" />
+          Mua với danh mục
+          <FaAngleDown className="ml-5" />
+        </div>
       </Button>
 
       <Drawer open={open} onClose={toggleDrawer(false)}>

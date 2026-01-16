@@ -15,7 +15,11 @@ export default function AllBannerSliderV2(props) {
     <div className="categorySlider py-5 w-full mt-6">
       <Swiper
         slidesPerView={props.item}
-        spaceBetween={10}
+        breakpoints={{
+          0: { spaceBetween: 20 },
+          768: { spaceBetween: 15 },
+          1024: { spaceBetween: 10 },
+        }}
         navigation={true}
         modules={[Navigation]}
         className=""

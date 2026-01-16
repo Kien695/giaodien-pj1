@@ -35,11 +35,13 @@ export default function Blog(props) {
     fetchData();
   }, []);
   return (
-    <div className="blog py-5 w-full bg-white">
+    <div className="blog md:py-5 pb-2 w-full bg-white">
       <div className="container">
-        <h2 className="text-[22px] font-[600] mb-4">Trang BLog</h2>
+        <h2 className="md:text-[22px] text-[18px] font-[600] mb-4">
+          Trang BLog
+        </h2>
         <Swiper
-          slidesPerView={3}
+          slidesPerView={props.items}
           spaceBetween={35}
           navigation={true}
           modules={[Navigation]}
@@ -52,7 +54,7 @@ export default function Blog(props) {
                   <img
                     src={item.images}
                     alt=""
-                    className="w-full transition-all hover:scale-105 hover:rotate-1 h-[300px] object-cover"
+                    className="w-full transition-all hover:scale-105 hover:rotate-1 md:[h-300px] h-[250px] object-cover"
                   />
                   <div className="time absolute bottom-2 right-2">
                     <div className="flex items-center  text-white bg-[#ff5252] text-[13px] p-1 gap-1 rounded-md">

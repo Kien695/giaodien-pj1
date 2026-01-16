@@ -15,7 +15,17 @@ export default function CategorySlider() {
     <div className="categorySlider mb-6">
       <div className="container">
         <Swiper
-          slidesPerView={8}
+          breakpoints={{
+            0: {
+              slidesPerView: 3, // mobile
+            },
+            768: {
+              slidesPerView: 5, // tablet
+            },
+            1024: {
+              slidesPerView: 8, // desktop
+            },
+          }}
           spaceBetween={20}
           centerInsufficientSlides={true}
           navigation={true}

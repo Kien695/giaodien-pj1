@@ -58,7 +58,7 @@ export default function ProductFeatured(props) {
             <div className="group  productItems rounded-md overflow-hidden shadow-lg border-2 border-[rgba(0,0,0,0.1)] relative">
               <div className="imgWrap w-[100%] overflow-hidden rounded-md relative ">
                 <Link>
-                  <div className="h-[220px] overflow-hidden">
+                  <div className="md:h-[220px] h-[180px]  overflow-hidden">
                     <img
                       src={item.images?.[0]?.url}
                       alt=""
@@ -73,9 +73,11 @@ export default function ProductFeatured(props) {
                   </div>
                 </Link>
               </div>
-              <div className="info  p-3 bg-[#f1f1f1] pt-1 pb-4">
+              <div className="info  p-3 bg-[#f1f1f1] ">
                 <h6 className="text-[13px]">
-                  <Link className="link transition-all">{item.brand}</Link>
+                  <Link className="link transition-all">
+                    {item.brand || "Không có"}
+                  </Link>
                 </h6>
                 <h3 className="title line-clamp-1 text-[15px] mt-1 mb-2 font-[500] text-[rgba(0,0,0,0.9)]">
                   <Link
@@ -91,7 +93,7 @@ export default function ProductFeatured(props) {
                   size="small"
                   readOnly
                 />
-                <div className="flex items-center text-[12px] justify-between font-[500] mb-3">
+                <div className="flex md:flex-row flex-col text-[12px] justify-between font-[500] mb-3">
                   <div className="priceOld line-through text-gray-500">
                     {Number(item.price).toLocaleString("vi-VN") + " đ"}
                   </div>
@@ -103,6 +105,7 @@ export default function ProductFeatured(props) {
                   </div>
                 </div>
                 <Button
+                  fullWidth
                   variant="outlined"
                   color="error"
                   sx={{
@@ -113,7 +116,7 @@ export default function ProductFeatured(props) {
                       color: "#f1f1f1",
                     },
                   }}
-                  className=" flex items-center justify-center gap-2 !text-[11px] !ml-6 "
+                  className=" flex items-center justify-center gap-2 !text-[11px]  "
                   onClick={() => {
                     handleAddToCart(item);
                   }}
