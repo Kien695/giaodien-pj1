@@ -19,7 +19,7 @@ import { MyContext } from "../../App";
 import { Link, useSearchParams } from "react-router-dom";
 import { useState } from "react";
 
-export default function SideBar({ minPrice, maxPrice,catId }) {
+export default function SideBar({ minPrice, maxPrice, catId }) {
   const context = React.useContext(MyContext);
   const [checkedCategory, setCheckedCategory] = React.useState([0]);
   const [checkedSize, setCheckedSize] = React.useState([0]);
@@ -73,7 +73,7 @@ export default function SideBar({ minPrice, maxPrice,catId }) {
     setSearchParams(params);
   };
   return (
-    <div className="sideBar">
+    <div className="sideBar md:p-0 p-4">
       <div className="">
         <div className="flex box text-[16px] font-[600] mb-2 text-[rgba(0,0,0,0.9)] items-center justify-between">
           Danh mục

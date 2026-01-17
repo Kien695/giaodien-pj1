@@ -2,8 +2,15 @@ import React, { useContext, useEffect, useState } from "react";
 import SideBar from "../../components/SideBar";
 import ProductItems from "../../components/ProductItems";
 import { GiHamburgerMenu } from "react-icons/gi";
-import { IoGridSharp } from "react-icons/io5";
-import { Button, FormControl, InputLabel, NativeSelect } from "@mui/material";
+import { IoColorFilterOutline, IoGridSharp } from "react-icons/io5";
+import {
+  Box,
+  Button,
+  Drawer,
+  FormControl,
+  InputLabel,
+  NativeSelect,
+} from "@mui/material";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Fade from "@mui/material/Fade";
@@ -21,7 +28,7 @@ export default function ProductList() {
   const [productPage, setTotalPage] = useState();
   const [totalProduct, setTotalProduct] = useState();
   const [searchParams, setSearchparams] = useSearchParams();
-
+  const [openSibarMobile, setOpenSibarMobile] = React.useState(false);
   const page = parseInt(searchParams.get("page")) || 1;
   const minPrice = parseInt(searchParams.get("minPrice")) || "";
   const maxPrice = parseInt(searchParams.get("maxPrice")) || "";
@@ -71,12 +78,34 @@ export default function ProductList() {
     setSearchparams(params);
   };
   return (
-    <div className="py-8 bg-white rounded-md">
-      <div className="container flex gap-3">
-        <div className="sideBar w-[15%] h-full bg-white p-3 shadow-md">
+    <div className="md:py-8 pb-8   bg-white rounded-md">
+      <div className="container">
+        <div
+          className="inline-flex md:hidden font-[500] text-[15px] py-2 my-3 gap-2 items-center bg-gray-200 hover:text-white hover:bg-[#ff5252] px-3 rounded-lg cursor-pointer"
+          onClick={() => {
+            setOpenSibarMobile(true);
+          }}
+        >
+          <IoColorFilterOutline /> Bộ lọc
+        </div>
+      </div>
+      <Drawer
+        open={openSibarMobile}
+        onClose={() => {
+          setOpenSibarMobile(false);
+        }}
+      >
+        {
+          <Box sx={{ width: 250 }} role="presentation">
+            <SideBar minPrice={minPrice} maxPrice={maxPrice} catId={catId} />
+          </Box>
+        }
+      </Drawer>
+      <div className=" container  flex gap-3">
+        <div className="sideBar md:w-[15%] hidden md:flex h-full bg-white p-3 shadow-md">
           <SideBar minPrice={minPrice} maxPrice={maxPrice} catId={catId} />
         </div>
-        <div className="product w-[85%] mx-auto">
+        <div className="product md:w-[85%] w-full mx-auto">
           <div className="bg-[#f1f1f1] w-full p-2 mb-3 flex items-center justify-between rounded-md">
             <div className="flex items-center ">
               <Button
@@ -101,7 +130,7 @@ export default function ProductList() {
               >
                 <IoGridSharp />
               </Button>
-              <span className="font-[500] pl-3 text-[rgba(0,0,0,0.7)]">
+              <span className="text-[15px] font-[500] pl-3 text-[rgba(0,0,0,0.7)]">
                 Có {totalProduct} sản phẩm
               </span>
             </div>
