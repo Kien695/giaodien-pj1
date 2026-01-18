@@ -27,8 +27,8 @@ export default function Cart() {
       prevItems.map((item) =>
         item._id === id
           ? { ...item, quantity: Number(item.quantity) + 1 }
-          : item
-      )
+          : item,
+      ),
     );
   };
   const handleQuiMinus = (id) => {
@@ -36,8 +36,8 @@ export default function Cart() {
       prevItems.map((item) =>
         item._id === id && item.quantity > 1
           ? { ...item, quantity: Number(item.quantity) - 1 }
-          : item
-      )
+          : item,
+      ),
     );
   };
 
@@ -57,8 +57,8 @@ export default function Cart() {
     if (isNaN(value) || value < 1) return;
     setCartItems((prevItems) =>
       prevItems.map((item) =>
-        item._id === id ? { ...item, quantity: value } : item
-      )
+        item._id === id ? { ...item, quantity: value } : item,
+      ),
     );
   };
   const totalPrice = cartItems?.reduce((total, item) => {
@@ -69,11 +69,11 @@ export default function Cart() {
   }, 0);
   return (
     <div className="container !my-6">
-      <div className="flex w-full justify-center ">
-        <div className=" w-[65%]  ">
+      <div className="flex md:flex-row flex-col w-full justify-center gap-6 mx-auto">
+        <div className=" md:w-[65%] w-full ">
           <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-              <caption className="p-5 text-lg font-semibold text-left bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 flex justify-between">
+              <caption className="p-5 md:text-lg text-[14px] gap-2 font-semibold text-left bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 flex justify-between">
                 Có {context?.countCart} sản phẩm trong giỏ hàng của bạn
                 <DeleteCartAll />
               </caption>
@@ -85,23 +85,23 @@ export default function Cart() {
                     key={index}
                   >
                     <td className="p-4">
-                      <div className=" flex">
-                        <div className="w-[15%] relative">
+                      <div className=" flex items-center">
+                        <div className="md:w-[15%] w-[20%] relative">
                           <img
                             src={item?.productId?.images[0].url}
                             alt=""
-                            className="w-[95px]"
+                            className="w-[110px] md:h-[110px] h-[90px] rounded-md"
                           />
                           <div className="absolute top-[-7px] left-[-9px] rounded-md bg-[#ff5252] text-white p-1">
                             {item?.productId.discountPercentage}%
                           </div>
                         </div>
-                        <div className="w-[65%] flex flex-col gap-1 ml-6">
-                          <div className="text-[14px]">
+                        <div className="md:w-[65%] w-[60%] flex flex-col gap-1 ml-6">
+                          <div className="md:text-[14px] text-12">
                             {item?.productId.brand}
                           </div>
                           <Link
-                            className="line-clamp-1 text-[18px] font-[500] text-black hover:text-[#ff5252]"
+                            className="line-clamp-1 md:text-[16px] text-[14px] font-[500] text-black hover:text-[#ff5252]"
                             to={`/product/${item?.productId._id}`}
                           >
                             {item?.productId.name}
@@ -112,7 +112,7 @@ export default function Cart() {
                             readOnly
                             size="small"
                           />
-                          <div className="flex gap-4">
+                          <div className="flex md:flex-row flex-col md:gap-4 gap-1">
                             <div className="flex items-center">
                               <div className="text-[14px] mr-1">Số lượng:</div>
                               <div className="relative flex items-center ">
@@ -134,7 +134,7 @@ export default function Cart() {
                                   onChange={(e) =>
                                     handleChangeQuantity(
                                       item._id,
-                                      e.target.value
+                                      e.target.value,
                                     )
                                   }
                                   min={1}
@@ -201,7 +201,7 @@ export default function Cart() {
                           <div className="flex items-center  font-[500]">
                             <div className="priceOld line-through text-gray-500 mr-3">
                               {Number(
-                                item?.productId.price * item.quantity
+                                item?.productId.price * item.quantity,
                               ).toLocaleString("vi-VN") + " đ"}
                             </div>
                             <div className="priceNew text-[#ff5252] ">
@@ -224,7 +224,7 @@ export default function Cart() {
             </table>
           </div>
         </div>
-        <div className="w-[32%] h-[270px] rounded-lg p-3 bg-white ml-5">
+        <div className="md:w-[32%] w-full h-[270px] rounded-lg p-3 bg-white ">
           <div className="flex flex-col gap-3">
             <div className="text-[20px] font-[600] text-[#ff5252]">
               Thanh toán

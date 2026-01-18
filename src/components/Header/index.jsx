@@ -49,7 +49,7 @@ export default function Header() {
         {},
         {
           withCredentials: true,
-        }
+        },
       );
       if (res.success) {
         localStorage.removeItem("accessToken");
@@ -114,7 +114,7 @@ export default function Header() {
           {context.isLogin ? (
             <>
               <div
-                className="flex items-center gap-2 cursor-pointer hover:bg-[#f6fafd] p-2 rounded-md"
+                className="flex items-center gap-2 cursor-pointer hover:bg-[#f6fafd]  rounded-md"
                 id="basic-button"
                 aria-controls={open ? "basic-menu" : undefined}
                 aria-haspopup="true"
@@ -122,20 +122,17 @@ export default function Header() {
                 onClick={handleClick}
               >
                 {context?.userData?.avatar ? (
-                  <div className="w-[36px] h-[36px] rounded-full overflow-hidden">
+                  <div className="w-[27px] h-[27px] rounded-full overflow-hidden">
                     <img src={context?.userData?.avatar}></img>
                   </div>
                 ) : (
-                  <Button className="!w-[36px] !h-[36px] !min-w-[36px] !rounded-full !bg-[#f1f1f1]">
+                  <Button className="!w-[27px] !h-[27px] !min-w-[27px] !rounded-full !bg-[#f1f1f1]">
                     <FaRegUser />
                   </Button>
                 )}
                 <div className="flex flex-col">
-                  <div className="text-[14px] font-[500]">
+                  <div className="text-[13px] font-[500]">
                     {context?.userData?.name}
-                  </div>
-                  <div className="text-[14px] text-[rgba(0,0,0,0.7)]">
-                    {context?.userData?.email}
                   </div>
                 </div>
               </div>
@@ -252,170 +249,172 @@ export default function Header() {
           </div>
 
           {/* Icon + login */}
-          <div className="flex items-center gap-3">
-            <div className=" flex items-center gap-3">
-              <div className="hidden md:flex">
-                {context.isLogin ? (
-                  <>
-                    <div
-                      className="flex items-center gap-2 cursor-pointer hover:bg-[#f6fafd] p-2 rounded-md"
-                      id="basic-button"
-                      aria-controls={open ? "basic-menu" : undefined}
-                      aria-haspopup="true"
-                      aria-expanded={open ? "true" : undefined}
-                      onClick={handleClick}
-                    >
-                      {context?.userData?.avatar ? (
-                        <div className="w-[36px] h-[36px] rounded-full overflow-hidden">
-                          <img src={context?.userData?.avatar}></img>
-                        </div>
-                      ) : (
-                        <Button className="!w-[36px] !h-[36px] !min-w-[36px] !rounded-full !bg-[#f1f1f1]">
-                          <FaRegUser />
-                        </Button>
-                      )}
-                      <div className="flex flex-col">
-                        <div className="text-[14px] font-[500]">
-                          {context?.userData?.name}
-                        </div>
-                        <div className="text-[14px] text-[rgba(0,0,0,0.7)]">
-                          {context?.userData?.email}
-                        </div>
+
+          <div className=" flex items-center md:gap-3 gap-1">
+            <div className="hidden md:flex">
+              {context.isLogin ? (
+                <>
+                  <div
+                    className="flex items-center gap-2 cursor-pointer hover:bg-[#f6fafd] p-2 rounded-md"
+                    id="basic-button"
+                    aria-controls={open ? "basic-menu" : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? "true" : undefined}
+                    onClick={handleClick}
+                  >
+                    {context?.userData?.avatar ? (
+                      <div className="w-[36px] h-[36px] rounded-full overflow-hidden">
+                        <img src={context?.userData?.avatar}></img>
+                      </div>
+                    ) : (
+                      <Button className="!w-[36px] !h-[36px] !min-w-[36px] !rounded-full !bg-[#f1f1f1]">
+                        <FaRegUser />
+                      </Button>
+                    )}
+                    <div className="flex flex-col">
+                      <div className="text-[14px] font-[500]">
+                        {context?.userData?.name}
+                      </div>
+                      <div className="text-[14px] text-[rgba(0,0,0,0.7)]">
+                        {context?.userData?.email}
                       </div>
                     </div>
-                    <Menu
-                      id="basic-menu"
-                      anchorEl={anchorEl}
-                      open={open}
-                      onClose={handleClose}
-                      slotProps={{
-                        paper: {
-                          elevation: 0,
-                          sx: {
-                            overflow: "visible",
-                            filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-                            mt: 1.5,
-                            "& .MuiAvatar-root": {
-                              width: 32,
-                              height: 32,
-                              ml: -0.5,
-                              mr: 1,
-                            },
-                            "&::before": {
-                              content: '""',
-                              display: "block",
-                              position: "absolute",
-                              top: 0,
-                              right: 14,
-                              width: 10,
-                              height: 10,
-                              bgcolor: "background.paper",
-                              transform: "translateY(-50%) rotate(45deg)",
-                              zIndex: 0,
-                            },
+                  </div>
+                  <Menu
+                    id="basic-menu"
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                    slotProps={{
+                      paper: {
+                        elevation: 0,
+                        sx: {
+                          overflow: "visible",
+                          filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                          mt: 1.5,
+                          "& .MuiAvatar-root": {
+                            width: 32,
+                            height: 32,
+                            ml: -0.5,
+                            mr: 1,
+                          },
+                          "&::before": {
+                            content: '""',
+                            display: "block",
+                            position: "absolute",
+                            top: 0,
+                            right: 14,
+                            width: 10,
+                            height: 10,
+                            bgcolor: "background.paper",
+                            transform: "translateY(-50%) rotate(45deg)",
+                            zIndex: 0,
                           },
                         },
-                      }}
-                      transformOrigin={{ horizontal: "right", vertical: "top" }}
-                      anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-                    >
-                      <MenuItem onClick={handleClose}>
-                        <Link
-                          to="/my-account"
-                          className="flex items-center gap-2"
-                        >
-                          <FaRegUser />
-                          Thông tin cá nhân
-                        </Link>
-                      </MenuItem>
-                      <MenuItem onClick={handleClose}>
-                        <Link to="/address">
-                          <div className="flex items-center gap-2">
-                            <MdOutlineLocationOn />
-                            Địa chỉ
-                          </div>
-                        </Link>
-                      </MenuItem>
-                      <MenuItem onClick={handleClose}>
-                        <Link to="/order">
-                          <div className="flex items-center gap-2">
-                            <IoLockClosedOutline />
-                            Đơn đặt hàng
-                          </div>
-                        </Link>
-                      </MenuItem>
-                      <MenuItem onClick={handleClose}>
-                        <Link to="/my-list">
-                          <div className="flex items-center gap-2">
-                            <FaRegHeart />
-                            Danh sách yêu thích
-                          </div>
-                        </Link>
-                      </MenuItem>
-                      <MenuItem onClick={handleLogout}>
+                      },
+                    }}
+                    transformOrigin={{ horizontal: "right", vertical: "top" }}
+                    anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+                  >
+                    <MenuItem onClick={handleClose}>
+                      <Link
+                        to="/my-account"
+                        className="flex items-center gap-2"
+                      >
+                        <FaRegUser />
+                        Thông tin cá nhân
+                      </Link>
+                    </MenuItem>
+                    <MenuItem onClick={handleClose}>
+                      <Link to="/address">
                         <div className="flex items-center gap-2">
-                          <FiLogOut />
-                          Đăng xuất
+                          <MdOutlineLocationOn />
+                          Địa chỉ
                         </div>
-                      </MenuItem>
-                    </Menu>
-                  </>
-                ) : (
-                  <>
-                    <div>
-                      <Link
-                        to="/login"
-                        className="link transition text-[15px] font-[500] mr-1"
-                      >
-                        Đăng nhập
                       </Link>
-                      <span>|</span>
-                      <Link
-                        to="/register"
-                        className="link transition text-[15px] font-[500] ml-1"
-                      >
-                        Đăng kí
+                    </MenuItem>
+                    <MenuItem onClick={handleClose}>
+                      <Link to="/order">
+                        <div className="flex items-center gap-2">
+                          <IoLockClosedOutline />
+                          Đơn đặt hàng
+                        </div>
                       </Link>
-                    </div>
-                  </>
-                )}
-              </div>
-              <div>
-                {context?.isLogin == true && (
-                  <div className="relative">
-                    <Tooltip>
-                      <IconButton>
-                        <Badge badgeContent=" " variant="dot" color="error">
-                          <FaRegBell onClick={() => setShowPopup(!showPopup)} />
-                        </Badge>
-                      </IconButton>
-                    </Tooltip>
-
-                    {/* Popup thông báo */}
-                    <NotificationPopup
-                      isOpen={showPopup}
-                      onClose={() => setShowPopup(false)}
-                    />
+                    </MenuItem>
+                    <MenuItem onClick={handleClose}>
+                      <Link to="/my-list">
+                        <div className="flex items-center gap-2">
+                          <FaRegHeart />
+                          Danh sách yêu thích
+                        </div>
+                      </Link>
+                    </MenuItem>
+                    <MenuItem onClick={handleLogout}>
+                      <div className="flex items-center gap-2">
+                        <FiLogOut />
+                        Đăng xuất
+                      </div>
+                    </MenuItem>
+                  </Menu>
+                </>
+              ) : (
+                <>
+                  <div>
+                    <Link
+                      to="/login"
+                      className="link transition text-[15px] font-[500] mr-1"
+                    >
+                      Đăng nhập
+                    </Link>
+                    <span>|</span>
+                    <Link
+                      to="/register"
+                      className="link transition text-[15px] font-[500] ml-1"
+                    >
+                      Đăng kí
+                    </Link>
                   </div>
-                )}
-              </div>
-              <div>
-                <Link to="/my-list">
-                  <Tooltip title="Danh sách yêu thích">
+                </>
+              )}
+            </div>
+            <div>
+              {context?.isLogin == true && (
+                <div className="relative">
+                  <Tooltip>
                     <IconButton>
-                      <StyledBadge
-                        badgeContent={context.wishlist.length}
-                        color="error"
-                      >
-                        <FaRegHeart />
-                      </StyledBadge>
+                      <Badge badgeContent=" " variant="dot" color="error">
+                        <FaRegBell
+                          className="md:text-[23px] text-[18px]"
+                          onClick={() => setShowPopup(!showPopup)}
+                        />
+                      </Badge>
                     </IconButton>
                   </Tooltip>
-                </Link>
-              </div>
-              <div>
-                <Cart />
-              </div>
+
+                  {/* Popup thông báo */}
+                  <NotificationPopup
+                    isOpen={showPopup}
+                    onClose={() => setShowPopup(false)}
+                  />
+                </div>
+              )}
+            </div>
+            <div>
+              <Link to="/my-list">
+                <Tooltip title="Danh sách yêu thích">
+                  <IconButton>
+                    <StyledBadge
+                      badgeContent={context.wishlist.length}
+                      color="error"
+                    >
+                      <FaRegHeart className="md:text-[23px] text-[18px]" />
+                    </StyledBadge>
+                  </IconButton>
+                </Tooltip>
+              </Link>
+            </div>
+            <div>
+              <Cart />
             </div>
           </div>
         </div>

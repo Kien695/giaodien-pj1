@@ -1,9 +1,11 @@
-import { Button } from "@mui/material";
+import { Button, useMediaQuery } from "@mui/material";
 import React from "react";
 import { deleteData } from "../../untils/api";
 import { MyContext } from "../../App";
+import { MdOutlineDeleteSweep } from "react-icons/md";
 
 export default function DeleteAllListLove({ onSuccess, countList }) {
+  const isMobile = useMediaQuery("(max-width:900px)");
   const context = React.useContext(MyContext);
   const handleClick = async () => {
     try {
@@ -22,6 +24,7 @@ export default function DeleteAllListLove({ onSuccess, countList }) {
   };
   return (
     <Button
+      size="small"
       variant="outlined"
       color="error"
       sx={{
@@ -35,7 +38,11 @@ export default function DeleteAllListLove({ onSuccess, countList }) {
       className=" flex items-center justify-center gap-2 "
       onClick={handleClick}
     >
-      <span>Xóa tất cả</span>
+      {isMobile ? (
+        <MdOutlineDeleteSweep className="text-[25px] font-semibold" />
+      ) : (
+        <span>Xóa tất cả</span>
+      )}
     </Button>
   );
 }

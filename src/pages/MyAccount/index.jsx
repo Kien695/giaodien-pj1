@@ -38,7 +38,7 @@ export default function MyAccount() {
         formInput,
         {
           withCredentials: true,
-        }
+        },
       );
       if (res.success) {
         context.openAlertBox("success", res.message);
@@ -54,9 +54,9 @@ export default function MyAccount() {
   };
   return (
     <div className="container py-10">
-      <div className="flex gap-10">
+      <div className="flex  md:flex-row flex-col gap-10">
         <Profile />
-        <div className="w-[600px] h-[280px] rounded-md shadow-md border border-2 borer-gray-300 bg-white p-5">
+        <div className="md:w-[600px] w-full h-[280px] rounded-md shadow-md  border-2 borer-gray-300 bg-white p-5">
           <div className="text-[20px] text-[#ff5252] font-[600] mb-3 text-center">
             Thông tin cá nhân
           </div>
@@ -103,6 +103,7 @@ export default function MyAccount() {
               </div>
             </div>
             <Button
+              size="small"
               variant="contained"
               color="error"
               type="submit"

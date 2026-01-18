@@ -13,7 +13,7 @@ export default function DeleteCartAll() {
       if (res.success) {
         context.openAlertBox(
           "success",
-          res.message || "Xóa sản phẩm khỏi giỏ hàng thành công"
+          res.message || "Xóa sản phẩm khỏi giỏ hàng thành công",
         );
         context.setCountCart(0);
       }
@@ -27,6 +27,7 @@ export default function DeleteCartAll() {
   };
   return (
     <Button
+      size="small"
       variant="outlined"
       color="error"
       sx={{

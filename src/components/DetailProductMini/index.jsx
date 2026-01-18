@@ -5,6 +5,7 @@ import {
   IconButton,
   Rating,
   TextField,
+  useMediaQuery,
 } from "@mui/material";
 import React, { useContext } from "react";
 import { BsCart3 } from "react-icons/bs";
@@ -16,6 +17,7 @@ import { MyContext } from "../../App";
 import { postData } from "../../untils/api";
 
 export default function DetailProductMini({ item }) {
+  const isMobile = useMediaQuery("(max-width:900px)");
   const context = useContext(MyContext);
   const [quantity, setQuantity] = React.useState(1);
   const [openDetailProduct, setOpenDetailProduct] = React.useState(false);
@@ -51,7 +53,7 @@ export default function DetailProductMini({ item }) {
         className="!w-[40px] !h-[40px] !min-w-[40px] !rounded-full !bg-white !text-black hover:!bg-[#ff5252] hover:!text-white"
         onClick={() => setOpenDetailProduct(true)}
       >
-        <MdOutlineZoomOutMap className="text-[18px]" />
+        <MdOutlineZoomOutMap className="md:text-[18px] text-[16px]" />
       </Button>
       <Dialog
         onClose={handleCloseDetail}
@@ -72,15 +74,15 @@ export default function DetailProductMini({ item }) {
           <IoMdClose />
         </IconButton>
         <DialogContent dividers>
-          <div className=" flex gap-5 mt-5 p-4 bg-white rounded-md">
-            <div className="imageZoom w-[30%]">
+          <div className=" flex md:flex-row flex-col gap-5 mt-5 p-4 bg-white rounded-md">
+            <div className="imageZoom md:w-[30%] w-full">
               <ZoomImage images={item.images || []} />
             </div>
-            <div className=" p-6 infoProduct w-[70%] flex flex-col gap-5">
-              <div className="uppercase font-[600] text-[25px] text-[rgba(0,0,0,0.8)]">
+            <div className=" p-6 infoProduct md:w-[70%] w-full flex flex-col gap-5">
+              <div className="uppercase font-[600] md:text-[25px] text-[18px] text-[rgba(0,0,0,0.8)]">
                 {item.name}
               </div>
-              <div className="info flex gap-5">
+              <div className="info flex md:flex-row flex-col md:gap-5 gap-2">
                 <div>
                   <span className="text-[rgba(0,0,0,0.5)]">Thương hiệu:</span>{" "}
                   {item.brand}
@@ -96,7 +98,7 @@ export default function DetailProductMini({ item }) {
                   {item.discountPercentage + "%"}
                 </span>
               </div>
-              <div className="flex items-center  font-[500]  gap-5">
+              <div className="flex md:flex-row flex-col md:items-center  font-[500]  md:gap-5 gap-2 md:text-[16px] text-[14px]">
                 <div className="flex items-center gap-3">
                   <div className="priceOld line-through text-gray-500">
                     {Number(item.price).toLocaleString("vi-VN") + "đ"}
@@ -117,7 +119,7 @@ export default function DetailProductMini({ item }) {
                 </div>
               </div>
               <div
-                className="text-[rgba(0,0,0,0.6)] text-[15px] line-clamp-3"
+                className="text-[rgba(0,0,0,0.6)] md:text-[15px] text-[13px] line-clamp-3"
                 dangerouslySetInnerHTML={{ __html: item.description || "" }}
               ></div>
               <div className="flex items-center gap-3 mb-6">
@@ -150,30 +152,49 @@ export default function DetailProductMini({ item }) {
                   type="number"
                   defaultValue={1}
                   InputProps={{ inputProps: { min: 1 } }}
-                  sx={{ width: "70px", fontSize: "14px" }}
-                />
-                <Button
-                  variant="outlined"
-                  color="error"
                   sx={{
-                    backgroundColor: "white",
-                    color: "#ff5252",
-                    "&:hover": {
-                      backgroundColor: "black",
-                      color: "#f1f1f1",
-                    },
+                    width: { xs: "100px", md: "70px" },
+                    fontSize: "14px",
                   }}
-                  className=" flex items-center justify-center gap-2 !text-[15px] !ml-6"
-                  onClick={() => {
-                    handleAddToCart(item._id);
-                  }}
-                >
-                  <BsCart3 />
-                  <span>Thêm vào giỏ hàng</span>
-                </Button>
-                <Button variant="contained" color="error">
-                  Mua ngay
-                </Button>
+                />
+                <div className="ml-6 flex gap-3">
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    color="error"
+                    sx={{
+                      textTransform: "none",
+                      backgroundColor: "white",
+                      color: "#ff5252",
+                      "&:hover": {
+                        backgroundColor: "black",
+                        color: "#f1f1f1",
+                      },
+                    }}
+                    className=" flex items-center justify-center gap-2 md:!text-[15px] !text-[13px]"
+                    onClick={() => {
+                      handleAddToCart(item._id);
+                    }}
+                  >
+                    {isMobile ? (
+                      <BsCart3 className="text-[20px]" />
+                    ) : (
+                      <>
+                        <BsCart3 /> <span>Thêm vào giỏ hàng</span>
+                      </>
+                    )}
+                  </Button>
+                  <Button
+                    sx={{
+                      textTransform: "none",
+                    }}
+                    size="small"
+                    variant="contained"
+                    color="error"
+                  >
+                    Mua ngay
+                  </Button>
+                </div>
               </div>
               <div className="flex">
                 <div className="flex items-center gap-1 cursor-pointer hover:text-[#ff5252] text-[15px]">

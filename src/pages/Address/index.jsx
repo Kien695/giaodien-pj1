@@ -35,15 +35,15 @@ export default function Address() {
   useEffect(() => {
     if (context?.addressData) {
       const selectedProvince = provinces.find(
-        (p) => p.name === context.addressData.province
+        (p) => p.name === context.addressData.province,
       );
       setSelectedProvince(selectedProvince?.code || "");
       const selectedDistrict = districts.find(
-        (d) => d.name === context.addressData.district
+        (d) => d.name === context.addressData.district,
       );
       setSelectedDistrict(selectedDistrict?.code || "");
       const selectedWard = wards.find(
-        (w) => w.name === context.addressData.ward
+        (w) => w.name === context.addressData.ward,
       );
       setSelectedWard(selectedWard?.code || "");
       setFormInput({
@@ -99,7 +99,7 @@ export default function Address() {
       if (res.success) {
         context.openAlertBox(
           "success",
-          res.message || "Thêm địa chỉ thành công!"
+          res.message || "Thêm địa chỉ thành công!",
         );
       }
     } catch (error) {
@@ -112,9 +112,9 @@ export default function Address() {
   };
 
   return (
-    <div className="container flex py-10 gap-10">
+    <div className="container flex  md:flex-row flex-col py-10 gap-10">
       <Profile />
-      <div className="w-[600px]  rounded-md shadow-md border border-2 borer-gray-300 bg-white p-5">
+      <div className="md:w-[600px] w-full  rounded-md shadow-md  border-2 borer-gray-300 bg-white p-5">
         <div className="text-[20px] text-[#ff5252] font-[600] mb-3 text-center">
           Địa chỉ cá nhân
         </div>
@@ -256,6 +256,7 @@ export default function Address() {
             </div>
           </div>
           <Button
+            size="small"
             variant="contained"
             color="error"
             type="submit"

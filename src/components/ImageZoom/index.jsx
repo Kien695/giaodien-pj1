@@ -31,7 +31,7 @@ export default function ZoomImage({ images = [] }) {
       >
         {images.map((img, index) => (
           <SwiperSlide key={index}>
-            <div className="w-full h-[350px] flex items-center justify-center bg-gray-50 rounded-md overflow-hidden relative">
+            <div className="w-full md:h-[350px] h-[250px] flex items-center justify-center bg-gray-50 rounded-md overflow-hidden relative">
               <InnerImageZoom
                 src={img.url}
                 zoomType="hover"

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import Rating from "@mui/material/Rating";
 import ZoomImage from "../../components/ImageZoom";
-import { Button, List, TextField } from "@mui/material";
+import { Button, List, TextField, useMediaQuery } from "@mui/material";
 import { BsCart3 } from "react-icons/bs";
 import { FaRegHeart } from "react-icons/fa6";
 import "./style.css";
@@ -11,6 +11,7 @@ import { getData, postData } from "../../untils/api";
 import { useNavigate, useParams } from "react-router-dom";
 import ListLikeProduct from "../../components/ListLikeProduct";
 export default function ProductDetail() {
+  const isMobile = useMediaQuery("(max-width:900px)");
   const context = useContext(MyContext);
   const navigate = useNavigate();
   const [active, setActive] = React.useState(null);
@@ -70,17 +71,17 @@ export default function ProductDetail() {
 
   return (
     <div className="container ">
-      <div className=" flex gap-5 mt-5 p-4 bg-white rounded-md">
-        <div className="imageZoom w-[30%]">
+      <div className=" flex md:flex-row flex-col gap-5 mt-5 p-4 bg-white rounded-md">
+        <div className="imageZoom md:w-[30%] w-full">
           <ZoomImage images={product.images || []} />
         </div>
-        <div className=" p-6 infoProduct w-[70%] flex flex-col gap-5">
-          <div className="font-[600] text-[25px] text-[rgba(0,0,0,0.8)]">
+        <div className=" p-6 infoProduct md:w-[70%] w-full flex flex-col gap-5">
+          <div className="font-[600] md:text-[25px] text-[20px] text-[rgba(0,0,0,0.8)]">
             {product.name}
           </div>
-          <div className="info flex gap-5">
+          <div className="info  flex md:flex-row flex-col md:gap-5 gap-2 md:text-[16px] text-[14px]">
             <div>
-              <span className="text-[rgba(0,0,0,0.5)]">Thương hiệu:</span>{" "}
+              <span className="text-[rgba(0,0,0,0.5)] ">Thương hiệu:</span>{" "}
               {product.brand}
             </div>
             <Rating name="read-only" size="small" value={3} readOnly />
@@ -112,7 +113,7 @@ export default function ProductDetail() {
             </div>
           </div>
           <div
-            className="text-[rgba(0,0,0,0.6)] text-[15px] line-clamp-3"
+            className="text-[rgba(0,0,0,0.6)] md:text-[15px] text-[13px] line-clamp-3"
             dangerouslySetInnerHTML={{
               __html: product.description || "",
             }}
@@ -152,32 +153,44 @@ export default function ProductDetail() {
               InputProps={{ inputProps: { min: 1 } }}
               sx={{ width: "70px", fontSize: "14px" }}
             />
-            <Button
-              variant="outlined"
-              color="error"
-              sx={{
-                backgroundColor: "white",
-                color: "#ff5252",
-                "&:hover": {
-                  backgroundColor: "black",
-                  color: "#f1f1f1",
-                },
-              }}
-              className=" flex items-center justify-center gap-2 !text-[15px] !ml-6"
-              onClick={() => {
-                handleAddToCart(product);
-              }}
-            >
-              <BsCart3 />
-              <span>Thêm vào giỏ hàng</span>
-            </Button>
-            <Button
-              variant="contained"
-              color="error"
-              onClick={() => handleBuy(product, quantity, size)}
-            >
-              Mua ngay
-            </Button>
+            <div className="ml-6 flex gap-3">
+              <Button
+                size="small"
+                variant="outlined"
+                color="error"
+                sx={{
+                  textTransform: "none",
+                  backgroundColor: "white",
+                  color: "#ff5252",
+                  "&:hover": {
+                    backgroundColor: "black",
+                    color: "#f1f1f1",
+                  },
+                }}
+                className=" flex items-center justify-center gap-2 md:!text-[15px] !text-[13px]"
+                onClick={() => {
+                  handleAddToCart(item._id);
+                }}
+              >
+                {isMobile ? (
+                  <BsCart3 className="text-[20px]" />
+                ) : (
+                  <>
+                    <BsCart3 /> <span>Thêm vào giỏ hàng</span>
+                  </>
+                )}
+              </Button>
+              <Button
+                sx={{
+                  textTransform: "none",
+                }}
+                size="small"
+                variant="contained"
+                color="error"
+              >
+                Mua ngay
+              </Button>
+            </div>
           </div>
           <ListLikeProduct item={product} type="heartSmall" />
         </div>
@@ -185,7 +198,7 @@ export default function ProductDetail() {
       <div className="py-8">
         <div className="flex items-center gap-5 mb-5">
           <div
-            className={`text-[20px] cursor-pointer font-[500] ${
+            className={`md:text-[20px] text-[17px] cursor-pointer font-[500] ${
               activeDes == 1 ? "!text-[#ff5252]  !border-none" : ""
             } `}
             onClick={() => setActiveDes(1)}
@@ -193,7 +206,7 @@ export default function ProductDetail() {
             Chi tiết sản phẩm
           </div>
           <div
-            className={`text-[20px] cursor-pointer font-[500] ${
+            className={`md:text-[20px] text-[17px] cursor-pointer font-[500] ${
               activeDes == 2 ? "!text-[#ff5252]  !border-none" : ""
             } `}
             onClick={() => setActiveDes(2)}
@@ -201,7 +214,7 @@ export default function ProductDetail() {
             Mô tả
           </div>
           <div
-            className={`text-[20px] cursor-pointer font-[500] ${
+            className={`md:text-[20px] text-[17px] cursor-pointer font-[500] ${
               activeDes == 3 ? "!text-[#ff5252]  !border-none" : ""
             } `}
             onClick={() => setActiveDes(3)}
@@ -212,7 +225,7 @@ export default function ProductDetail() {
 
         {activeDes == 2 && (
           <div
-            className="shadow-lg w-full p-5 bg-white rounded-md"
+            className="shadow-lg w-full p-5 bg-white rounded-md md:text-[16px] text-[14px] h-[300px] overflow-y-scroll"
             dangerouslySetInnerHTML={{
               __html: product.description || "",
             }}
@@ -296,9 +309,9 @@ export default function ProductDetail() {
           </div>
         )}
         {activeDes == 3 && (
-          <div className="shadow-lg max-w-[75%] p-5 bg-white rounded-md p-8">
+          <div className="shadow-lg md:max-w-[75%] w-full bg-white rounded-md p-8">
             <div className="font-[500] mb-8">Đánh giá của khách hàng</div>
-            <div className="scroll max-h-[300px] overflow-y-scroll flex flex-col gap-3 overflow-y-hidden">
+            <div className="scroll max-h-[300px] overflow-y-scroll flex flex-col gap-3 ">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1">
                   <img
@@ -410,8 +423,10 @@ export default function ProductDetail() {
         )}
       </div>
       <div className="py-4">
-        <div className="text-[22px] font-[500]">Sản phẩm liên quan</div>
-        <ProductSlider item={5} />
+        <div className="md:text-[22px] text-[18px] font-[500]">
+          Sản phẩm liên quan
+        </div>
+        <ProductSlider item={isMobile ? 2 : 5} />
       </div>
     </div>
   );

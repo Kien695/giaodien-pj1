@@ -38,10 +38,10 @@ export default function MyOrder() {
     navigate("/checkout", { state: { item, quantity: qty, size: size || "" } });
   };
   return (
-    <div className="container flex gap-8 py-10">
+    <div className="container flex  md:flex-row flex-col gap-8 py-10">
       <Profile />
       <div>
-        <div className="flex items-center justify-between w-[500px]  bg-white p-6 h-[30px] rounded-md shadow-md">
+        <div className="flex items-center justify-between md:w-[500px]  w-full bg-white p-6 h-[30px] rounded-md shadow-md">
           <div
             className={`${
               active == 1
@@ -90,7 +90,7 @@ export default function MyOrder() {
               <React.Fragment key={index}>
                 {item?.productItems.map((item1, i) => (
                   <div
-                    className="bg-white w-[800px] py-3 px-6 shadow-md rounded-md mb-2"
+                    className="bg-white md:w-[800px] w-full py-3 px-6 shadow-md rounded-md mb-2"
                     key={i}
                   >
                     <div className="flex items-center justify-between mb-2">
@@ -129,16 +129,16 @@ export default function MyOrder() {
                     </div>
 
                     <hr />
-                    <div className="flex my-3">
-                      <div className="w-[10%]">
+                    <div className="flex my-3 items-center">
+                      <div className="w-[15%]">
                         <img
                           src={item1.productId?.images?.[0].url}
                           alt=""
-                          className="w-[90px] rounded-md"
+                          className="w-[95px] md:h-[110px] h-[80px] rounded-md"
                         />
                       </div>
-                      <div className="w-[75%] flex flex-col gap-1 ml-6">
-                        <Link className="line-clamp-1 text-[18px] font-[500] text-black hover:text-[#ff5252]">
+                      <div className="w-[70%] flex flex-col gap-1 ml-6">
+                        <Link className="line-clamp-1 md:text-[16px] text-[14px] font-[500] text-black hover:text-[#ff5252]">
                           {item1.productId?.name}
                         </Link>
 
@@ -178,7 +178,7 @@ export default function MyOrder() {
                         </div>
 
                         <div className="flex items-center font-[500]">
-                          <div className="priceNew text-[#ff5252] ">
+                          <div className="priceNew text-[#ff5252] md:text-[16px] text-[14px]">
                             {item1.price.toLocaleString()} đ
                           </div>
                         </div>
@@ -188,7 +188,7 @@ export default function MyOrder() {
                     <hr />
                     <div className="flex items-center justify-end mt-2">
                       <div>Thành tiền:</div>
-                      <span className="ml-3 text-[#ff5252] font-[600]">
+                      <span className="ml-3 text-[#ff5252] font-[600] md:text-[16px] text-[14px]">
                         {item1.price.toLocaleString()} đ
                       </span>
                     </div>
@@ -206,8 +206,8 @@ export default function MyOrder() {
           <>
             {orderData.some((order) =>
               order.productItems.some(
-                (item1) => item1.order_status === "delivering"
-              )
+                (item1) => item1.order_status === "delivering",
+              ),
             ) ? (
               orderData.map((item, index) => (
                 <React.Fragment key={index}>
@@ -215,7 +215,7 @@ export default function MyOrder() {
                     .filter((item1) => item1.order_status === "delivering")
                     .map((item1, i) => (
                       <div
-                        className="bg-white w-[800px] py-3 px-6 shadow-md rounded-md mb-2"
+                        className="bg-white md:w-[800px] w-full py-3 px-6 shadow-md rounded-md mb-2"
                         key={i}
                       >
                         <div className="flex items-center justify-between mb-2">
@@ -315,7 +315,7 @@ export default function MyOrder() {
                 </React.Fragment>
               ))
             ) : (
-              <div className="flex w-[500px] h-[200px] bg-white items-center justify-center text-gray-500 text-[18px] italic">
+              <div className="flex md:w-[500px] w-full h-[200px] bg-white items-center justify-center text-gray-500 text-[18px] italic">
                 Hiện chưa có đơn hàng nào!
               </div>
             )}
@@ -325,8 +325,8 @@ export default function MyOrder() {
           <>
             {orderData.some((order) =>
               order.productItems.some(
-                (item1) => item1.order_status === "delivered"
-              )
+                (item1) => item1.order_status === "delivered",
+              ),
             ) ? (
               orderData.map((item, index) => (
                 <React.Fragment key={index}>
@@ -342,7 +342,7 @@ export default function MyOrder() {
                             {item1.productId?.brand}
                           </div>
                           <div className="flex items-center">
-                            <div className="text-[14px] flex gap-1 font-[500]  border-r border-gray-400 pr-2 flex items-center leading-none">
+                            <div className="text-[14px]  gap-1 font-[500]  border-r border-gray-400 pr-2 flex items-center leading-none">
                               <span className="flex items-center text-green-500  gap-1">
                                 <IoMdCheckmarkCircleOutline className="text-[20px]" />
                                 Giao hàng thành công
@@ -358,14 +358,14 @@ export default function MyOrder() {
 
                         <hr />
                         <div className="flex my-3">
-                          <div className="w-[10%]">
+                          <div className="w-[15%]">
                             <img
                               src={item1.productId?.images?.[0].url}
                               alt=""
-                              className="w-[90px] rounded-md"
+                              className="w-[95px] md:h-[110px] h-[80px] rounded-md"
                             />
                           </div>
-                          <div className="w-[75%] flex flex-col gap-1 ml-6">
+                          <div className="w-[70%] flex flex-col gap-1 ml-6">
                             <Link className="line-clamp-1 text-[18px] font-[500] text-black hover:text-[#ff5252]">
                               {item1.productId?.name}
                             </Link>
@@ -434,7 +434,7 @@ export default function MyOrder() {
                 </React.Fragment>
               ))
             ) : (
-              <div className="flex w-[500px] h-[200px] bg-white items-center justify-center text-gray-500 text-[18px] italic">
+              <div className="flex md:w-[500px] w-full h-[200px] bg-white items-center justify-center text-gray-500 text-[18px] italic">
                 Hiện chưa có đơn hàng nào!
               </div>
             )}
@@ -444,8 +444,8 @@ export default function MyOrder() {
           <>
             {orderData.some((order) =>
               order.productItems.some(
-                (item1) => item1.order_status === "cancelled"
-              )
+                (item1) => item1.order_status === "cancelled",
+              ),
             ) ? (
               orderData.map((item, index) => (
                 <React.Fragment key={index}>
@@ -453,7 +453,7 @@ export default function MyOrder() {
                     .filter((item1) => item1.order_status === "cancelled")
                     .map((item1, i) => (
                       <div
-                        className="bg-white w-[800px] py-3 px-6 shadow-md rounded-md mb-2"
+                        className="bg-white md:w-[800px] w-full py-3 px-6 shadow-md rounded-md mb-2"
                         key={i}
                       >
                         <div className="flex items-center justify-between mb-2">
@@ -461,7 +461,7 @@ export default function MyOrder() {
                             {item1.productId?.brand}
                           </div>
                           <div className="flex items-center">
-                            <div className="text-[14px] flex gap-1 font-[500]  border-r border-gray-400 pr-2 flex items-center leading-none">
+                            <div className="text-[14px]  gap-1 font-[500]  border-r border-gray-400 pr-2 flex items-center leading-none">
                               <span className="flex text-gray-500 items-center gap-1">
                                 <FcCancel className="text-[20px]" /> Đã hủy
                               </span>
@@ -475,15 +475,15 @@ export default function MyOrder() {
                         </div>
 
                         <hr />
-                        <div className="flex my-3">
-                          <div className="w-[10%]">
+                        <div className="flex my-3 items-center">
+                          <div className="w-[15%]">
                             <img
                               src={item1.productId?.images?.[0].url}
                               alt=""
-                              className="w-[90px] rounded-md"
+                              className="w-[95px] md:h-[110px] h-[80px] rounded-md"
                             />
                           </div>
-                          <div className="w-[75%] flex flex-col gap-1 ml-6">
+                          <div className="w-[70%] flex flex-col gap-1 ml-6">
                             <Link className="line-clamp-1 text-[18px] font-[500] text-black hover:text-[#ff5252]">
                               {item1.productId?.name}
                             </Link>
@@ -555,7 +555,13 @@ export default function MyOrder() {
                                   color: "#f1f1f1",
                                 },
                               }}
-                              onClick={() => handleBuy(item1.productId, item1.quantity, item1?.size)}
+                              onClick={() =>
+                                handleBuy(
+                                  item1.productId,
+                                  item1.quantity,
+                                  item1?.size,
+                                )
+                              }
                             >
                               Mua lại
                             </Button>
@@ -570,7 +576,7 @@ export default function MyOrder() {
                 </React.Fragment>
               ))
             ) : (
-              <div className="flex w-[500px] h-[200px] bg-white items-center justify-center text-gray-500 text-[18px] italic">
+              <div className="flex md:w-[500px] w-full h-[200px] bg-white items-center justify-center text-gray-500 text-[18px] italic">
                 Hiện chưa có đơn hàng nào!
               </div>
             )}

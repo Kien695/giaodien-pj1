@@ -93,7 +93,7 @@ export default function Checkout() {
         try {
           localStorage.setItem("orderInfo", JSON.stringify(formData));
           const res = await getData(
-            `/api/checkout/payment?amount=${totalPrice}`
+            `/api/checkout/payment?amount=${totalPrice}`,
           );
           if (res.success) {
             window.location.href = res.url;
@@ -115,7 +115,7 @@ export default function Checkout() {
 
         context.openAlertBox(
           "success",
-          "Đặt hàng thành công! Vui lòng kiểm tra đơn hàng của bạn"
+          "Đặt hàng thành công! Vui lòng kiểm tra đơn hàng của bạn",
         );
         navigate("/product");
       }
@@ -124,10 +124,10 @@ export default function Checkout() {
   return (
     <div className="py-10">
       <div className="container">
-        <div className=" w-[1100px] flex mx-auto gap-8">
-          <div className="w-[500px] h-[300px] flex flex-col gap-3 bg-white rounded-md p-6 shadow-md">
+        <div className=" md:w-[1100px] flex md:flex-row flex-col mx-auto md:gap-16 gap-6">
+          <div className="md:w-[500px] w-full h-[300px] flex flex-col gap-3 bg-white rounded-md p-6 shadow-md">
             <div className="flex items-center justify-between">
-              <h3 className="text-[20px] font-[600] text-[#ff5252] ">
+              <h3 className="md:text-[20px] text-[16px] font-[600] text-[#ff5252] ">
                 Địa chỉ giao hàng
               </h3>
               <Link to="/my-account">
@@ -137,7 +137,7 @@ export default function Checkout() {
             <hr />
 
             <div className="flex gap-3">
-              <div className="flex flex-col justify-end font-[500]">
+              <div className="flex flex-col justify-end font-[500] md:text-[15px] text-[13px]">
                 Họ tên:
               </div>
               <TextField
@@ -152,8 +152,8 @@ export default function Checkout() {
                 name="fullName"
               />
             </div>
-            <div className="flex gap-3 mt-3">
-              <div className="flex flex-col justify-end font-[500]">
+            <div className="flex gap-3 md:mt-3 mt-2">
+              <div className="flex flex-col justify-end font-[500] md:text-[15px] text-[13px]">
                 Số điện thoại:
               </div>
               <TextField
@@ -170,7 +170,7 @@ export default function Checkout() {
             </div>
 
             <div className="flex gap-3 mt-3 items-center">
-              <div className="flex flex-col justify-end font-[500]">
+              <div className="flex flex-col justify-end font-[500] md:text-[15px] text-[13px]">
                 Địa chỉ:
               </div>
               <TextField
@@ -187,7 +187,7 @@ export default function Checkout() {
               />
             </div>
             <div className="flex gap-3 items-center mt-3">
-              <div className="flex flex-col justify-end font-[500]">
+              <div className="flex flex-col justify-end font-[500] md:text-[15px] text-[13px]">
                 Loại địa chỉ:
               </div>
               <FormControl>
@@ -218,11 +218,9 @@ export default function Checkout() {
               </FormControl>
             </div>
           </div>
-          <div className=" ml-5 w-[600px] h-full bg-white rounded-md shadow-md p-3">
+          <div className=" md:w-[600px] w-full h-full bg-white rounded-md shadow-md p-3">
             <div className="flex-none">
-              <p className="font-[600px] text-[#ff5252] font-bold mb-2">
-                Đơn hàng của bạn
-              </p>
+              <p className=" text-[#ff5252] font-bold mb-2">Đơn hàng của bạn</p>
               <hr />
               <div className="flex items-center justify-between mb-2">
                 <div className="text-[15px] font-[600]">Sản phẩm</div>

@@ -31,12 +31,12 @@ export default function MyList() {
   }, []);
 
   return (
-    <div className="container flex py-10 gap-10">
+    <div className="container flex  md:flex-row flex-col py-10 gap-10">
       <Profile />
-      <div className="w-[800px]">
+      <div className="md:w-[800px] w-full">
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
           <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <caption className="p-5 text-lg font-semibold text-left bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 flex justify-between">
+            <caption className="p-5 md:text-lg text-[15px] gap-2 font-semibold text-left bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 flex justify-between">
               Có {countList} sản phẩm trong danh sách yêu thích của bạn
               <DeleteAllListLove
                 onSuccess={() => fetchData()}
@@ -51,22 +51,24 @@ export default function MyList() {
                   key={index}
                 >
                   <td className="p-4">
-                    <div className=" flex">
+                    <div className=" flex items-center">
                       <div className="w-[15%] relative">
                         <img
                           src={item.product.images[0].url}
                           alt=""
-                          className="w-[95px] rounded-md"
+                          className="w-[95px] md:h-[110px] h-[80px] rounded-md"
                         />
-                        <div className="absolute top-[-7px] left-[-9px] rounded-md bg-[#ff5252] text-white p-1">
+                        <div className="md:text-[15px] text-[11px] absolute top-[-7px] left-[-9px] rounded-md bg-[#ff5252] text-white p-1">
                           {item?.product.discountPercentage}%
                         </div>
                       </div>
                       <div className="w-[65%] flex flex-col gap-1 ml-6">
-                        <div className="text-[14px]">{item?.product.brand}</div>
+                        <div className="md:text-[14px] text-[12px]">
+                          {item?.product.brand}
+                        </div>
                         <Link
                           to={`/product/${item?.product._id}`}
-                          className="line-clamp-1 text-[16px] font-[500] text-black link"
+                          className="line-clamp-1 md:text-[16px] text-[14px] font-[500] text-black link"
                         >
                           {item?.product.name}
                         </Link>
@@ -81,7 +83,7 @@ export default function MyList() {
                             {item?.product?.size?.length > 0 && (
                               <div className="flex items-center gap-3">
                                 <div>Kích thước:</div>
-                                <div className="flex !w-[30px] !h-[30px] !min-w-[30px]  gap-2 action ">
+                                <div className="flex !w-[25px] !h-[25px] !min-w-[25px]  gap-2 action ">
                                   {item?.product.size.map((size, index) => (
                                     <Button
                                       key={index}

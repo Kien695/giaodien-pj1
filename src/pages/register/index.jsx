@@ -74,7 +74,7 @@ export default function Register() {
   return (
     <div className="py-10">
       <div className="container">
-        <div className="shadow-md rounded-md w-[500px] mx-auto bg-white py-4 px-16">
+        <div className="shadow-md rounded-md md:w-[500px] w-[400px] mx-auto bg-white py-4 px-16">
           <div className="text-center text-[20px] text-[#ff5252] font-[600] mb-6">
             Đăng kí
           </div>

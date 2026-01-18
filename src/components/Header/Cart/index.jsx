@@ -113,7 +113,7 @@ export default function Cart() {
         <Tooltip title="Giỏ hàng">
           <IconButton aria-label="cart">
             <StyledBadge badgeContent={context.countCart} color="error">
-              <MdOutlineShoppingCart />
+              <MdOutlineShoppingCart className="md:text-[23px] text-[18px]" />
             </StyledBadge>
           </IconButton>
         </Tooltip>

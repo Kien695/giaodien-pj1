@@ -30,7 +30,7 @@ export default function Verify() {
         } else {
           context.openAlertBox(
             "error",
-            res.message || "Mã OTP không chính xác!"
+            res.message || "Mã OTP không chính xác!",
           );
         }
       } catch (error) {
@@ -68,7 +68,7 @@ export default function Verify() {
 
   return (
     <div className="container py-8">
-      <div className="w-[500px] bg-white mx-auto rounded-md">
+      <div className="md:w-[500px] w-[400px] bg-white mx-auto rounded-md">
         <div className="flex flex-col items-center p-5 gap-2 ">
           <div className="img">
             <img

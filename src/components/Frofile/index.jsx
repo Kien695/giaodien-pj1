@@ -27,7 +27,7 @@ export default function Profile() {
       if (response.success) {
         const token = localStorage.getItem("accessToken");
         const updatedUser = await getData(
-          `/api/user/user-detail?token=${token}`
+          `/api/user/user-detail?token=${token}`,
         );
 
         if (updatedUser.success) {
@@ -43,8 +43,8 @@ export default function Profile() {
   };
 
   return (
-    <div className="w-[250px] h-[400px] rounded-md shadow-md border border-2 borer-gray-300 ">
-      <div className="img h-[50%] flex flex-col gap-3 items-center justify-center bg-white py-6 rounded-md ">
+    <div className="md:w-[250px] w-full flex md:flex-col flex-row gap-4 md:gap-0  md:h-[400px] h-auto rounded-md shadow-md border-2 borer-gray-300 ">
+      <div className="img h-[50%] flex flex-col gap-3 items-center justify-center bg-white md:py-6 py-8 rounded-md ">
         <div className="relative w-[90px] h-[90px]">
           <img
             src={preview ? preview : context?.userData?.avatar || avatar}
@@ -81,7 +81,7 @@ export default function Profile() {
           )}
         </div>
 
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center md:px-0 px-3">
           <div className="text-[14px] font-[500]">
             {context?.userData?.name}
           </div>
