@@ -55,7 +55,7 @@ export default function ProductLasted(props) {
       >
         {context?.productNewData.map((item, index) => (
           <SwiperSlide key={index}>
-            <div className="group  productItems rounded-md overflow-hidden shadow-lg border-2 border-[rgba(0,0,0,0.1)] relative">
+            <div className="group   productItems rounded-md overflow-hidden shadow-lg border-2 border-[rgba(0,0,0,0.1)] relative">
               <div className="imgWrap w-[100%] overflow-hidden rounded-md relative ">
                 <Link>
                   <div className="md:h-[220px] h-[180px] overflow-hidden">

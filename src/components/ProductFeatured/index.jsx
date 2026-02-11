@@ -73,7 +73,7 @@ export default function ProductFeatured(props) {
                   </div>
                 </Link>
               </div>
-              <div className="info  p-3 bg-[#f1f1f1] ">
+              <div className="info h-[180px]  p-3 bg-[#f1f1f1] ">
                 <h6 className="text-[13px]">
                   <Link className="link transition-all">
                     {item.brand || "Không có"}

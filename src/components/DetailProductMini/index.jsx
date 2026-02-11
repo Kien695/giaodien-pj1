@@ -15,10 +15,12 @@ import { MdOutlineZoomOutMap } from "react-icons/md";
 import ZoomImage from "../ImageZoom";
 import { MyContext } from "../../App";
 import { postData } from "../../untils/api";
+import { useNavigate } from "react-router-dom";
 
 export default function DetailProductMini({ item }) {
   const isMobile = useMediaQuery("(max-width:900px)");
   const context = useContext(MyContext);
+  const navigate = useNavigate();
   const [quantity, setQuantity] = React.useState(1);
   const [openDetailProduct, setOpenDetailProduct] = React.useState(false);
   const [maxWidth, setMaxWidth] = React.useState("lg");
@@ -27,7 +29,11 @@ export default function DetailProductMini({ item }) {
   const handleCloseDetail = () => {
     setOpenDetailProduct(false);
   };
-
+  //buy now
+  const handleBuy = (item, qty, size) => {
+    navigate("/checkout", { state: { item, quantity: qty, size: size || "" } });
+  };
+  //adđ to cart
   const handleAddToCart = async (id) => {
     try {
       const res = await postData("/api/cart/add", {
@@ -185,6 +191,9 @@ export default function DetailProductMini({ item }) {
                     )}
                   </Button>
                   <Button
+                    onClick={() => {
+                      handleBuy(item, quantity, size);
+                    }}
                     sx={{
                       textTransform: "none",
                     }}

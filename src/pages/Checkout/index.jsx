@@ -31,63 +31,96 @@ export default function Checkout() {
     : "";
 
   let totalPrice = 0;
-  let formData = {};
-  if (item) {
-    // Mua ngay: chỉ 1 sản phẩm
-    const discountedPrice =
-      item.price - item.price * (item.discountPercentage / 100);
+  const [formData, setFormData] = useState({
+    productItems: [],
+    paymentMethod: paymentMethod,
+    delivery_address: address || "",
+    mobile: context?.addressData?.userId?.mobile || "",
+    totalAmount: totalPrice,
+    payment_status: "",
+  });
+  const ref = {
+    mobile: React.useRef(),
+    address: React.useRef(),
+  };
+  const handleInfoCheckout = (e) => {
+    const { name, value } = e.target;
+    if (name === "mobile") {
+    if (!/^\d*$/.test(value)) return; // chỉ cho số
+  }
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+  useEffect(() => {
+    let totalPrice = 0;
 
-    totalPrice = discountedPrice * (quantity || 1);
-    formData = {
-      productItems:
-        {
-          productId: item._id,
-          quantity: quantity,
-          price: totalPrice,
-          size: size,
-          order_status: "pending",
-        } || [],
-      paymentMethod: paymentMethod,
-      delivery_address: address,
-      totalAmount: totalPrice,
-      payment_status: paymentMethod == "cod" ? "no" : "yes",
-      buyMethod: "direct",
-    };
-  } else {
-    // Checkout từ giỏ hàng
-    totalPrice = context?.cart?.reduce((total, cartItem) => {
-      if (!cartItem?.productId || typeof cartItem.productId.price !== "number")
-        return total;
-
+    if (item) {
       const discountedPrice =
-        cartItem.productId.price -
-        cartItem.productId.price *
-          ((cartItem.productId.discountPercentage || 0) / 100);
+        item.price - item.price * (item.discountPercentage / 100);
 
-      return total + discountedPrice * (cartItem.quantity || 1);
-    }, 0);
-    formData = {
-      productItems:
-        context?.cart?.map((item) => ({
-          productId: item.productId,
+      totalPrice = discountedPrice * (quantity || 1);
+
+      setFormData({
+        productItems: [
+          {
+            productId: item._id,
+            quantity,
+            price: totalPrice,
+            size,
+            order_status: "pending",
+          },
+        ],
+        paymentMethod,
+        delivery_address: address,
+        totalAmount: totalPrice,
+        payment_status: paymentMethod === "cod" ? "no" : "yes",
+        buyMethod: "direct",
+      });
+    } else if (context?.cart?.length) {
+      totalPrice = context.cart.reduce((total, cartItem) => {
+        if (!cartItem?.productId) return total;
+
+        const discountedPrice =
+          cartItem.productId.price -
+          cartItem.productId.price *
+            ((cartItem.productId.discountPercentage || 0) / 100);
+
+        return total + discountedPrice * (cartItem.quantity || 1);
+      }, 0);
+
+      setFormData({
+        productItems: context.cart.map((item) => ({
+          productId: item.productId._id,
           quantity: item.quantity,
           price:
             item.quantity *
-            (item?.productId.price -
-              item?.productId.price *
-                (item?.productId.discountPercentage / 100)),
+            (item.productId.price -
+              item.productId.price * (item.productId.discountPercentage / 100)),
           size: item.size,
           order_status: "pending",
-        })) || [],
-      paymentMethod: paymentMethod,
-      delivery_address: address,
-      totalAmount: totalPrice,
-      payment_status: paymentMethod == "cod" ? "no" : "yes",
-      buyMethod: "indirect",
-    };
-  }
+        })),
+        paymentMethod,
+        delivery_address: address,
+        totalAmount: totalPrice,
+        payment_status: paymentMethod === "cod" ? "no" : "yes",
+        buyMethod: "indirect",
+      });
+    }
+  }, [item, quantity, size, paymentMethod, address, context?.cart]);
 
   const handlePayment = async () => {
+    if (!formData.mobile) {
+      context.openAlertBox("warning", "Vui lòng điền số điện thoại!");
+      ref.mobile.current.focus();
+      return;
+    }
+    if (!formData.delivery_address) {
+      context.openAlertBox("warning", "Vui lòng điền địa chỉ giao hàng!");
+      ref.address.current.focus();
+      return;
+    }
     if (paymentMethod == "card") {
       if (selectedCardMethod == "vn-pay") {
         try {
@@ -144,10 +177,8 @@ export default function Checkout() {
                 InputProps={{
                   readOnly: true, // chỉ đọc
                 }}
-                value={context?.addressData?.userId?.name || ""}
-                id="standard-fullName-input"
+                value={context?.userData?.name || ""}
                 type="text"
-                autoComplete="fullName"
                 variant="standard"
                 name="fullName"
               />
@@ -157,15 +188,12 @@ export default function Checkout() {
                 Số điện thoại:
               </div>
               <TextField
-                slotProps={{
-                  readOnly: true, //  chỉ đọc
-                }}
-                value={context?.addressData?.userId?.mobile || ""}
-                id="standard-phone-input"
-                type="text"
-                autoComplete="address"
+                inputRef={ref.mobile}
+                value={formData?.mobile || ""}
+                type="tel"
                 variant="standard"
-                name="phone"
+                name="mobile"
+                onChange={handleInfoCheckout}
               />
             </div>
 
@@ -174,16 +202,15 @@ export default function Checkout() {
                 Địa chỉ:
               </div>
               <TextField
-                slotProps={{
-                  readOnly: true, //  chỉ đọc
-                }}
+                inputRef={ref.address}
                 id="standard-address-input"
-                value={address}
+                value={formData?.delivery_address || ""}
                 type="text"
                 autoComplete="address"
                 variant="standard"
                 sx={{ width: "70%" }}
-                name="address_line"
+                name="delivery_address"
+                onChange={handleInfoCheckout}
               />
             </div>
             <div className="flex gap-3 items-center mt-3">
@@ -292,18 +319,18 @@ export default function Checkout() {
             <div className="p-3">
               <div className="flex justify-between mb-3">
                 <div className="font-[500] text-[15px]">Tổng tiền</div>
-                <div className="font-[500] font-[16px]">
-                  {Number(totalPrice).toLocaleString("vi-VN") + " đ"}
+                <div className="font-[500] text-[16px]">
+                  {Number(formData.totalAmount).toLocaleString("vi-VN") + " đ"}
                 </div>
               </div>
               <div className="flex justify-between mb-3">
                 <div className="font-[500] text-[15px]">Vận chuyển</div>
-                <div className="font-[500]  font-[16px]">Free</div>
+                <div className="font-[500]  text-[16px]">Free</div>
               </div>
               <div className="flex justify-between mb-3">
                 <div className="font-[600] text-[15px] italic">Thanh toán</div>
-                <div className="font-[600] text-[#ff5252] font-[16px] italic">
-                  {Number(totalPrice).toLocaleString("vi-VN") + " đ"}
+                <div className="font-[600] text-[#ff5252] text-[16px] italic">
+                  {Number(formData.totalAmount).toLocaleString("vi-VN") + " đ"}
                 </div>
               </div>
               <div className="flex items-center justify-between mb-2">

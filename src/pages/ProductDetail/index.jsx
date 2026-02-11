@@ -10,13 +10,14 @@ import { MyContext } from "../../App";
 import { getData, postData } from "../../untils/api";
 import { useNavigate, useParams } from "react-router-dom";
 import ListLikeProduct from "../../components/ListLikeProduct";
+import dayjs from "dayjs";
 export default function ProductDetail() {
   const isMobile = useMediaQuery("(max-width:900px)");
   const context = useContext(MyContext);
   const navigate = useNavigate();
   const [active, setActive] = React.useState(null);
   const [activeDes, setActiveDes] = React.useState(1);
-  const [product, getProduct] = React.useState("");
+  const [product, setProduct] = React.useState("");
   const [quantity, setQuantity] = React.useState(1);
   const [size, setSize] = React.useState("");
 
@@ -27,7 +28,7 @@ export default function ProductDetail() {
       try {
         const res = await getData(`/api/productClient/${id}`);
         if (res.success) {
-          getProduct(res.data);
+          setProduct(res.data);
         }
       } catch (error) {
         if (error.response) {
@@ -68,7 +69,57 @@ export default function ProductDetail() {
   const handleBuy = (item, qty, size) => {
     navigate("/checkout", { state: { item, quantity: qty, size: size || "" } });
   };
+  //review product
+  const [listReview, setListReview] = React.useState([]);
+  const [review, setReview] = React.useState({
+    rating: 0,
+    comment: "",
+    productId: id,
+  });
+  //get review product
+  useEffect(() => {
+    const fetchReviewProduct = async () => {
+      try {
+        const res = await getData(`/api/reviewProduct/product/${id}`);
+        if (res.success) {
+          setListReview(res.data);
+        }
+      } catch (error) {
+        if (error.response) {
+          context.openAlertBox("error", error.response.data.message);
+        } else {
+          context.openAlertBox("error", "Không thể kết nối server!");
+        }
+      }
+    };
+    fetchReviewProduct();
+  }, []);
+  //create review product
+  const handleReviewProduct = async () => {
+    try {
+      const res = await postData("/api/reviewProduct/review-product", review);
+      if (res.success) {
+        context.openAlertBox("success", res.message);
+        setListReview((prev) => {
+          const filtered = prev.filter((r) => r._id !== res.review._id);
+          return [res.review, ...filtered];
+        });
 
+        setReview({ ...review, rating: 0, comment: "" });
+        setProduct((prev) => ({
+          ...prev,
+          rating: res.rating,
+          numReviews: res.numReviews,
+        }));
+      }
+    } catch (error) {
+      if (error.response?.data?.message) {
+        context.openAlertBox("error", error.response.data.message);
+      } else {
+        context.openAlertBox("error", "Không thể kết nối server!");
+      }
+    }
+  };
   return (
     <div className="container ">
       <div className=" flex md:flex-row flex-col gap-5 mt-5 p-4 bg-white rounded-md">
@@ -84,8 +135,18 @@ export default function ProductDetail() {
               <span className="text-[rgba(0,0,0,0.5)] ">Thương hiệu:</span>{" "}
               {product.brand}
             </div>
-            <Rating name="read-only" size="small" value={3} readOnly />
-            <div>Đánh giá(0)</div>
+            {product?.rating > 0 ? (
+              <Rating
+                name="read-only"
+                size="small"
+                value={product?.rating}
+                readOnly
+              />
+            ) : (
+              <div className="text-[rgba(0,0,0,0.6)]">Chưa có đánh giá</div>
+            )}
+
+            <div>Bình luận({product?.numReviews || 0})</div>
           </div>
           <div className="flex items-center gap-4">
             <span className="text-[rgba(0,0,0,0.6)]">Voucher của shop:</span>
@@ -169,7 +230,7 @@ export default function ProductDetail() {
                 }}
                 className=" flex items-center justify-center gap-2 md:!text-[15px] !text-[13px]"
                 onClick={() => {
-                  handleAddToCart(item._id);
+                  handleAddToCart(product);
                 }}
               >
                 {isMobile ? (
@@ -181,6 +242,7 @@ export default function ProductDetail() {
                 )}
               </Button>
               <Button
+              onClick={()=>{handleBuy(product,quantity,size)}}
                 sx={{
                   textTransform: "none",
                 }}
@@ -219,7 +281,7 @@ export default function ProductDetail() {
             } `}
             onClick={() => setActiveDes(3)}
           >
-            Đánh giá (10)
+            Đánh giá ({product.numReviews || 0})
           </div>
         </div>
 
@@ -312,94 +374,42 @@ export default function ProductDetail() {
           <div className="shadow-lg md:max-w-[75%] w-full bg-white rounded-md p-8">
             <div className="font-[500] mb-8">Đánh giá của khách hàng</div>
             <div className="scroll max-h-[300px] overflow-y-scroll flex flex-col gap-3 ">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1">
-                  <img
-                    src="/src/assets/tải xuống.jfif"
-                    alt=""
-                    className="w-[80px] h-auto rounded-full"
-                  />
-                  <div className="info flex flex-col">
-                    <div className="text-[16px] font-[500]">Tấn Kiên</div>
-                    <div className="text-[13px]">8-28-2025</div>
-                    <div className="text-[14px]">Sản phẩm quá tốt</div>
-                  </div>
-                </div>
-                <Rating
-                  size="small"
-                  name="read-only"
-                  value={4}
-                  readOnly
-                  className="mr-4"
-                />
-              </div>
-              <hr />
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1">
-                  <img
-                    src="/src/assets/tải xuống.jfif"
-                    alt=""
-                    className="w-[80px] h-auto rounded-full"
-                  />
-                  <div className="info flex flex-col">
-                    <div className="text-[16px] font-[500]">Tấn Kiên</div>
-                    <div className="text-[13px]">8-28-2025</div>
-                    <div className="text-[14px]">Sản phẩm quá tốt</div>
-                  </div>
-                </div>
-                <Rating
-                  size="small"
-                  name="read-only"
-                  value={4}
-                  readOnly
-                  className="mr-4"
-                />
-              </div>
-              <hr />
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1">
-                  <img
-                    src="/src/assets/tải xuống.jfif"
-                    alt=""
-                    className="w-[80px] h-auto rounded-full"
-                  />
-                  <div className="info flex flex-col">
-                    <div className="text-[16px] font-[500]">Tấn Kiên</div>
-                    <div className="text-[13px]">8-28-2025</div>
-                    <div className="text-[14px]">Sản phẩm quá tốt</div>
-                  </div>
-                </div>
-                <Rating
-                  size="small"
-                  name="read-only"
-                  value={4}
-                  readOnly
-                  className="mr-4"
-                />
-              </div>
-              <hr />
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1">
-                  <img
-                    src="/src/assets/tải xuống.jfif"
-                    alt=""
-                    className="w-[80px] h-auto rounded-full"
-                  />
-                  <div className="info flex flex-col">
-                    <div className="text-[16px] font-[500]">Tấn Kiên</div>
-                    <div className="text-[13px]">8-28-2025</div>
-                    <div className="text-[14px]">Sản phẩm quá tốt</div>
-                  </div>
-                </div>
-                <Rating
-                  size="small"
-                  name="read-only"
-                  value={4}
-                  readOnly
-                  className="mr-4"
-                />
-              </div>
-              <hr />
+              {listReview.length > 0 ? (
+                listReview.map((item, index) => (
+                  <React.Fragment key={index}>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <img
+                          src={
+                            item?.user?.avatar || "/src/assets/tải xuống.jfif"
+                          }
+                          alt=""
+                          className="w-[70px] h-[70px] rounded-full"
+                        />
+                        <div className="info flex flex-col">
+                          <div className="text-[16px] font-[500]">
+                            {item?.user?.name}
+                          </div>
+                          <div className="text-[11px] ">
+                            {dayjs(item.createdAt).format("YYYY-MM-DD")}
+                          </div>
+                          <div className="text-[14px]">{item?.comment}</div>
+                        </div>
+                      </div>
+                      <Rating
+                        size="small"
+                        name="read-only"
+                        value={item.rating}
+                        readOnly
+                        className="mr-4"
+                      />
+                    </div>
+                    <hr />
+                  </React.Fragment>
+                ))
+              ) : (
+                <div>Chưa có đánh giá nào</div>
+              )}
             </div>
             <div className="bg-[#f5f0f0] mt-8 p-6 flex flex-col gap-5 rounded-md">
               <div className="font-[500] ">Thêm đánh giá</div>
@@ -409,12 +419,23 @@ export default function ProductDetail() {
                 multiline
                 rows={4}
                 sx={{ width: "100%" }}
+                value={review.comment}
+                onChange={(e) =>
+                  setReview({ ...review, comment: e.target.value })
+                }
               />
-              <Rating name="size-medium" defaultValue={2} />
+              <Rating
+                name="size-medium"
+                value={review.rating}
+                onChange={(e) =>
+                  setReview({ ...review, rating: e.target.value })
+                }
+              />
               <Button
                 variant="contained"
                 color="error"
                 className="w-auto self-center"
+                onClick={handleReviewProduct}
               >
                 Gửi đánh giá
               </Button>

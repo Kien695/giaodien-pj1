@@ -77,7 +77,7 @@ export default function Login() {
 
     try {
       const res = await postData(
-        `/api/user/login?token=${localStorage.getItem("accessToken")}`,
+        `/api/user/login}`,
         formFields,
         {
           withCredentials: true,
@@ -85,7 +85,7 @@ export default function Login() {
       );
       if (res.success) {
         localStorage.setItem("accessToken", res?.data?.accessToken);
-        localStorage.setItem("refreshToken", res?.data?.refreshToken);
+      
         setFormFields({ email: "", password: "" });
         context.openAlertBox("success", res.message);
         context.setIsLogin(true);
