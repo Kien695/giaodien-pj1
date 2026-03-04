@@ -10,25 +10,6 @@ import DeleteAllListLove from "../../components/DeleteAllListLove";
 
 export default function MyList() {
   const context = useContext(MyContext);
-  const [countList, setCountList] = React.useState(0);
-  const [listLove, setListLove] = React.useState([]);
-
-  const fetchData = async () => {
-    try {
-      const resData = await getData("/api/myList/");
-      setListLove(resData.data);
-      setCountList(resData.countList);
-    } catch (error) {
-      if (error.response?.data?.message) {
-        context.openAlertBox("error", error.response.data.message);
-      } else {
-        context.openAlertBox("error", "Không thể kết nối server!");
-      }
-    }
-  };
-  useEffect(() => {
-    fetchData();
-  }, []);
 
   return (
     <div className="container flex  md:flex-row flex-col py-10 gap-10">
@@ -37,15 +18,13 @@ export default function MyList() {
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
           <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <caption className="p-5 md:text-lg text-[15px] gap-2 font-semibold text-left bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 flex justify-between">
-              Có {countList} sản phẩm trong danh sách yêu thích của bạn
-              <DeleteAllListLove
-                onSuccess={() => fetchData()}
-                countList={countList}
-              />
+              Có {context.wishlist.length} sản phẩm trong danh sách yêu thích
+              của bạn
+              <DeleteAllListLove />
             </caption>
 
             <tbody>
-              {listLove.map((item, index) => (
+              {context?.wishlist?.map((item, index) => (
                 <tr
                   className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200"
                   key={index}
@@ -115,10 +94,7 @@ export default function MyList() {
                           </div>
                         </div>
                       </div>
-                      <DeleteListLove
-                        item={item}
-                        onSuccess={() => fetchData()}
-                      />
+                      <DeleteListLove item={item} />
                     </div>
                   </td>
                 </tr>

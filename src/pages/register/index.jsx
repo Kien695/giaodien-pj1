@@ -23,8 +23,8 @@ export default function Register() {
   });
   const handleChangeInput = (e) => {
     const { name, value } = e.target;
-    setFormInput(() => {
-      return { ...formInput, [name]: value };
+    setFormInput((prev) => {
+      return { ...prev, [name]: value };
     });
   };
   const handleSubmit = async (e) => {
@@ -43,17 +43,36 @@ export default function Register() {
       setLoading(false);
       return;
     }
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formInput.email)) {
+      context.openAlertBox("error", "Email không đúng định dạng!");
+      inputRefs.email.current.focus();
+      setLoading(false);
+      return;
+    }
     if (formInput.password === "") {
       context.openAlertBox("error", "Vui lòng nhập mật khẩu");
       inputRefs.password.current.focus();
       setLoading(false);
       return;
     }
+    // Regex password
+    const passwordRegex =
+      /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_\-+=\[{\]};:'",.<>/?\\|]).{8,}$/;
 
+    if (!passwordRegex.test(formInput.password)) {
+      context.openAlertBox(
+        "error",
+        "Mật khẩu phải ≥ 8 ký tự, gồm 1 chữ hoa, 1 số và 1 ký tự đặc biệt",
+      );
+      inputRefs.password.current.focus();
+      setLoading(false);
+      return;
+    }
     try {
       const res = await postData("/api/user/register", formInput);
       if (res.success) {
-        // Chỉ chạy khi status 200
         localStorage.setItem("userEmail", formInput.email);
         setFormInput({ name: "", email: "", password: "" });
         context.openAlertBox("success", res.message);
@@ -89,7 +108,6 @@ export default function Register() {
             />
             <TextField
               label="Email"
-              type="email"
               name="email"
               size="small"
               inputRef={inputRefs.email}

@@ -69,7 +69,18 @@ export default function ProductItems({ productData, type }) {
                 {item.name}
               </Link>
             </h3>
-            <Rating name="size-small" defaultValue={2} size="small" readOnly />
+            {item.rating ? (
+              <Rating
+                name="size-small"
+                value={item?.rating}
+                size="small"
+                readOnly
+              />
+            ) : (
+              <span className="text-[12px] text-gray-500">
+                Chưa có đánh giá
+              </span>
+            )}
             <div className="flex text-[12px] items-center justify-between font-[500] mb-3">
               <div className="priceOld line-through text-gray-500">
                 {Number(item.price).toLocaleString("vi-VN") + " đ"}
@@ -162,12 +173,19 @@ export default function ProductItems({ productData, type }) {
               }}
             ></div>
             <div className="flex md:flex-col flex-row md:gap-2 gap-5">
-              <Rating
-                name="size-small"
-                defaultValue={2}
-                size="small"
-                readOnly
-              />
+              {item.rating ? (
+                <Rating
+                  name="size-small"
+                  value={item?.rating}
+                  size="small"
+                  readOnly
+                />
+              ) : (
+                <span className="text-[12px] text-gray-500">
+                  Chưa có đánh giá
+                </span>
+              )}
+
               <div className="flex md:text-[15px] text-[12px] items-center md:gap-6 gap-2 font-[500] mb-4">
                 <div className="priceOld line-through text-gray-500">
                   {Number(item.price).toLocaleString("vi-VN") + " đ"}

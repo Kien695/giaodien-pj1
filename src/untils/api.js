@@ -61,7 +61,9 @@ api.interceptors.response.use(
       try {
         const res = await api.post("/api/user/refresh-token");
         const newToken = res.data.data.accessToken;
+
         localStorage.setItem("accessToken", newToken);
+
         api.defaults.headers.Authorization = `Bearer ${newToken}`;
 
         processQueue(null, newToken);
@@ -71,7 +73,7 @@ api.interceptors.response.use(
       } catch (err) {
         processQueue(err, null);
         localStorage.removeItem("accessToken");
-        window.location.href = "/login";
+
         return Promise.reject(err);
       } finally {
         isRefreshing = false;

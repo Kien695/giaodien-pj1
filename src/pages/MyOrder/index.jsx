@@ -1,6 +1,6 @@
 import React from "react";
 import Profile from "../../components/Frofile";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { Button, Rating } from "@mui/material";
 import { CiDeliveryTruck } from "react-icons/ci";
 import { MyContext } from "../../App";
@@ -14,7 +14,7 @@ import { FcCancel, FcProcess } from "react-icons/fc";
 
 export default function MyOrder() {
   const context = useContext(MyContext);
-  const navigate = useNavigate();
+
   const [orderData, setOrderData] = useState([]);
   const [active, setActive] = useState(1);
   const fetchData = async () => {
@@ -193,9 +193,7 @@ export default function MyOrder() {
                       </span>
                     </div>
 
-                    <div className="flex justify-end">
-                      <OrderButton item={item1} onSuccess={() => fetchData()} />
-                    </div>
+                    <OrderButton item={item1} onSuccess={() => fetchData()} />
                   </div>
                 ))}
               </React.Fragment>
@@ -205,7 +203,7 @@ export default function MyOrder() {
         {active == 2 && (
           <>
             {orderData.some((order) =>
-              order.productItems.some(
+              order.productItems?.some(
                 (item1) => item1.order_status === "delivering",
               ),
             ) ? (
@@ -223,7 +221,7 @@ export default function MyOrder() {
                             {item1.productId?.brand}
                           </div>
                           <div className="flex items-center">
-                            <div className="text-[14px] flex gap-1 font-[500] border-r border-gray-400 pr-2 flex items-center leading-none">
+                            <div className="text-[14px] flex gap-1 font-[500] border-r border-gray-400 pr-2  items-center leading-none">
                               <span className="flex items-center gap-1">
                                 <CiDeliveryTruck className="text-[20px]" />
                                 Đang giao
@@ -304,12 +302,10 @@ export default function MyOrder() {
                           </span>
                         </div>
 
-                        <div className="flex justify-end">
-                          <OrderButton
-                            item={item1}
-                            onSuccess={() => fetchData()}
-                          />
-                        </div>
+                        <OrderButton
+                          item={item1}
+                          onSuccess={() => fetchData()}
+                        />
                       </div>
                     ))}
                 </React.Fragment>
@@ -423,12 +419,10 @@ export default function MyOrder() {
                           </span>
                         </div>
 
-                        <div className="flex justify-end">
-                          <OrderButton
-                            item={item1}
-                            onSuccess={() => fetchData()}
-                          />
-                        </div>
+                        <OrderButton
+                          item={item1}
+                          onSuccess={() => fetchData()}
+                        />
                       </div>
                     ))}
                 </React.Fragment>
@@ -541,36 +535,10 @@ export default function MyOrder() {
                           </span>
                         </div>
 
-                        <div className="flex gap-2 justify-end">
-                          {item1.order_status == "cancelled" && (
-                            <Button
-                              variant="contained"
-                              color="error"
-                              sx={{
-                                backgroundColor: "#ff5252",
-                                color: "white",
-                                marginTop: "10px",
-                                "&:hover": {
-                                  backgroundColor: "black",
-                                  color: "#f1f1f1",
-                                },
-                              }}
-                              onClick={() =>
-                                handleBuy(
-                                  item1.productId,
-                                  item1.quantity,
-                                  item1?.size,
-                                )
-                              }
-                            >
-                              Mua lại
-                            </Button>
-                          )}
-                          <OrderButton
-                            item={item1}
-                            onSuccess={() => fetchData()}
-                          />
-                        </div>
+                        <OrderButton
+                          item={item1}
+                          onSuccess={() => fetchData()}
+                        />
                       </div>
                     ))}
                 </React.Fragment>

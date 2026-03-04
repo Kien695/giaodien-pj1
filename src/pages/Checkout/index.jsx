@@ -22,6 +22,8 @@ export default function Checkout() {
   const item = location.state?.item;
   const quantity = location.state?.quantity;
   const size = location.state?.size;
+  const cartItems = location.state?.cartItems;
+  const selectedSize = location.state?.selectedSize;
 
   const [paymentMethod, setPaymentMethod] = useState("cod");
   const [paymentStatus, setPaymentStatus] = useState("no");
@@ -30,15 +32,25 @@ export default function Checkout() {
     ? `${context.addressData.address_line}, ${context.addressData.ward}, ${context.addressData.district}, ${context.addressData.province}`
     : "";
 
-  let totalPrice = 0;
+  const mobile = context?.userData?.mobile || "";
+  const typeAddress = context?.addressData?.typeAddress || "Home";
   const [formData, setFormData] = useState({
     productItems: [],
     paymentMethod: paymentMethod,
-    delivery_address: address || "",
-    mobile: context?.addressData?.userId?.mobile || "",
-    totalAmount: totalPrice,
+    delivery_address: "",
+    mobile: "",
+    totalAmount: 0,
     payment_status: "",
+    typeAddress: "",
   });
+  useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      delivery_address: address,
+      mobile: mobile,
+      typeAddress: typeAddress,
+    }));
+  }, [address, mobile, typeAddress]);
   const ref = {
     mobile: React.useRef(),
     address: React.useRef(),
@@ -46,8 +58,8 @@ export default function Checkout() {
   const handleInfoCheckout = (e) => {
     const { name, value } = e.target;
     if (name === "mobile") {
-    if (!/^\d*$/.test(value)) return; // chỉ cho số
-  }
+      if (!/^\d*$/.test(value)) return; // chỉ cho số
+    }
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -55,6 +67,8 @@ export default function Checkout() {
   };
   useEffect(() => {
     let totalPrice = 0;
+    let productItems = [];
+    let buyMethod = "";
 
     if (item) {
       const discountedPrice =
@@ -62,53 +76,56 @@ export default function Checkout() {
 
       totalPrice = discountedPrice * (quantity || 1);
 
-      setFormData({
-        productItems: [
-          {
-            productId: item._id,
-            quantity,
-            price: totalPrice,
-            size,
-            order_status: "pending",
-          },
-        ],
-        paymentMethod,
-        delivery_address: address,
-        totalAmount: totalPrice,
-        payment_status: paymentMethod === "cod" ? "no" : "yes",
-        buyMethod: "direct",
-      });
-    } else if (context?.cart?.length) {
-      totalPrice = context.cart.reduce((total, cartItem) => {
-        if (!cartItem?.productId) return total;
-
-        const discountedPrice =
-          cartItem.productId.price -
-          cartItem.productId.price *
-            ((cartItem.productId.discountPercentage || 0) / 100);
-
-        return total + discountedPrice * (cartItem.quantity || 1);
-      }, 0);
-
-      setFormData({
-        productItems: context.cart.map((item) => ({
-          productId: item.productId._id,
-          quantity: item.quantity,
-          price:
-            item.quantity *
-            (item.productId.price -
-              item.productId.price * (item.productId.discountPercentage / 100)),
-          size: item.size,
+      productItems = [
+        {
+          productId: item._id,
+          quantity,
+          price: totalPrice,
+          size,
           order_status: "pending",
-        })),
-        paymentMethod,
-        delivery_address: address,
+        },
+      ];
+
+      buyMethod = "direct";
+    } else if (cartItems?.length) {
+      totalPrice = location.state?.totalPrice;
+      productItems = cartItems.map((cartItem) => {
+        return {
+          productId: cartItem.productId._id,
+          quantity: cartItem.quantity,
+          price:
+            (cartItem.productId.price -
+              cartItem.productId.price *
+                (cartItem.productId.discountPercentage / 100)) *
+            cartItem.quantity,
+
+          size: selectedSize[cartItem.productId._id],
+          order_status: "pending",
+        };
+      });
+
+      buyMethod = "indirect";
+    }
+
+    if (productItems.length > 0) {
+      setFormData((prev) => ({
+        ...prev,
+        productItems,
         totalAmount: totalPrice,
         payment_status: paymentMethod === "cod" ? "no" : "yes",
-        buyMethod: "indirect",
-      });
+        buyMethod,
+      }));
     }
-  }, [item, quantity, size, paymentMethod, address, context?.cart]);
+  }, [
+    item,
+    quantity,
+    size,
+    paymentMethod,
+    address,
+    context?.cart,
+    mobile,
+    typeAddress,
+  ]);
 
   const handlePayment = async () => {
     if (!formData.mobile) {
@@ -124,10 +141,8 @@ export default function Checkout() {
     if (paymentMethod == "card") {
       if (selectedCardMethod == "vn-pay") {
         try {
-          localStorage.setItem("orderInfo", JSON.stringify(formData));
-          const res = await getData(
-            `/api/checkout/payment?amount=${totalPrice}`,
-          );
+          sessionStorage.setItem("paymentMethod", "vn-pay");
+          const res = await postData(`/api/checkout/payment`, formData);
           if (res.success) {
             window.location.href = res.url;
           }
@@ -135,7 +150,21 @@ export default function Checkout() {
           if (error.response?.data?.message) {
             context.openAlertBox("error", error.response.data.message);
           } else {
-            context.openAlertBox("error", "Không thể kết nối server!");
+            context.openAlertBox("error", "Lỗi!");
+          }
+        }
+      } else if (selectedCardMethod == "mo-mo") {
+        try {
+          sessionStorage.setItem("paymentMethod", "mo-mo");
+          const res = await postData(`/api/checkout/payment-momo`, formData);
+          if (res.success) {
+            window.location.href = res.url;
+          }
+        } catch (error) {
+          if (error.response?.data?.message) {
+            context.openAlertBox("error", error.response.data.message);
+          } else {
+            context.openAlertBox("error", "Lỗi!");
           }
         }
       }
@@ -174,7 +203,7 @@ export default function Checkout() {
                 Họ tên:
               </div>
               <TextField
-                InputProps={{
+                slotProps={{
                   readOnly: true, // chỉ đọc
                 }}
                 value={context?.userData?.name || ""}
@@ -221,24 +250,20 @@ export default function Checkout() {
                 <RadioGroup
                   row
                   aria-labelledby="demo-row-radio-buttons-group-label"
-                  name="row-radio-buttons-group"
-                  value={context?.addressData?.typeAddress || "Home"}
-                  slotProps={{
-                    readOnly: true, //  chỉ đọc
-                  }}
+                  name="typeAddress"
+                  value={formData?.typeAddress}
+                  onChange={handleInfoCheckout}
                 >
                   <FormControlLabel
                     value="Home"
                     control={<Radio color="error" />}
                     label="Nhà riêng"
-                    name="typeAddress"
                     sx={{ color: "rgba(0,0,0,0.7)" }}
                   />
                   <FormControlLabel
                     value="Office"
                     control={<Radio color="error" />}
                     label="Văn phòng"
-                    name="typeAddress"
                     sx={{ color: "rgba(0,0,0,0.7)" }}
                   />
                 </RadioGroup>
@@ -283,7 +308,7 @@ export default function Checkout() {
                   </div>
                 </div>
               ) : (
-                context?.cart?.map((item, index) => (
+                cartItems?.map((item, index) => (
                   <div
                     className="flex items-center justify-between"
                     key={index}
@@ -298,14 +323,22 @@ export default function Checkout() {
                         <div className="line-clamp-1 font-[500] text-[14px]">
                           {item?.productId?.name}
                         </div>
-                        <div className="text-[12px]">
-                          Số lượng: <span>{item.quantity}</span>
+                        <div className="flex gap-3">
+                          <div className="text-[12px]">
+                            Số lượng: <span>{item.quantity}</span>
+                          </div>
+                          <div className="text-[12px] ">
+                            Kích thước:{" "}
+                            <span className="uppercase">
+                              {selectedSize[item.productId._id]}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
                     <div className="text-[14px] text-[#ff5252] font-[500] w-[25%] text-end">
                       {(
-                        (item?.productId.price -
+                        (item.productId.price -
                           item?.productId.price *
                             (item?.productId.discountPercentage / 100)) *
                         item.quantity
@@ -339,12 +372,12 @@ export default function Checkout() {
                 </div>
                 <select
                   id="underline_select"
-                  className=" p-1 text-sm font-[500] text-[#ff5252] bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-500 peer"
+                  className=" p-1 text-sm font-[500] text-[#ff5252] bg-transparent border-0 border-b-2 border-gray-200  dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-500 peer"
                   value={paymentMethod}
                   onChange={(e) => setPaymentMethod(e.target.value)}
                 >
                   <option value="cod">Thanh toán khi nhận hàng</option>
-                  <option value="card">Thanh toán thẻ</option>
+                  <option value="card">Thanh toán điện tử</option>
                 </select>
               </div>
               {paymentMethod === "card" && (
@@ -376,9 +409,9 @@ export default function Checkout() {
                           className="w-[80px] border border-gray-200 rounded"
                         />
                         {/* Radio hiển thị trên góc */}
-                        <span className="absolute top-0 left-0 w-4 h-4 border border-gray-400 rounded-full bg-white flex items-center justify-center peer-checked:bg-red-500 z-[50]">
+                        <span className="absolute top-0 left-0 w-4 h-4 border border-gray-400 rounded-full bg-white flex items-center justify-center peer-checked:bg-red-500 z-[10]">
                           {/* Dot bên trong khi checked */}
-                          <span className="w-2 h-2 bg-red-500 rounded-full hidden peer-checked:block "></span>
+                          <span className="w-2 h-2  bg-red-500 rounded-full hidden peer-checked:block "></span>
                         </span>
                         {/* Lớp phủ mờ khi chọn */}
                         <div className="absolute inset-0 bg-black opacity-0 rounded-md peer-checked:opacity-20 transition-opacity"></div>

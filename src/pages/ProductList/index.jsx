@@ -32,6 +32,7 @@ export default function ProductList() {
   const page = parseInt(searchParams.get("page")) || 1;
   const minPrice = parseInt(searchParams.get("minPrice")) || "";
   const maxPrice = parseInt(searchParams.get("maxPrice")) || "";
+  const rating = searchParams.get("rating") || "";
   const sortKey = searchParams.get("sortKey") || "";
   const sortValue = searchParams.get("sortValue") || "";
   const catId = searchParams.get("catId") || "";
@@ -53,7 +54,7 @@ export default function ProductList() {
     const fetchData = async () => {
       try {
         const res = await getData(
-          `/api/productClient/all?keyword=${keyword}&page=${page}&catId=${catId}&minPrice=${minPrice}&maxPrice=${maxPrice}&sortKey=${sortKey}&sortValue=${sortValue}`
+          `/api/productClient/all?keyword=${keyword}&page=${page}&catId=${catId}&rating=${rating}&minPrice=${minPrice}&maxPrice=${maxPrice}&sortKey=${sortKey}&sortValue=${sortValue}`,
         );
         if (res.success) {
           setProductData(res.data);
@@ -69,7 +70,7 @@ export default function ProductList() {
       }
     };
     fetchData();
-  }, [page, catId, minPrice, maxPrice, sortKey, sortValue, keyword]);
+  }, [page, rating, catId, minPrice, maxPrice, sortKey, sortValue, keyword]);
   const handleChange = (e) => {
     const params = new URLSearchParams(searchParams);
     const [sortKey, sortValue] = e.target.value.split("-");
@@ -103,7 +104,12 @@ export default function ProductList() {
       </Drawer>
       <div className=" container  flex gap-3">
         <div className="sideBar md:w-[15%] hidden md:flex h-full bg-white p-3 shadow-md">
-          <SideBar minPrice={minPrice} maxPrice={maxPrice} catId={catId} />
+          <SideBar
+            minPrice={minPrice}
+            maxPrice={maxPrice}
+            catId={catId}
+            rating={rating}
+          />
         </div>
         <div className="product md:w-[85%] w-full mx-auto">
           <div className="bg-[#f1f1f1] w-full p-2 mb-3 flex items-center justify-between rounded-md">
@@ -144,6 +150,7 @@ export default function ProductList() {
                   Sắp xếp
                 </InputLabel>
                 <NativeSelect
+                  color="error"
                   value={
                     sortKey && sortValue ? `${sortKey}-${sortValue}` : undefined
                   }

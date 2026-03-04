@@ -76,22 +76,16 @@ export default function Login() {
     }
 
     try {
-      const res = await postData(
-        `/api/user/login}`,
-        formFields,
-        {
-          withCredentials: true,
-        },
-      );
+      const res = await postData(`/api/user/login`, formFields);
       if (res.success) {
         localStorage.setItem("accessToken", res?.data?.accessToken);
-      
+
         setFormFields({ email: "", password: "" });
         context.openAlertBox("success", res.message);
         context.setIsLogin(true);
         navigate("/");
       } else {
-        context.openAlertBox("error", res.message);
+        context.openAlertBox("error", res.message || "Đăng nhập thất bại");
       }
     } catch (error) {
       if (error.response) {
@@ -116,7 +110,6 @@ export default function Login() {
             <TextField
               size="small"
               label="Email"
-              type="email"
               name="email"
               inputRef={inputRefs.email}
               value={formFields.email}

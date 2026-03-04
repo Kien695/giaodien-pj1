@@ -3,15 +3,15 @@ import { SlClose } from "react-icons/sl";
 import { MyContext } from "../../App";
 import { deleteData } from "../../untils/api";
 
-export default function DeleteListLove({ item, onSuccess }) {
+export default function DeleteListLove({ item }) {
   const context = React.useContext(MyContext);
   const handleClick = async () => {
     try {
       const res = await deleteData(`/api/myList/remove/${item._id}`);
       if (res.success) {
         context.openAlertBox("success", res.message);
-        context.setCountList(res.countList);
-        if (onSuccess) onSuccess();
+
+        context.setWishlist((prev) => prev.filter((i) => i._id !== item._id));
       }
     } catch (error) {
       if (error.response?.data?.message) {

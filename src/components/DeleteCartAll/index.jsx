@@ -15,7 +15,7 @@ export default function DeleteCartAll() {
           "success",
           res.message || "Xóa sản phẩm khỏi giỏ hàng thành công",
         );
-        context.setCountCart(0);
+        context.setCart([]);
       }
     } catch (error) {
       if (error.response?.data?.message) {
@@ -37,6 +37,7 @@ export default function DeleteCartAll() {
           color: "#f1f1f1",
         },
       }}
+      disabled={context.cart.length === 0}
       className=" flex items-center justify-center gap-2 "
       onClick={handleDeleteAll}
     >

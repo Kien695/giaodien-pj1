@@ -73,7 +73,7 @@ export default function ProductFeatured(props) {
                   </div>
                 </Link>
               </div>
-              <div className="info h-[180px]  p-3 bg-[#f1f1f1] ">
+              <div className="info p-3 bg-[#f1f1f1] ">
                 <h6 className="text-[13px]">
                   <Link className="link transition-all">
                     {item.brand || "Không có"}
@@ -87,12 +87,18 @@ export default function ProductFeatured(props) {
                     {item.name}
                   </Link>
                 </h3>
-                <Rating
-                  name="size-small"
-                  defaultValue={2}
-                  size="small"
-                  readOnly
-                />
+                {item.rating ? (
+                  <Rating
+                    name="size-small"
+                    value={item.rating}
+                    size="small"
+                    readOnly
+                  />
+                ) : (
+                  <div className="text-[12px] py-1 text-gray-500">
+                    Chưa có đánh giá
+                  </div>
+                )}
                 <div className="flex md:flex-row flex-col text-[12px] justify-between font-[500] mb-3">
                   <div className="priceOld line-through text-gray-500">
                     {Number(item.price).toLocaleString("vi-VN") + " đ"}

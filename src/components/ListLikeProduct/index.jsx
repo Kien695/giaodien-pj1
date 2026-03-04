@@ -15,20 +15,14 @@ export default function ListLikeProduct({ item, type }) {
         const res = await postData(`/api/myList/add/${item._id}`);
 
         if (res.success) {
-          const resWishList = await getData("/api/myList/");
-          if (resWishList.success) {
-            context.setCountList(resWishList.countList);
-          }
+          context.setCountList((prev) => prev + 1);
           context.openAlertBox("success", res.message);
         }
       } else {
         const res = await deleteData(`/api/myList/remove/${wishItem._id}`);
 
         if (res.success) {
-          const resWishList = await getData("/api/myList/");
-          if (resWishList.success) {
-            context.setCountList(resWishList.countList);
-          }
+          context.setCountList((prev) => prev - 1);
           context.openAlertBox("success", res.message);
         }
       }

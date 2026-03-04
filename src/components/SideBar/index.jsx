@@ -19,31 +19,37 @@ import { MyContext } from "../../App";
 import { Link, useSearchParams } from "react-router-dom";
 import { useState } from "react";
 
-export default function SideBar({ minPrice, maxPrice, catId }) {
+export default function SideBar({ minPrice, maxPrice, catId, rating }) {
   const context = React.useContext(MyContext);
-  const [checkedCategory, setCheckedCategory] = React.useState([0]);
-  const [checkedSize, setCheckedSize] = React.useState([0]);
-  const [checkedRating, setCheckedRating] = React.useState([0]);
+  const [checkedCategory, setCheckedCategory] = React.useState(null);
+  const [checkedRating, setCheckedRating] = React.useState(null);
   const [isOpenedCategory, setIsOpenedCategory] = React.useState(true);
   const [isOpenedFilter, setIsOpenedFilter] = React.useState(true);
   const [searchParams, setSearchParams] = useSearchParams();
 
   const handleChangeCat = (id) => {
     const params = new URLSearchParams(searchParams);
-    params.set("catId", id);
+    if (checkedCategory === id) {
+      params.delete("catId");
+      setCheckedCategory(null);
+    } else {
+      params.set("catId", id);
+      setCheckedCategory(id);
+    }
     setSearchParams(params);
   };
   const handleToggleRating = (value) => () => {
-    const currentIndex = checkedRating.indexOf(value);
-    const newChecked = [...checkedRating];
+    const params = new URLSearchParams(searchParams);
 
-    if (currentIndex === -1) {
-      newChecked.push(value);
+    if (checkedRating === value) {
+      params.delete("rating");
+      setCheckedRating(null);
     } else {
-      newChecked.splice(currentIndex, 1);
+      params.set("rating", value);
+      setCheckedRating(value);
     }
 
-    setCheckedRating(newChecked);
+    setSearchParams(params);
   };
   const [priceData, setPriceData] = useState({
     minPrice: minPrice || "",
@@ -146,7 +152,7 @@ export default function SideBar({ minPrice, maxPrice, catId }) {
                 size="small"
                 type="number"
                 variant="filled"
-                InputProps={{ inputProps: { min: 1 } }}
+                slotProps={{ inputProps: { min: 1 } }}
                 value={priceData.minPrice}
                 onChange={handleChange}
               />
@@ -210,7 +216,7 @@ export default function SideBar({ minPrice, maxPrice, catId }) {
                 >
                   <Checkbox
                     edge="start"
-                    checked={checkedRating.includes(value)}
+                    checked={checkedRating === value || rating == value}
                     tabIndex={-1}
                     disableRipple
                   />

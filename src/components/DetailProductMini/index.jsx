@@ -14,7 +14,7 @@ import { IoMdClose } from "react-icons/io";
 import { MdOutlineZoomOutMap } from "react-icons/md";
 import ZoomImage from "../ImageZoom";
 import { MyContext } from "../../App";
-import { postData } from "../../untils/api";
+import { deleteData, postData } from "../../untils/api";
 import { useNavigate } from "react-router-dom";
 
 export default function DetailProductMini({ item }) {
@@ -26,6 +26,8 @@ export default function DetailProductMini({ item }) {
   const [maxWidth, setMaxWidth] = React.useState("lg");
   const [active, setActive] = React.useState(null);
   const [size, setSize] = React.useState("");
+  const isLiked = context.wishlist?.some((w) => w.product?._id === item._id);
+  const wishItem = context.wishlist.find((w) => w.product._id === item._id);
   const handleCloseDetail = () => {
     setOpenDetailProduct(false);
   };
@@ -44,6 +46,32 @@ export default function DetailProductMini({ item }) {
       if (res.success) {
         context.openAlertBox("success", res.message);
         context.setCountList((prev) => prev + 1);
+      }
+    } catch (error) {
+      if (error.response?.data?.message) {
+        context.openAlertBox("error", error.response.data.message);
+      } else {
+        context.openAlertBox("error", "Không thể kết nối server!");
+      }
+    }
+  };
+  //add to like list
+  const handleClickLike = async () => {
+    try {
+      if (!isLiked) {
+        const res = await postData(`/api/myList/add/${item._id}`);
+
+        if (res.success) {
+          context.setCountList((prev) => prev + 1);
+          context.openAlertBox("success", res.message);
+        }
+      } else {
+        const res = await deleteData(`/api/myList/remove/${wishItem._id}`);
+
+        if (res.success) {
+          context.setCountList((prev) => prev - 1);
+          context.openAlertBox("success", res.message);
+        }
       }
     } catch (error) {
       if (error.response?.data?.message) {
@@ -135,6 +163,7 @@ export default function DetailProductMini({ item }) {
                     <div className="flex !w-[30px] !h-[30px] !min-w-[30px] gap-2 action ">
                       {item.size.map((size, index) => (
                         <Button
+                          key={index}
                           className={`${
                             active == index
                               ? "!bg-[#ff5252] !text-white !border-none"
@@ -205,12 +234,23 @@ export default function DetailProductMini({ item }) {
                   </Button>
                 </div>
               </div>
-              <div className="flex">
-                <div className="flex items-center gap-1 cursor-pointer hover:text-[#ff5252] text-[15px]">
+              {isLiked ? (
+                <div
+                  className="flex items-center gap-1 text-[#ff5252] text-[15px] cursor-pointer"
+                  onClick={handleClickLike}
+                >
+                  <FaRegHeart />
+                  Đã thích
+                </div>
+              ) : (
+                <div
+                  className=" flex items-center gap-1 cursor-pointer hover:text-[#ff5252] text-[15px]"
+                  onClick={handleClickLike}
+                >
                   <FaRegHeart />
                   Thêm vào yêu thích
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </DialogContent>

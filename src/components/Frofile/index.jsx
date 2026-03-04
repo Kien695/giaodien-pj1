@@ -25,15 +25,9 @@ export default function Profile() {
       const response = await putData("/api/user/user-avatar", formData);
 
       if (response.success) {
-        const token = localStorage.getItem("accessToken");
-        const updatedUser = await getData(
-          `/api/user/user-detail?token=${token}`,
-        );
-
-        if (updatedUser.success) {
-          context.setUserData(updatedUser.data);
-          setPreview(null);
-        }
+        context.setUserData({ ...context.userData, avatar: response.data });
+        context.openAlertBox("success", response.message);
+        setPreview(null);
       }
     } catch (error) {
       console.error("Upload failed:", error);

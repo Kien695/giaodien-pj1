@@ -44,16 +44,10 @@ export default function Header() {
   const handleLogout = async () => {
     setAnchorEl(null);
     try {
-      const res = await postData(
-        `/api/user/logout`,
-        {},
-        {
-          withCredentials: true,
-        },
-      );
+      const res = await postData(`/api/user/logout`);
       if (res.success) {
         localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
+
         context.openAlertBox("success", res?.message || "Đăng xuất thành công");
         context.setIsLogin(false);
         context.setUserData(null);
@@ -75,7 +69,7 @@ export default function Header() {
           <div className="flex justify-between items-center">
             <div className="w-[50%]">
               <p className="text-[14px] font-[500]">
-                Nhận đến 50% giảm giá cho phong cách mới
+                Chào bạn đến với cửa hàng của chúng tôi!
               </p>
             </div>
             <div className="flex">

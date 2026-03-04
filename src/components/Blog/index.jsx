@@ -41,7 +41,7 @@ export default function Blog(props) {
           Trang BLog
         </h2>
         <Swiper
-          slidesPerView={props.items}
+          slidesPerView={props.item}
           spaceBetween={35}
           navigation={true}
           modules={[Navigation]}

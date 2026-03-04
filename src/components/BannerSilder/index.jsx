@@ -40,7 +40,7 @@ export default function HomeSlider() {
           pagination={{
             clickable: true,
           }}
-          navigation={true}
+          navigation={true} //nút mũi trên trái phải
           modules={[Autoplay, Pagination, Navigation]}
           className="sliderHome"
         >

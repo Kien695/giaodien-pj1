@@ -18,7 +18,7 @@ export default function Search() {
         <input
           type="text"
           className="flex-grow border-none bg-transparent px-3 py-2 text-black outline-none"
-          placeholder="Free Ship Đơn Từ 0Đ"
+          placeholder="Nhập tên sản phẩm bạn muốn tìm kiếm..."
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
         />

@@ -4,6 +4,7 @@ import { MyContext } from "../../App";
 import { deleteData } from "../../untils/api";
 export default function DeleteCart({ cart }) {
   const context = React.useContext(MyContext);
+
   const handleDelete = async () => {
     try {
       const res = await deleteData(`/api/cart/deleteCart`, {
@@ -13,9 +14,11 @@ export default function DeleteCart({ cart }) {
       if (res.success) {
         context.openAlertBox(
           "success",
-          res.message || "Xóa sản phẩm khỏi giỏ hàng thành công"
+          res.message || "Xóa sản phẩm khỏi giỏ hàng thành công",
         );
-        context.setCountCart((prev) => prev - 1);
+        context?.setCart((prev) =>
+          prev.filter((item) => item?.productId._id !== cart?.productId._id),
+        );
       }
     } catch (error) {
       if (error.response?.data?.message) {

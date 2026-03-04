@@ -71,7 +71,7 @@ export default function Category() {
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation">
       <div className="p-2">
-        <Link to="#">
+        <Link to="/">
           <img src={context?.logoData?.images} className="w-full h-[60px]" />
         </Link>
       </div>
@@ -84,7 +84,7 @@ export default function Category() {
         />
       </div>
 
-      {/* Hiển thị danh mục (cấp 1 → cấp 2 → cấp 3...) */}
+      {/* Hiển thị danh mục (cấp 1 , cấp 2 , cấp 3...) */}
       {context?.catData && renderCategories(context.catData)}
     </Box>
   );

@@ -34,11 +34,8 @@ export default function MyAccount() {
 
     try {
       const res = await putData(
-        `/api/user/${context?.userData?._id}`,
+        `/api/user/info`,
         formInput,
-        {
-          withCredentials: true,
-        },
       );
       if (res.success) {
         context.openAlertBox("success", res.message);
@@ -82,7 +79,7 @@ export default function MyAccount() {
                   disabled
                   value={context?.userData?.email || ""}
                   variant="standard"
-                  InputProps={{
+                  slotProps={{
                     readOnly: true, // chỉ đọc
                   }}
                   sx={{ width: 200 }}

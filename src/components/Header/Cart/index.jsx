@@ -45,7 +45,7 @@ export default function Cart() {
     <Box sx={{ width: 380 }} role="presentation">
       <div className="p-2 mt-2 flex items-center justify-between">
         <div className="text-[18px] font-[500] text-[#ff5252]">
-          Giỏ hàng ({context.countCart})
+          Giỏ hàng ({context?.cart?.length})
         </div>
         <IoClose
           className="cursor-pointer text-[20px] font-[600]"
@@ -91,7 +91,7 @@ export default function Cart() {
       <hr />
       <List sx={{ paddingX: 2 }}>
         <div className="flex items-center justify-between p-2">
-          {context?.countCart} mặt hàng
+          {context?.cart.length} mặt hàng
           <span className="text-[#ff5252] font-[600]">
             {Number(totalPrice).toLocaleString("vi-VN") + " đ"}
           </span>
@@ -112,7 +112,7 @@ export default function Cart() {
       <div onClick={toggleDrawer(true)}>
         <Tooltip title="Giỏ hàng">
           <IconButton aria-label="cart">
-            <StyledBadge badgeContent={context.countCart} color="error">
+            <StyledBadge badgeContent={context?.cart.length} color="error">
               <MdOutlineShoppingCart className="md:text-[23px] text-[18px]" />
             </StyledBadge>
           </IconButton>

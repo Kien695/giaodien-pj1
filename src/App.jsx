@@ -36,7 +36,7 @@ export default function App() {
       if (token) {
         setIsLogin(true);
         try {
-          const resUser = await getData(`/api/user/user-detail?token=${token}`);
+          const resUser = await getData(`/api/user/user-detail`);
           if (resUser.success) setUserData(resUser.data);
 
           const resAddress = await getData("/api/address");
@@ -48,12 +48,10 @@ export default function App() {
           const resWishList = await getData("/api/myList/");
           if (resWishList.success) {
             setWishlist(resWishList.data);
-            setCountList(resWishList.countList);
           }
           const resCart = await getData("/api/cart/getItem");
           if (resCart.success) {
             setCart(resCart.data);
-            setCountCart(resCart.countCart);
           }
         } catch (error) {
           console.error("Lỗi khi fetch user:", error);
@@ -67,9 +65,6 @@ export default function App() {
     fetchUser();
   }, [countList, countCart, isLogin]);
 
-  const handleCloseDetail = () => {
-    setOpenDetailProduct(false);
-  };
   const openAlertBox = (value, msg) => {
     if (value == "success") {
       toast.success(msg, { duration: 4000, dismissible: true });
@@ -89,10 +84,10 @@ export default function App() {
     productNewData,
     addressData,
     wishlist,
-    countList,
+    setWishlist,
     setCountList,
-    countCart,
     cart,
+    setCart,
     setCountCart,
   };
   return (

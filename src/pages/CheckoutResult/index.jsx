@@ -15,27 +15,40 @@ export default function CheckoutResult() {
   const [status, setStatus] = useState("");
   const [title, setTitle] = useState("");
   const [loading, setLoading] = useState(true);
-  const formData = JSON.parse(localStorage.getItem("orderInfo"));
 
+  const paymentMethod = sessionStorage.getItem("paymentMethod");
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await getData(
-          `/api/checkout/result?${searchParams.toString()}`
-        );
-        if (res.data.vnp_ResponseCode == "00") {
-          const res = await postData("/api/order/add", formData);
-          if (res.success) {
-            localStorage.removeItem("orderInfo");
+        if (paymentMethod === "mo-mo") {
+          const res = await postData("/api/checkout/result-momo");
+          if (res.data.resultCode == "0") {
+            sessionStorage.removeItem("paymentMethod");
             setStatus("success");
             setTitle(
               "Thanh toán thành công! Vui lòng kiểm tra đơn hàng của bạn." ||
-                res.message
+                res.message,
             );
+          } else {
+            setTitle("Thanh toán thất bại!" || res.message);
+            setStatus("error");
           }
+          return;
         } else {
-          setTitle("Thanh toán thất bại!" || res.message);
-          setStatus("error");
+          const res = await getData(
+            `/api/checkout/result?${searchParams.toString()}`,
+          );
+          if (res.data.vnp_ResponseCode == "00") {
+            sessionStorage.removeItem("paymentMethod");
+            setStatus("success");
+            setTitle(
+              "Thanh toán thành công! Vui lòng kiểm tra đơn hàng của bạn." ||
+                res.message,
+            );
+          } else {
+            setTitle("Thanh toán thất bại!" || res.message);
+            setStatus("error");
+          }
         }
       } catch (error) {
         if (error.response?.data?.message) {
@@ -67,7 +80,9 @@ export default function CheckoutResult() {
           <img src={error} alt="" className="w-[150px]" />
         </div>
       )}
-      <div className="font-[600] text-[18px] text-[#ff5252]">{title}</div>
+      <div className="font-[600] md:text-[18px] text-[15px] text-[#ff5252] text-center">
+        {title}
+      </div>
       <Button>
         <Link to="/" className="text-[12px] flex items-center gap-1">
           <MdOutlineAssignmentReturn className="text-[18px]" />

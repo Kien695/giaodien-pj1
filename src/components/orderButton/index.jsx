@@ -3,9 +3,11 @@ import Swal from "sweetalert2";
 import { Button } from "@mui/material";
 import { patchData, postData } from "../../untils/api";
 import { MyContext } from "../../App";
+import { useNavigate } from "react-router-dom";
 
 export default function OrderButton({ item, onSuccess }) {
   const context = useContext(MyContext);
+  const navigate = useNavigate();
   const getButtonAction = (order_status) => {
     switch (order_status) {
       case "pending":
@@ -14,7 +16,7 @@ export default function OrderButton({ item, onSuccess }) {
         return { label: "Đang giao", value: "" };
 
       case "delivered":
-        return { label: "Mua lại", value: "buyAgain" };
+        return { label: "Đã giao", value: "delivered" };
       case "cancelled":
         return { label: "Đã hủy", value: "cancelled" };
       default:
@@ -54,24 +56,48 @@ export default function OrderButton({ item, onSuccess }) {
       }
     });
   };
+  const handleBuy = (item, qty, size) => {
+    navigate("/checkout", { state: { item, quantity: qty, size: size || "" } });
+  };
   return (
-    <Button
-      variant="contained"
-      color="error"
-      sx={{
-        backgroundColor:
-          item.order_status === "cancelled" ? "#888888" : "#ff5252",
-        color: "white",
-        marginTop: "10px",
-        "&:hover": {
-          backgroundColor: "black",
-          color: "#f1f1f1",
-        },
-      }}
-      disabled={item.order_status !== "pending"}
-      onClick={() => onClick(value)}
-    >
-      {label}
-    </Button>
+    <div className="flex gap-2 justify-end">
+      {(item.order_status == "cancelled" ||
+        item.order_status == "delivered") && (
+        <Button
+          variant="contained"
+          color="error"
+          sx={{
+            backgroundColor: "#ff5252",
+            color: "white",
+            marginTop: "10px",
+            "&:hover": {
+              backgroundColor: "black",
+              color: "#f1f1f1",
+            },
+          }}
+          onClick={() => handleBuy(item?.productId, item?.quantity, item?.size)}
+        >
+          Mua lại
+        </Button>
+      )}
+      <Button
+        variant="contained"
+        color="error"
+        sx={{
+          backgroundColor:
+            item.order_status === "cancelled" ? "#888888" : "#ff5252",
+          color: "white",
+          marginTop: "10px",
+          "&:hover": {
+            backgroundColor: "black",
+            color: "#f1f1f1",
+          },
+        }}
+        disabled={item.order_status !== "pending"}
+        onClick={() => onClick(value)}
+      >
+        {label}
+      </Button>
+    </div>
   );
 }

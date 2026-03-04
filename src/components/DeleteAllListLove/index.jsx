@@ -4,7 +4,7 @@ import { deleteData } from "../../untils/api";
 import { MyContext } from "../../App";
 import { MdOutlineDeleteSweep } from "react-icons/md";
 
-export default function DeleteAllListLove({ onSuccess, countList }) {
+export default function DeleteAllListLove() {
   const isMobile = useMediaQuery("(max-width:900px)");
   const context = React.useContext(MyContext);
   const handleClick = async () => {
@@ -12,7 +12,7 @@ export default function DeleteAllListLove({ onSuccess, countList }) {
       const res = await deleteData(`/api/myList/removeAll`);
       if (res.success) {
         context.openAlertBox("success", res.message);
-        if (onSuccess) onSuccess();
+        context.setWishlist([]);
       }
     } catch (error) {
       if (error.response?.data?.message) {
@@ -34,7 +34,7 @@ export default function DeleteAllListLove({ onSuccess, countList }) {
           color: "#f1f1f1",
         },
       }}
-      disabled={countList === 0}
+      disabled={context.wishlist.length === 0}
       className=" flex items-center justify-center gap-2 "
       onClick={handleClick}
     >

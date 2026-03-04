@@ -31,7 +31,7 @@ export default function Address() {
     address_line: "",
     typeAddress: "",
   });
-  //  Khi context.addressData + provinces có → chọn tỉnh
+
   useEffect(() => {
     if (context?.addressData) {
       const selectedProvince = provinces.find(
@@ -157,7 +157,7 @@ export default function Address() {
                 onChange={(e) => {
                   const value = e.target.value;
                   const selected = districts.find((p) => p.code === value);
-                  setSelectedDistrict(value); // ✅ sửa chỗ này
+                  setSelectedDistrict(value);
                   setFormInput({
                     ...formInput,
                     district: selected?.name || "",

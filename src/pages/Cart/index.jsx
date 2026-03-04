@@ -1,5 +1,5 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useMemo, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { LiaWindowCloseSolid } from "react-icons/lia";
 import { Button, Menu, MenuItem, Rating, TextField } from "@mui/material";
 import { IoBagCheckOutline } from "react-icons/io5";
@@ -11,10 +11,11 @@ import DeleteCart from "../../components/DeleteCart";
 import DeleteCartAll from "../../components/DeleteCartAll";
 
 export default function Cart() {
+  const navigate = useNavigate();
   const context = React.useContext(MyContext);
   const [anchorElQut, setAnchorElQut] = React.useState(null);
   const [anchorElSize, setAnchorElSize] = React.useState(null);
-
+  const [menuId, setMenuId] = useState(null);
   const cart = context?.cart || [];
   const [cartItems, setCartItems] = React.useState(cart);
   useEffect(() => {
@@ -41,15 +42,16 @@ export default function Cart() {
     );
   };
 
-  const openSize = Boolean(anchorElSize);
-  const handleClickSize = (event) => {
+  const handleClickSize = (event, productId) => {
     setAnchorElSize(event.currentTarget);
+    setMenuId(productId);
   };
   const handleCloseSize = () => {
     setAnchorElSize(null);
+    setMenuId(null);
   };
-  const handleSelectSize = (size) => {
-    setSelectedSize(size);
+  const handleSelectSize = (id, size) => {
+    setSelectedSize((prev) => ({ ...prev, [id]: size }));
     handleCloseSize();
   };
   const handleChangeQuantity = (id, newValue) => {
@@ -61,12 +63,35 @@ export default function Cart() {
       ),
     );
   };
-  const totalPrice = cartItems?.reduce((total, item) => {
-    const discountedPrice =
-      item.productId.price -
-      item.productId.price * (item.productId.discountPercentage / 100);
-    return total + discountedPrice * item.quantity;
-  }, 0);
+  const totalPrice = useMemo(() => {
+    return cartItems?.reduce((total, item) => {
+      const discountedPrice =
+        item.productId.price -
+        item.productId.price * (item.productId.discountPercentage / 100);
+
+      return total + discountedPrice * item.quantity;
+    }, 0);
+  }, [cartItems]);
+  const handleToCheckout = () => {
+    if (cartItems.length === 0) {
+      context.openAlertBox("error", "Giỏ hàng của bạn đang trống!");
+      return;
+    }
+    if (cartItems.some((item) => !selectedSize[item.productId._id])) {
+      context.openAlertBox(
+        "error",
+        "Vui lòng chọn kích thước cho tất cả sản phẩm!",
+      );
+      return;
+    }
+    navigate("/checkout", {
+      state: {
+        cartItems,
+        totalPrice,
+        selectedSize,
+      },
+    });
+  };
   return (
     <div className="container !my-6">
       <div className="flex md:flex-row flex-col w-full justify-center gap-6 mx-auto">
@@ -74,7 +99,7 @@ export default function Cart() {
           <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
               <caption className="p-5 md:text-lg text-[14px] gap-2 font-semibold text-left bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 flex justify-between">
-                Có {context?.countCart} sản phẩm trong giỏ hàng của bạn
+                Có {context?.cart?.length} sản phẩm trong giỏ hàng của bạn
                 <DeleteCartAll />
               </caption>
 
@@ -93,7 +118,7 @@ export default function Cart() {
                             className="w-[110px] md:h-[110px] h-[90px] rounded-md"
                           />
                           <div className="absolute top-[-7px] left-[-9px] rounded-md bg-[#ff5252] text-white p-1">
-                            {item?.productId.discountPercentage}%
+                            -{item?.productId.discountPercentage}%
                           </div>
                         </div>
                         <div className="md:w-[65%] w-[60%] flex flex-col gap-1 ml-6">
@@ -106,12 +131,19 @@ export default function Cart() {
                           >
                             {item?.productId.name}
                           </Link>
-                          <Rating
-                            name="read-only"
-                            value={4}
-                            readOnly
-                            size="small"
-                          />
+                          {item?.productId?.rating ? (
+                            <Rating
+                              name="read-only"
+                              value={item?.productId.rating}
+                              readOnly
+                              size="small"
+                            />
+                          ) : (
+                            <div className="text-[12px] text-gray-500 italic">
+                              Chưa có đánh giá
+                            </div>
+                          )}
+
                           <div className="flex md:flex-row flex-col md:gap-4 gap-1">
                             <div className="flex items-center">
                               <div className="text-[14px] mr-1">Số lượng:</div>
@@ -150,11 +182,13 @@ export default function Cart() {
                                 </button>
                               </div>
                             </div>
+
                             {item?.productId?.size?.length > 0 && (
                               <div className="flex items-center">
                                 <div className="text-[14px] mr-1">
                                   Kích thước:
                                 </div>
+
                                 <Button
                                   size="small"
                                   id="basic-button"
@@ -163,7 +197,9 @@ export default function Cart() {
                                   }
                                   aria-haspopup="true"
                                   aria-expanded={open ? "true" : undefined}
-                                  onClick={handleClickSize}
+                                  onClick={(e) =>
+                                    handleClickSize(e, item.productId._id)
+                                  }
                                   sx={{
                                     background: "gray",
                                     padding: "2px 8px",
@@ -171,12 +207,15 @@ export default function Cart() {
                                     color: "#fff",
                                   }}
                                 >
-                                  {selectedSize || item.size}
+                                  {selectedSize[item.productId._id] ||
+                                    item.size ||
+                                    "Chọn kích thước"}
                                 </Button>
+
                                 <Menu
                                   id="basic-menu"
                                   anchorEl={anchorElSize}
-                                  open={openSize}
+                                  open={menuId === item.productId._id}
                                   onClose={handleCloseSize}
                                   slotProps={{
                                     list: {
@@ -187,7 +226,10 @@ export default function Cart() {
                                   {item?.productId?.size.map((size, index) => (
                                     <MenuItem
                                       onClick={() => {
-                                        handleSelectSize(size);
+                                        handleSelectSize(
+                                          item?.productId._id,
+                                          size,
+                                        );
                                       }}
                                       key={index}
                                     >
@@ -249,10 +291,11 @@ export default function Cart() {
             </div>
             <hr className="mb-3" />
 
-            <Link to="/checkout" className="flex justify-center">
+            <div onClick={handleToCheckout} className="flex justify-center">
               <Button
                 variant="contained"
                 color="error"
+                disabled={context.cart.length === 0}
                 sx={{
                   backgroundColor: "#ff5252",
                   color: "#black",
@@ -266,7 +309,7 @@ export default function Cart() {
                 <IoBagCheckOutline className="text-[20px]" />
                 <span>Đặt hàng</span>
               </Button>
-            </Link>
+            </div>
           </div>
         </div>
       </div>
