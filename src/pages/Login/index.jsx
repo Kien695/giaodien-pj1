@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { MyContext } from "../../App";
 import { postData } from "../../untils/api";
+import socketClient from "../../../socket";
 export default function Login() {
   const context = useContext(MyContext);
 
@@ -79,7 +80,10 @@ export default function Login() {
       const res = await postData(`/api/user/login`, formFields);
       if (res.success) {
         localStorage.setItem("accessToken", res?.data?.accessToken);
-
+        socketClient.auth = {
+          token: localStorage.getItem("accessToken"),
+        };
+        socketClient.connect();
         setFormFields({ email: "", password: "" });
         context.openAlertBox("success", res.message);
         context.setIsLogin(true);

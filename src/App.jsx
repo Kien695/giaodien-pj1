@@ -5,6 +5,7 @@ import AllRouter from "./components/AllRouter";
 import toast, { Toaster } from "react-hot-toast";
 
 import { getData } from "./untils/api";
+import socketClient from "../socket.js";
 
 const MyContext = createContext();
 export default function App() {
@@ -20,51 +21,84 @@ export default function App() {
   const [countList, setCountList] = React.useState(0);
   const [cart, setCart] = React.useState([]);
   const [countCart, setCountCart] = React.useState(0);
+  const [notification, setNotification] = React.useState([]);
+  const [dot, setDot] = React.useState(0);
+  //no login data
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetchData = async () => {
       const resLogo = await getData("/api/logo");
       if (resLogo.success) setLogoData(resLogo.data);
 
       const resCat = await getData("/api/category/");
       if (resCat.success) setCatData(resCat.data);
+
       const resProduct = await getData("/api/productClient");
       if (resProduct.success) {
         setProductFeaturedData(resProduct.dataFeatured);
         setProductNewData(resProduct.dataNew);
       }
+    };
+
+    fetchData();
+  }, []);
+  //login data
+  useEffect(() => {
+    const fetchUser = async () => {
       const token = localStorage.getItem("accessToken");
-      if (token) {
-        setIsLogin(true);
-        try {
-          const resUser = await getData(`/api/user/user-detail`);
-          if (resUser.success) setUserData(resUser.data);
 
-          const resAddress = await getData("/api/address");
-          if (resAddress.success) {
-            setAddressData(resAddress.data);
-          }
+      if (!token) {
+        setIsLogin(false);
+        return;
+      }
+      socketClient.auth = { token };
+      if (!socketClient.connected) {
+        socketClient.connect();
+      }
+      setIsLogin(true);
 
-          //  Fetch wishlist luôn
-          const resWishList = await getData("/api/myList/");
-          if (resWishList.success) {
-            setWishlist(resWishList.data);
-          }
-          const resCart = await getData("/api/cart/getItem");
-          if (resCart.success) {
-            setCart(resCart.data);
-          }
-        } catch (error) {
-          console.error("Lỗi khi fetch user:", error);
-          setIsLogin(false);
+      try {
+        const resUser = await getData(`/api/user/user-detail`);
+        if (resUser.success) setUserData(resUser.data);
+
+        const resAddress = await getData("/api/address");
+        if (resAddress.success) setAddressData(resAddress.data);
+
+        const resWishList = await getData("/api/myList/");
+        if (resWishList.success) setWishlist(resWishList.data);
+
+        const resCart = await getData("/api/cart/getItem");
+        if (resCart.success) setCart(resCart.data);
+        const unReadNoti = await getData("/api/notification/unRead");
+        if (unReadNoti.success) {
+          setDot(unReadNoti.unreadCount || 0);
         }
-      } else {
+      } catch (err) {
         setIsLogin(false);
       }
     };
 
     fetchUser();
-  }, [countList, countCart, isLogin]);
+  }, [countList, countCart]);
+  //socket
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
 
+    if (!token) return;
+
+    socketClient.auth = { token };
+    if (!socketClient.connected) {
+      socketClient.connect();
+    }
+
+    socketClient.on("ORDER_STATUS", (data) => {
+      setNotification((prev) => [data, ...prev]);
+      setDot(1);
+    });
+
+    return () => {
+      socketClient.off("ORDER_STATUS");
+    };
+  }, []);
   const openAlertBox = (value, msg) => {
     if (value == "success") {
       toast.success(msg, { duration: 4000, dismissible: true });
@@ -89,6 +123,10 @@ export default function App() {
     cart,
     setCart,
     setCountCart,
+    notification,
+    setNotification,
+    dot,
+    setDot,
   };
   return (
     <>

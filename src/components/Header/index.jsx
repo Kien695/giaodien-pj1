@@ -17,8 +17,9 @@ import { Button, Menu, MenuItem } from "@mui/material";
 import { IoMdHeartEmpty } from "react-icons/io";
 import { FiLogOut } from "react-icons/fi";
 import { IoLockClosedOutline } from "react-icons/io5";
-import { postData } from "../../untils/api";
+import { patchData, postData } from "../../untils/api";
 import NotificationPopup from "../Notification";
+import socketClient from "../../../socket";
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
@@ -47,7 +48,7 @@ export default function Header() {
       const res = await postData(`/api/user/logout`);
       if (res.success) {
         localStorage.removeItem("accessToken");
-
+        socketClient.disconnect();
         context.openAlertBox("success", res?.message || "Đăng xuất thành công");
         context.setIsLogin(false);
         context.setUserData(null);
@@ -61,7 +62,23 @@ export default function Header() {
       }
     }
   };
-
+  //isReadNoti
+  const handleIsRead = async (req, res) => {
+    try {
+      if (context?.dot !== 0) {
+        const res = await patchData("/api/notification/updateRead");
+        if (res.success) {
+          context.setDot(0);
+        }
+      }
+    } catch (error) {
+      if (error.response) {
+        context.openAlertBox("error", error.response.data.message);
+      } else {
+        context.openAlertBox("error", "Đăng xuất không thành công");
+      }
+    }
+  };
   return (
     <header className="bg-white sticky -top-[42px] z-50">
       <div className="hidden md:flex m-t-10 border-t-[1px] border-b-[1px] py-2 border-gray-250">
@@ -376,10 +393,18 @@ export default function Header() {
                 <div className="relative">
                   <Tooltip>
                     <IconButton>
-                      <Badge badgeContent=" " variant="dot" color="error">
+                      <Badge
+                        variant="dot"
+                        color="error"
+                        invisible={context.dot == 0}
+                      >
                         <FaRegBell
                           className="md:text-[23px] text-[18px]"
-                          onClick={() => setShowPopup(!showPopup)}
+                          onClick={() => {
+                            setShowPopup(!showPopup);
+                            context.setDot(0);
+                            handleIsRead();
+                          }}
                         />
                       </Badge>
                     </IconButton>
