@@ -26,8 +26,8 @@ export default function HomeSliderV2() {
       <SwiperSlide className="">
         <div className="item rounded-[5px] overflow-hidden relative">
           <img
-            src="https://serviceapi.spicezgold.com/download/1742441193376_1737037654953_New_Project_45.jpg"
-            className="w-full"
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKFpNG6O-xFp_IGrIn9bQSs6Xw8Xfj30qazQ&s"
+            className="w-full h-[420px] object-contain"
           />
         </div>
         <div className="info absolute top-0 -right-[100%] p-8 w-[50%] h-[100%] flex items-center flex-col gap-2 justify-center opacity-0 transition-all duration-700">

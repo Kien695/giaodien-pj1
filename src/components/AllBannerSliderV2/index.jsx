@@ -30,7 +30,7 @@ export default function AllBannerSliderV2(props) {
             link="product?catId=68dbe8681ada8a2729ecd824"
             info="right"
             price={Number(100000).toLocaleString("vi-VN") + "đ"}
-            image="https://serviceapi.spicezgold.com/download/1753859360822_1737020916820_New_Project_52.jpg"
+            image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHxaesjg0LdkuINUi2dMkPiuvJ2brxZVX7Vg&s"
           />
         </SwiperSlide>
         <SwiperSlide>
@@ -39,7 +39,7 @@ export default function AllBannerSliderV2(props) {
             link="product?catId=691550ef962c06d59923ae46"
             info="left"
             price={Number(50000).toLocaleString("vi-VN") + "đ"}
-            image="https://serviceapi.spicezgold.com/download/1741663408792_1737020756772_New_Project_1.png"
+            image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSRd25JjPCttOZmvv8EQVU_SQ5ZSv9xBvbow&s"
           />
         </SwiperSlide>
         <SwiperSlide>
@@ -48,7 +48,7 @@ export default function AllBannerSliderV2(props) {
             link="product?catId=691550ef962c06d59923ae46"
             info="right"
             price={Number(20000).toLocaleString("vi-VN") + "đ"}
-            image="https://serviceapi.spicezgold.com/download/1741664665391_1741497254110_New_Project_50.jpg"
+            image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiWdkv8Ipdi0WGsIfb_lVjhTz2KAOjNualUw&s"
           />
         </SwiperSlide>
         <SwiperSlide>

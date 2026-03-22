@@ -78,7 +78,7 @@ export default function App() {
     };
 
     fetchUser();
-  }, [countList, countCart]);
+  }, [countList, countCart, isLogin]);
   //socket
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
@@ -90,7 +90,7 @@ export default function App() {
       socketClient.connect();
     }
 
-    socketClient.on("ORDER_STATUS", (data) => {
+    socketClient.on("NOTI_STATUS", (data) => {
       setNotification((prev) => [data, ...prev]);
       setDot(1);
     });

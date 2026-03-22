@@ -5,12 +5,13 @@ import { Button, List, TextField, useMediaQuery } from "@mui/material";
 import { BsCart3 } from "react-icons/bs";
 import { FaRegHeart } from "react-icons/fa6";
 import "./style.css";
-import ProductSlider from "../../components/ProductLasted";
+
 import { MyContext } from "../../App";
 import { getData, postData } from "../../untils/api";
 import { useNavigate, useParams } from "react-router-dom";
 import ListLikeProduct from "../../components/ListLikeProduct";
 import dayjs from "dayjs";
+import ProductRelated from "../../components/ProductRelated";
 export default function ProductDetail() {
   const isMobile = useMediaQuery("(max-width:900px)");
   const context = useContext(MyContext);
@@ -20,7 +21,7 @@ export default function ProductDetail() {
   const [product, setProduct] = React.useState("");
   const [quantity, setQuantity] = React.useState(1);
   const [size, setSize] = React.useState("");
-
+  const [productRelate, setProductRelate] = React.useState([]);
   const { id } = useParams();
 
   useEffect(() => {
@@ -29,6 +30,7 @@ export default function ProductDetail() {
         const res = await getData(`/api/productClient/${id}`);
         if (res.success) {
           setProduct(res.data);
+          setProductRelate(res.related);
         }
       } catch (error) {
         if (error.response) {
@@ -242,7 +244,9 @@ export default function ProductDetail() {
                 )}
               </Button>
               <Button
-              onClick={()=>{handleBuy(product,quantity,size)}}
+                onClick={() => {
+                  handleBuy(product, quantity, size);
+                }}
                 sx={{
                   textTransform: "none",
                 }}
@@ -444,10 +448,10 @@ export default function ProductDetail() {
         )}
       </div>
       <div className="py-4">
-        <div className="md:text-[22px] text-[18px] font-[500]">
+        <div className="md:text-[18px] text-[16px] ml-5 font-[500]">
           Sản phẩm liên quan
         </div>
-        <ProductSlider item={isMobile ? 2 : 5} />
+        <ProductRelated item={isMobile ? 2 : 5} data={productRelate} />
       </div>
     </div>
   );

@@ -5,7 +5,7 @@ import avatar from "../../assets/avatar-user.png";
 import socketClient from "../../../socket";
 import { deleteData, getData } from "../../untils/api";
 import { MyContext } from "../../App";
-import { useNavigate } from "react-router-dom";
+
 import { Box, Button } from "@mui/material";
 const notifications = [
   {
@@ -21,7 +21,7 @@ const notifications = [
 ];
 const NotificationPopup = ({ isOpen, onClose }) => {
   const context = useContext(MyContext);
-  const navigate = useNavigate();
+
   const timeAgo = (date) => {
     if (!date) return "";
     const diff = Date.now() - new Date(date).getTime();
@@ -59,11 +59,11 @@ const NotificationPopup = ({ isOpen, onClose }) => {
   }, [isOpen]);
   if (!isOpen) return null;
   //xóa thông báo
-  const handleDelete = async() => {
+  const handleDelete = async () => {
     try {
-      const res=await deleteData("/api/notification/delete")
-      if(res.success){
-        context.setNotification([])
+      const res = await deleteData("/api/notification/delete");
+      if (res.success) {
+        context.setNotification([]);
       }
     } catch (error) {
       if (error.response) {
@@ -99,7 +99,6 @@ const NotificationPopup = ({ isOpen, onClose }) => {
               {context?.notification.map((item, index) => (
                 <li
                   onClick={() => {
-                    navigate("/order");
                     onClose();
                   }}
                   key={index}
@@ -111,7 +110,10 @@ const NotificationPopup = ({ isOpen, onClose }) => {
                   <div className="flex gap-3">
                     <div className="flex flex-col gap-1 w-[20%] justify-center ">
                       <img
-                        src={item?.product?.images[0].url}
+                        src={
+                          item?.product?.images[0].url ||
+                          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8kiBwlQlgJoB8cM0uF619T85F1BLjjbBYTg&s"
+                        }
                         alt="avatar"
                         className="w-5 h-5 rounded-full"
                       />
@@ -120,7 +122,12 @@ const NotificationPopup = ({ isOpen, onClose }) => {
                       </div>
                     </div>
                     <div className="flex-1">
-                      <p className="text-sm text-gray-800">{item.content}</p>
+                      <p
+                        className="text-sm text-gray-800 line-clamp-2"
+                        dangerouslySetInnerHTML={{
+                          __html: item.content || "",
+                        }}
+                      ></p>
                     </div>
                   </div>
                   <span className="text-xs text-gray-400 flex justify-end">
