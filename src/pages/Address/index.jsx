@@ -59,43 +59,45 @@ export default function Address() {
     }
   }, [context?.addressData, provinces, districts, wards]);
 
+  // 1. Lấy danh sách Tỉnh/Thành
   useEffect(() => {
     axios
-      .get("https://provinces.open-api.vn/vn-api/api/v1/?depth=1")
-      .then((res) => {
-        console.log("PROVINCES API:", res.data);
-        setProvinces(res.data || []);
-      })
-      .catch((err) => console.error(" Axios Error:", err));
+      .get("https://provinces.open-api.vn/api/p/")
+      .then((res) => setProvinces(res.data))
+      .catch((err) => console.error("Lỗi lấy tỉnh:", err));
   }, []);
 
+  // 2. Lấy danh sách Quận/Huyện khi chọn Tỉnh
   useEffect(() => {
-    if (selectedProvince) {
-      // lấy quận/huyện cho tỉnh đã chọn
-      axios
-        .get(
-          `https://provinces.open-api.vn/vn-api/api/v1/p/${selectedProvince}?depth=2`,
-        )
-        .then((res) => {
-          setDistricts(res.data.districts || []);
-          setWards([]); // reset ward
-        })
-        .catch(console.error);
+    if (!selectedProvince) {
+      setDistricts([]);
+      setWards([]);
+      return;
     }
+
+    axios
+      .get(`https://provinces.open-api.vn/api/p/${selectedProvince}?depth=2`)
+      .then((res) => {
+        setDistricts(res.data.districts || []);
+        setWards([]); // Reset xã khi đổi tỉnh
+      })
+      .catch(console.error);
   }, [selectedProvince]);
 
+  // 3. Lấy danh sách Phường/Xã khi chọn Quận/Huyện
   useEffect(() => {
-    if (selectedDistrict) {
-      // lấy phường/xã
-      axios
-        .get(
-          `https://provinces.open-api.vn/vn-api/api/v1/d/${selectedDistrict}?depth=2`,
-        )
-        .then((res) => {
-          setWards(res.data.wards || []);
-        })
-        .catch(console.error);
+    if (!selectedDistrict) {
+      setWards([]);
+      return;
     }
+
+    axios
+
+      .get(`https://provinces.open-api.vn/api/d/${selectedDistrict}?depth=2`)
+      .then((res) => {
+        setWards(res.data.wards || []);
+      })
+      .catch(console.error);
   }, [selectedDistrict]);
   const handleSubmit = async (e) => {
     e.preventDefault();
