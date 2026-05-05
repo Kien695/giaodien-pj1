@@ -63,7 +63,8 @@ export default function Address() {
     axios
       .get("/vn-api/api/v1/?depth=1")
       .then((res) => {
-        setProvinces(res.data);
+        console.log("PROVINCES API:", res.data);
+        setProvinces(res.data || []);
       })
       .catch((err) => console.error(" Axios Error:", err));
   }, []);
