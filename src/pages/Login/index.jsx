@@ -180,7 +180,7 @@ export default function Login() {
               type="button" // tránh submit form
               className="!flex !items-center !justify-center gap-2 "
               onClick={() => {
-                window.open("http://localhost:3000/auth/google", "_self");
+                window.open("https://shop.kien.cloud/auth/google", "_self");
               }}
             >
               <FcGoogle className="text-xl" />
