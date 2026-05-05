@@ -61,7 +61,7 @@ export default function Address() {
 
   useEffect(() => {
     axios
-      .get("/vn-api/api/v1/?depth=1")
+      .get("https://provinces.open-api.vn/vn-api/api/v1/?depth=1")
       .then((res) => {
         console.log("PROVINCES API:", res.data);
         setProvinces(res.data || []);
@@ -73,7 +73,9 @@ export default function Address() {
     if (selectedProvince) {
       // lấy quận/huyện cho tỉnh đã chọn
       axios
-        .get(`/vn-api/api/v1/p/${selectedProvince}?depth=2`)
+        .get(
+          `https://provinces.open-api.vn/vn-api/api/v1/p/${selectedProvince}?depth=2`,
+        )
         .then((res) => {
           setDistricts(res.data.districts || []);
           setWards([]); // reset ward
@@ -86,7 +88,9 @@ export default function Address() {
     if (selectedDistrict) {
       // lấy phường/xã
       axios
-        .get(`/vn-api/api/v1/d/${selectedDistrict}?depth=2`)
+        .get(
+          `https://provinces.open-api.vn/vn-api/api/v1/d/${selectedDistrict}?depth=2`,
+        )
         .then((res) => {
           setWards(res.data.wards || []);
         })
