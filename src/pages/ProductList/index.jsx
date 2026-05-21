@@ -103,7 +103,7 @@ export default function ProductList() {
         }
       </Drawer>
       <div className=" container  flex gap-3">
-        <div className="sideBar md:w-[15%] hidden md:flex h-full bg-white p-3 shadow-md">
+        <div className="sideBar md:w-[22%] hidden md:flex h-full bg-white p-3 shadow-md">
           <SideBar
             minPrice={minPrice}
             maxPrice={maxPrice}
@@ -111,7 +111,7 @@ export default function ProductList() {
             rating={rating}
           />
         </div>
-        <div className="product md:w-[85%] w-full mx-auto">
+        <div className="product md:w-[78%] w-full mx-auto">
           <div className="bg-[#f1f1f1] w-full p-2 mb-3 flex items-center justify-between rounded-md">
             <div className="flex items-center ">
               <Button
