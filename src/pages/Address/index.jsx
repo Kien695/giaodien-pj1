@@ -124,7 +124,7 @@ export default function Address() {
             <div className="flex gap-3 ">
               <div className="flex items-end">Tỉnh/thành phố:</div>
               <Select
-                value={formInput.provinceCode || ""}
+                value={formInput.province || ""}
                 onChange={(e) => {
                   const value = e.target.value;
                   const selected = provinces.find((p) => p.code === value);
@@ -152,7 +152,7 @@ export default function Address() {
             <div className="flex gap-3">
               <div className="flex items-end">Quận/huyện:</div>
               <Select
-                value={formInput.districtCode || ""}
+                value={formInput.district || ""}
                 onChange={(e) => {
                   const value = e.target.value;
                   const selected = districts.find((p) => p.code === value);
@@ -181,7 +181,7 @@ export default function Address() {
             <div className="flex gap-3">
               <div className="flex items-end">Phường/xã: </div>
               <Select
-                value={formInput.wardCode || ""}
+                value={formInput.ward || ""}
                 onChange={(e) => {
                   const value = e.target.value;
                   const selected = wards.find((p) => p.code === value);
