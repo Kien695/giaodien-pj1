@@ -124,50 +124,87 @@ export default function Address() {
             <div className="flex gap-3 ">
               <div className="flex items-end">Tỉnh/thành phố:</div>
               <Select
-                placeholder="Chọn tỉnh/thành phố"
-                value={formInput.province}
-                onChange={(value, option) => {
-                  setFormInput({ ...formInput, province: option.label });
+                value={formInput.provinceCode || ""}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  const selected = provinces.find((p) => p.code === value);
                   setSelectedProvince(value);
+                  setFormInput({
+                    ...formInput,
+                    province: selected?.name || "",
+                    provinceCode: value,
+                  });
                 }}
-                options={provinces.map((p) => ({
-                  value: p.code,
-                  label: p.name,
-                }))}
+                size="small"
+                displayEmpty
                 className="w-full sm:w-[200px]"
-              />
+              >
+                <MenuItem value="">
+                  <em>Chọn tỉnh/thành phố</em>
+                </MenuItem>
+                {provinces.map((p) => (
+                  <MenuItem key={p.code} value={p.code}>
+                    {p.name}
+                  </MenuItem>
+                ))}
+              </Select>
             </div>
             <div className="flex gap-3">
               <div className="flex items-end">Quận/huyện:</div>
               <Select
-                placeholder="Chọn quận/huyện"
-                value={formInput.district}
-                onChange={(value, option) => {
-                  setFormInput({ ...formInput, district: option.label });
+                value={formInput.districtCode || ""}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  const selected = districts.find((p) => p.code === value);
                   setSelectedDistrict(value);
+                  setFormInput({
+                    ...formInput,
+                    district: selected?.name || "",
+                    districtCode: value,
+                  });
                 }}
-                options={districts.map((d) => ({
-                  value: d.code,
-                  label: d.name,
-                }))}
+                size="small"
+                displayEmpty
                 className="w-full sm:w-[200px]"
-              />
+              >
+                <MenuItem value="">
+                  <em>Chọn quận/huyện</em>
+                </MenuItem>
+                {districts.map((p) => (
+                  <MenuItem key={p.code} value={p.code}>
+                    {p.name}
+                  </MenuItem>
+                ))}
+              </Select>
             </div>
 
             <div className="flex gap-3">
               <div className="flex items-end">Phường/xã: </div>
               <Select
-                placeholder="Chọn phường/xã"
-                value={formInput.ward}
-                onChange={(value, option) =>
-                  setFormInput({ ...formInput, ward: option.label })
-                }
-                options={wards.map((w) => ({
-                  value: w.code,
-                  label: w.name,
-                }))}
+                value={formInput.wardCode || ""}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  const selected = wards.find((p) => p.code === value);
+                  setSelectedWard(value); //
+                  setFormInput({
+                    ...formInput,
+                    ward: selected?.name || "",
+                    wardCode: value,
+                  });
+                }}
+                size="small"
+                displayEmpty
                 className="w-full sm:w-[200px]"
-              />
+              >
+                <MenuItem value="">
+                  <em>Chọn phường/xã</em>
+                </MenuItem>
+                {wards.map((p) => (
+                  <MenuItem key={p.code} value={p.code}>
+                    {p.name}
+                  </MenuItem>
+                ))}
+              </Select>
             </div>
             <div className="flex gap-3">
               <div className="flex items-end">Địa chỉ cụ thể: </div>
