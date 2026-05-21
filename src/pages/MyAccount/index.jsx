@@ -35,6 +35,10 @@ export default function MyAccount() {
       context.openAlertBox("error", "Vui lòng điền đầy đủ thông tin!");
       return;
     }
+    if (!/^\d{10}$/.test(formInput.mobile)) {
+      context.openAlertBox("error", "Số điện thoại không hợp lệ!");
+      return;
+    }
     try {
       const res = await putData(`/api/user/info`, formInput);
       if (res.success) {
