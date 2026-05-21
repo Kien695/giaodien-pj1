@@ -33,31 +33,23 @@ export default function Address() {
   });
 
   useEffect(() => {
-    if (context?.addressData) {
-      const selectedProvince = provinces.find(
-        (p) => p.name === context.addressData.province,
-      );
-      setSelectedProvince(selectedProvince?.code || "");
-      const selectedDistrict = districts.find(
-        (d) => d.name === context.addressData.district,
-      );
-      setSelectedDistrict(selectedDistrict?.code || "");
-      const selectedWard = wards.find(
-        (w) => w.name === context.addressData.ward,
-      );
-      setSelectedWard(selectedWard?.code || "");
-      setFormInput({
-        province: context.addressData.province || "",
-        provinceCode: selectedProvince?.code || "",
-        district: context.addressData.district || "",
-        districtCode: selectedDistrict?.code || "",
-        ward: context.addressData.ward || "",
-        wardCode: selectedWard?.code || "",
-        address_line: context.addressData.address_line || "",
-        typeAddress: context.addressData.typeAddress || "",
-      });
-    }
-  }, [context?.addressData, provinces, districts, wards]);
+    if (!context?.addressData) return;
+
+    setSelectedProvince(context.addressData.provinceCode);
+    setSelectedDistrict(context.addressData.districtCode);
+    setSelectedWard(context.addressData.wardCode);
+
+    setFormInput({
+      province: context.addressData.province || "",
+      provinceCode: context.addressData.provinceCode || "",
+      district: context.addressData.district || "",
+      districtCode: context.addressData.districtCode || "",
+      ward: context.addressData.ward || "",
+      wardCode: context.addressData.wardCode || "",
+      address_line: context.addressData.address_line || "",
+      typeAddress: context.addressData.typeAddress || "",
+    });
+  }, [context?.addressData]);
 
   // 1. Lấy danh sách Tỉnh/Thành
   useEffect(() => {

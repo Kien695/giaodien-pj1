@@ -31,12 +31,12 @@ export default function MyAccount() {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    if (!formInput.name || !formInput.mobile) {
+      context.openAlertBox("error", "Vui lòng điền đầy đủ thông tin!");
+      return;
+    }
     try {
-      const res = await putData(
-        `/api/user/info`,
-        formInput,
-      );
+      const res = await putData(`/api/user/info`, formInput);
       if (res.success) {
         context.openAlertBox("success", res.message);
       } else {
