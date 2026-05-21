@@ -35,9 +35,9 @@ export default function Address() {
   useEffect(() => {
     if (!context?.addressData) return;
 
-    setSelectedProvince(context.addressData.province);
-    setSelectedDistrict(context.addressData.district);
-    setSelectedWard(context.addressData.ward);
+    setSelectedProvince(context.addressData.provinceCode);
+    setSelectedDistrict(context.addressData.districtCode);
+    setSelectedWard(context.addressData.wardCode);
 
     setFormInput({
       province: context.addressData.province || "",
