@@ -84,7 +84,7 @@ export default function SideBar({ minPrice, maxPrice, catId, rating }) {
         <div className="flex box text-[16px] font-[600] mb-2 text-[rgba(0,0,0,0.9)] items-center justify-between">
           Danh mục
           <Button
-            className="!text-black !rounded-full !w-[20px] !h-[20px] !min-w-[20px]"
+            className="!text-black !rounded-full !w-[30px] !h-[30px] !min-w-[30px]"
             onClick={() => setIsOpenedCategory(!isOpenedCategory)}
           >
             {isOpenedCategory == true ? <FaAngleDown /> : <FaAngleUp />}
@@ -94,7 +94,7 @@ export default function SideBar({ minPrice, maxPrice, catId, rating }) {
           <List
             sx={{
               width: "100%",
-              maxWidth: 250,
+              maxWidth: 300,
               bgcolor: "background.paper",
               position: "relative",
               overflow: "auto",
