@@ -1,6 +1,11 @@
 import React from "react";
 import { useEffect } from "react";
-import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import { getData, postData } from "../../untils/api";
 import { useState } from "react";
 import { Alert, Button, CircularProgress, Container } from "@mui/material";
@@ -128,9 +133,9 @@ export default function CheckoutResult() {
               variant="contained"
               color="error"
               className="flex-1 !rounded-lg"
-              onClick={() => navigate(-1)}
+              onClick={() => navigate("/checkout")}
             >
-              Thử lại
+              Thanh toán lại
             </Button>
           )}
         </div>
