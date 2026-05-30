@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect } from "react";
-import { Link, useLocation, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { getData, postData } from "../../untils/api";
 import { useState } from "react";
 import { Alert, Button, CircularProgress, Container } from "@mui/material";
@@ -15,7 +15,7 @@ export default function CheckoutResult() {
   const [status, setStatus] = useState("");
   const [title, setTitle] = useState("");
   const [loading, setLoading] = useState(true);
-
+  const navigate = useNavigate();
   const paymentMethod = sessionStorage.getItem("paymentMethod");
   useEffect(() => {
     const fetchData = async () => {
