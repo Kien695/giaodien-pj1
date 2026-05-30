@@ -37,519 +37,158 @@ export default function MyOrder() {
   const handleBuy = (item, qty, size) => {
     navigate("/checkout", { state: { item, quantity: qty, size: size || "" } });
   };
+  const tabs = [
+    { id: 1, label: "Tất cả", status: "all" },
+    { id: 2, label: "Đang giao", status: "delivering" },
+    { id: 3, label: "Đã giao", status: "delivered" },
+    { id: 4, label: "Đã hủy", status: "cancelled" },
+  ];
+
+  const formatDate = (date) => {
+    return new Date(date).toLocaleString("vi-VN", {
+      hour: "2-digit",
+      minute: "2-digit",
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  };
+
+  const getStatusText = (status) => {
+    if (status === "pending") return "Đang xử lí";
+    if (status === "delivering") return "Đang giao";
+    if (status === "cancelled") return "Đã hủy";
+    return "Giao hàng thành công";
+  };
+
+  const filteredOrders = orderData.flatMap((order) =>
+    order.productItems
+      .filter((product) => {
+        if (active === 1) return true;
+        if (active === 2) return product.order_status === "delivering";
+        if (active === 3) return product.order_status === "delivered";
+        if (active === 4) return product.order_status === "cancelled";
+        return true;
+      })
+      .map((product) => ({
+        order,
+        product,
+      })),
+  );
   return (
-    <div className="container flex  md:flex-row flex-col gap-8 py-10">
+    <div className="container flex md:flex-row flex-col gap-8 py-10">
       <Profile />
-      <div>
-        <div className="flex items-center justify-between md:w-[500px]  w-full bg-white p-6 h-[30px] rounded-md shadow-md">
-          <div
-            className={`${
-              active == 1
-                ? "text-red-500 font-[600]"
-                : "text-gray-600 font-[500]"
-            } cursor-pointer`}
-            onClick={() => setActive(1)}
-          >
-            Tất cả
-          </div>
-          <div
-            className={`${
-              active == 2
-                ? "text-red-500 font-[600]"
-                : "text-gray-600 font-[500]"
-            } cursor-pointer`}
-            onClick={() => setActive(2)}
-          >
-            Đang giao
-          </div>
-          <div
-            className={`${
-              active == 3
-                ? "text-red-500 font-[600]"
-                : "text-gray-600 font-[500]"
-            } cursor-pointer`}
-            onClick={() => setActive(3)}
-          >
-            Đã giao
-          </div>
-          <div
-            className={`${
-              active == 4
-                ? "text-red-500 font-[600]"
-                : "text-gray-600 font-[500]"
-            } cursor-pointer`}
-            onClick={() => setActive(4)}
-          >
-            Đã hủy
-          </div>
+
+      <div className="flex-1">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-2 flex items-center gap-2 overflow-x-auto mb-5">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActive(tab.id)}
+              className={`px-5 py-2 rounded-xl text-sm font-semibold whitespace-nowrap transition-all ${
+                active === tab.id
+                  ? "bg-[#ff5252] text-white shadow-md"
+                  : "text-gray-600 hover:bg-gray-100"
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
         </div>
-        <br />
-        {active == 1 && (
-          <>
-            {orderData.map((item, index) => (
-              <React.Fragment key={index}>
-                {item?.productItems.map((item1, i) => (
-                  <div
-                    className="bg-white md:w-[800px] w-full py-3 px-6 shadow-md rounded-md mb-2"
-                    key={i}
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="font-[500] text-[12px]">
-                        {item1.productId?.brand}
+
+        <div className="max-h-[500px] bg-gray-50 rounded-2xl p-5  overflow-y-auto">
+          {filteredOrders.length === 0 ? (
+            <div className="md:w-[800px] w-full h-[220px] bg-white rounded-2xl shadow-sm border border-gray-100 flex items-center justify-center text-gray-500 text-[16px] italic">
+              Hiện chưa có đơn hàng nào!
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {filteredOrders.map(({ order, product }, index) => (
+                <div
+                  key={index}
+                  className="bg-white md:w-[800px] w-full rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
+                >
+                  <div className="flex md:flex-row flex-col md:items-center md:justify-between gap-2 px-5 py-4 bg-gray-50">
+                    <div>
+                      <div className="text-sm font-semibold text-gray-800">
+                        {product.productId?.brand || "Không có thương hiệu"}
                       </div>
-                      <div className="flex items-center">
-                        <div className="text-[14px] font-[500]  border-r border-gray-400 pr-2 flex leading-none">
-                          {item1.order_status === "pending" ? (
-                            <span className="flex items-center gap-1">
-                              <FcProcess className="text-[20px] !text-green-500" />
-                              Đang xử lí
-                            </span>
-                          ) : item1.order_status === "delivering" ? (
-                            <span className="flex items-center gap-1">
-                              <CiDeliveryTruck className="text-[20px]" />
-                              Đang giao
-                            </span>
-                          ) : item1.order_status === "cancelled" ? (
-                            <span className="flex text-gray-500 items-center gap-1">
-                              <FcCancel className="text-[20px]" /> Đã hủy
-                            </span>
-                          ) : (
-                            <span className="flex items-center text-green-500  gap-1">
-                              <IoMdCheckmarkCircleOutline className="text-[20px]" />{" "}
-                              Giao hàng thành công
-                            </span>
-                          )}
-                        </div>
-                        <div className="pl-2 text-[12px] uppercase text-[#ff5252] font-[600] flex items-center leading-none">
-                          {item.payment_status === "yes"
-                            ? "Đã thanh toán"
-                            : "Chưa thanh toán"}
-                        </div>
+
+                      <div className="text-xs text-gray-500 mt-1">
+                        Đặt hàng lúc: {formatDate(order.createdAt)}
                       </div>
                     </div>
 
-                    <hr />
-                    <div className="flex my-3 items-center">
-                      <div className="w-[15%]">
-                        <img
-                          src={item1.productId?.images?.[0].url}
-                          alt=""
-                          className="w-[95px] md:h-[110px] h-[80px] rounded-md"
-                        />
-                      </div>
-                      <div className="w-[70%] flex flex-col gap-1 ml-6">
-                        <Link className="line-clamp-1 md:text-[16px] text-[14px] font-[500] text-black hover:text-[#ff5252]">
-                          {item1.productId?.name}
-                        </Link>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="px-3 py-1 rounded-full bg-blue-50 text-blue-600 text-xs font-semibold">
+                        {getStatusText(product.order_status)}
+                      </span>
 
-                        <div className="flex gap-4">
-                          <div className="flex items-center">
-                            <div className="text-[14px] mr-1">Số lượng:</div>
-                            <Button
-                              size="small"
-                              sx={{
-                                background: "gray",
-                                padding: "2px 8px",
-                                minWidth: "auto",
-                                color: "#fff",
-                              }}
-                            >
-                              {item1.quantity}
-                            </Button>
-                          </div>
-                          {item1?.size?.length > 0 && (
-                            <div className="flex items-center">
-                              <div className="text-[14px] mr-1">
-                                Kích thước:
-                              </div>
-                              <Button
-                                size="small"
-                                sx={{
-                                  background: "gray",
-                                  padding: "2px 8px",
-                                  minWidth: "auto",
-                                  color: "#fff",
-                                }}
-                              >
-                                {item1.size}
-                              </Button>
-                            </div>
-                          )}
-                        </div>
-
-                        <div className="flex items-center font-[500]">
-                          <div className="priceNew text-[#ff5252] md:text-[16px] text-[14px]">
-                            {item1.price.toLocaleString()} đ
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <hr />
-                    <div className="flex items-center justify-end mt-2">
-                      <div>Thành tiền:</div>
-                      <span className="ml-3 text-[#ff5252] font-[600] md:text-[16px] text-[14px]">
-                        {item1.price.toLocaleString()} đ
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                          order.payment_status === "yes"
+                            ? "bg-green-50 text-green-600"
+                            : "bg-red-50 text-red-500"
+                        }`}
+                      >
+                        {order.payment_status === "yes"
+                          ? "Đã thanh toán"
+                          : "Chưa thanh toán"}
                       </span>
                     </div>
-
-                    <OrderButton item={item1} onSuccess={() => fetchData()} />
                   </div>
-                ))}
-              </React.Fragment>
-            ))}
-          </>
-        )}
-        {active == 2 && (
-          <>
-            {orderData.some((order) =>
-              order.productItems?.some(
-                (item1) => item1.order_status === "delivering",
-              ),
-            ) ? (
-              orderData.map((item, index) => (
-                <React.Fragment key={index}>
-                  {item?.productItems
-                    .filter((item1) => item1.order_status === "delivering")
-                    .map((item1, i) => (
-                      <div
-                        className="bg-white md:w-[800px] w-full py-3 px-6 shadow-md rounded-md mb-2"
-                        key={i}
-                      >
-                        <div className="flex items-center justify-between mb-2">
-                          <div className="font-[500] text-[12px]">
-                            {item1.productId?.brand}
-                          </div>
-                          <div className="flex items-center">
-                            <div className="text-[14px] flex gap-1 font-[500] border-r border-gray-400 pr-2  items-center leading-none">
-                              <span className="flex items-center gap-1">
-                                <CiDeliveryTruck className="text-[20px]" />
-                                Đang giao
-                              </span>
-                            </div>
-                            <div className="pl-2 text-[12px] uppercase text-[#ff5252] font-[600] flex items-center leading-none">
-                              {item.payment_status === "yes"
-                                ? "Đã thanh toán"
-                                : "Chưa thanh toán"}
-                            </div>
-                          </div>
-                        </div>
 
-                        <hr />
-                        <div className="flex my-3">
-                          <div className="w-[10%]">
-                            <img
-                              src={item1.productId?.images?.[0].url}
-                              alt=""
-                              className="w-[90px] rounded-md"
-                            />
-                          </div>
-                          <div className="w-[75%] flex flex-col gap-1 ml-6">
-                            <Link className="line-clamp-1 text-[18px] font-[500] text-black hover:text-[#ff5252]">
-                              {item1.productId?.name}
-                            </Link>
+                  <div className="p-5 flex gap-4">
+                    <img
+                      src={product.productId?.images?.[0]?.url}
+                      alt={product.productId?.name}
+                      className="w-[90px] h-[100px] object-cover rounded-xl border border-gray-100"
+                    />
 
-                            <div className="flex gap-4">
-                              <div className="flex items-center">
-                                <div className="text-[14px] mr-1">
-                                  Số lượng:
-                                </div>
-                                <Button
-                                  size="small"
-                                  sx={{
-                                    background: "gray",
-                                    padding: "2px 8px",
-                                    minWidth: "auto",
-                                    color: "#fff",
-                                  }}
-                                >
-                                  {item1.quantity}
-                                </Button>
-                              </div>
-                              {item1?.size?.length > 0 && (
-                                <div className="flex items-center">
-                                  <div className="text-[14px] mr-1">
-                                    Kích thước:
-                                  </div>
-                                  <Button
-                                    size="small"
-                                    sx={{
-                                      background: "gray",
-                                      padding: "2px 8px",
-                                      minWidth: "auto",
-                                      color: "#fff",
-                                    }}
-                                  >
-                                    {item1.size}
-                                  </Button>
-                                </div>
-                              )}
-                            </div>
+                    <div className="flex-1">
+                      <Link className="line-clamp-1 md:text-[17px] text-[15px] font-semibold text-gray-900 hover:text-[#ff5252]">
+                        {product.productId?.name}
+                      </Link>
 
-                            <div className="flex items-center font-[500]">
-                              <div className="priceNew text-[#ff5252] ">
-                                {item1.price.toLocaleString()} đ
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+                      <div className="flex gap-3 flex-wrap mt-3 text-sm text-gray-600">
+                        <span className="px-3 py-1 bg-gray-100 rounded-lg">
+                          Số lượng: {product.quantity}
+                        </span>
 
-                        <hr />
-                        <div className="flex items-center justify-end mt-2">
-                          <div>Thành tiền:</div>
-                          <span className="ml-3 text-[#ff5252] font-[600]">
-                            {item1.price.toLocaleString()} đ
+                        {product?.size?.length > 0 && (
+                          <span className="px-3 py-1 bg-gray-100 rounded-lg">
+                            Size: {product.size}
                           </span>
-                        </div>
-
-                        <OrderButton
-                          item={item1}
-                          onSuccess={() => fetchData()}
-                        />
+                        )}
                       </div>
-                    ))}
-                </React.Fragment>
-              ))
-            ) : (
-              <div className="flex md:w-[500px] w-full h-[200px] bg-white items-center justify-center text-gray-500 text-[18px] italic">
-                Hiện chưa có đơn hàng nào!
-              </div>
-            )}
-          </>
-        )}
-        {active == 3 && (
-          <>
-            {orderData.some((order) =>
-              order.productItems.some(
-                (item1) => item1.order_status === "delivered",
-              ),
-            ) ? (
-              orderData.map((item, index) => (
-                <React.Fragment key={index}>
-                  {item?.productItems
-                    .filter((item1) => item1.order_status === "delivered")
-                    .map((item1, i) => (
-                      <div
-                        className="bg-white w-[800px] py-3 px-6 shadow-md rounded-md mb-2"
-                        key={i}
-                      >
-                        <div className="flex items-center justify-between mb-2">
-                          <div className="font-[500] text-[12px]">
-                            {item1.productId?.brand}
-                          </div>
-                          <div className="flex items-center">
-                            <div className="text-[14px]  gap-1 font-[500]  border-r border-gray-400 pr-2 flex items-center leading-none">
-                              <span className="flex items-center text-green-500  gap-1">
-                                <IoMdCheckmarkCircleOutline className="text-[20px]" />
-                                Giao hàng thành công
-                              </span>
-                            </div>
-                            <div className="pl-2 text-[12px] uppercase text-[#ff5252] font-[600] flex items-center leading-none">
-                              {item.payment_status === "yes"
-                                ? "Đã thanh toán"
-                                : "Chưa thanh toán"}
-                            </div>
-                          </div>
-                        </div>
 
-                        <hr />
-                        <div className="flex my-3">
-                          <div className="w-[15%]">
-                            <img
-                              src={item1.productId?.images?.[0].url}
-                              alt=""
-                              className="w-[95px] md:h-[110px] h-[80px] rounded-md"
-                            />
-                          </div>
-                          <div className="w-[70%] flex flex-col gap-1 ml-6">
-                            <Link className="line-clamp-1 text-[18px] font-[500] text-black hover:text-[#ff5252]">
-                              {item1.productId?.name}
-                            </Link>
-
-                            <div className="flex gap-4">
-                              <div className="flex items-center">
-                                <div className="text-[14px] mr-1">
-                                  Số lượng:
-                                </div>
-                                <Button
-                                  size="small"
-                                  sx={{
-                                    background: "gray",
-                                    padding: "2px 8px",
-                                    minWidth: "auto",
-                                    color: "#fff",
-                                  }}
-                                >
-                                  {item1.quantity}
-                                </Button>
-                              </div>
-                              {item1?.size?.length > 0 && (
-                                <div className="flex items-center">
-                                  <div className="text-[14px] mr-1">
-                                    Kích thước:
-                                  </div>
-                                  <Button
-                                    size="small"
-                                    sx={{
-                                      background: "gray",
-                                      padding: "2px 8px",
-                                      minWidth: "auto",
-                                      color: "#fff",
-                                    }}
-                                  >
-                                    {item1.size}
-                                  </Button>
-                                </div>
-                              )}
-                            </div>
-
-                            <div className="flex items-center font-[500]">
-                              <div className="priceNew text-[#ff5252] ">
-                                {item1.price.toLocaleString()} đ
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        <hr />
-                        <div className="flex items-center justify-end mt-2">
-                          <div>Thành tiền:</div>
-                          <span className="ml-3 text-[#ff5252] font-[600]">
-                            {item1.price.toLocaleString()} đ
-                          </span>
-                        </div>
-
-                        <OrderButton
-                          item={item1}
-                          onSuccess={() => fetchData()}
-                        />
+                      <div className="mt-3 text-[#ff5252] font-bold">
+                        {product.price.toLocaleString()} đ
                       </div>
-                    ))}
-                </React.Fragment>
-              ))
-            ) : (
-              <div className="flex md:w-[500px] w-full h-[200px] bg-white items-center justify-center text-gray-500 text-[18px] italic">
-                Hiện chưa có đơn hàng nào!
-              </div>
-            )}
-          </>
-        )}
-        {active == 4 && (
-          <>
-            {orderData.some((order) =>
-              order.productItems.some(
-                (item1) => item1.order_status === "cancelled",
-              ),
-            ) ? (
-              orderData.map((item, index) => (
-                <React.Fragment key={index}>
-                  {item?.productItems
-                    .filter((item1) => item1.order_status === "cancelled")
-                    .map((item1, i) => (
-                      <div
-                        className="bg-white md:w-[800px] w-full py-3 px-6 shadow-md rounded-md mb-2"
-                        key={i}
-                      >
-                        <div className="flex items-center justify-between mb-2">
-                          <div className="font-[500] text-[12px]">
-                            {item1.productId?.brand}
-                          </div>
-                          <div className="flex items-center">
-                            <div className="text-[14px]  gap-1 font-[500]  border-r border-gray-400 pr-2 flex items-center leading-none">
-                              <span className="flex text-gray-500 items-center gap-1">
-                                <FcCancel className="text-[20px]" /> Đã hủy
-                              </span>
-                            </div>
-                            <div className="pl-2 text-[12px] uppercase text-[#ff5252] font-[600] flex items-center leading-none">
-                              {item.payment_status === "yes"
-                                ? "Đã thanh toán"
-                                : "Chưa thanh toán"}
-                            </div>
-                          </div>
-                        </div>
+                    </div>
+                  </div>
 
-                        <hr />
-                        <div className="flex my-3 items-center">
-                          <div className="w-[15%]">
-                            <img
-                              src={item1.productId?.images?.[0].url}
-                              alt=""
-                              className="w-[95px] md:h-[110px] h-[80px] rounded-md"
-                            />
-                          </div>
-                          <div className="w-[70%] flex flex-col gap-1 ml-6">
-                            <Link className="line-clamp-1 text-[18px] font-[500] text-black hover:text-[#ff5252]">
-                              {item1.productId?.name}
-                            </Link>
+                  <div className="px-5 py-4 border-t border-gray-100 flex md:flex-row flex-col md:items-center md:justify-between gap-3">
+                    <div className="text-sm text-gray-500">
+                      Mã đơn: #{order._id?.slice(-8)}
+                    </div>
 
-                            <div className="flex gap-4">
-                              <div className="flex items-center">
-                                <div className="text-[14px] mr-1">
-                                  Số lượng:
-                                </div>
-                                <Button
-                                  size="small"
-                                  sx={{
-                                    background: "gray",
-                                    padding: "2px 8px",
-                                    minWidth: "auto",
-                                    color: "#fff",
-                                  }}
-                                >
-                                  {item1.quantity}
-                                </Button>
-                              </div>
-                              {item1?.size?.length > 0 && (
-                                <div className="flex items-center">
-                                  <div className="text-[14px] mr-1">
-                                    Kích thước:
-                                  </div>
-                                  <Button
-                                    size="small"
-                                    sx={{
-                                      background: "gray",
-                                      padding: "2px 8px",
-                                      minWidth: "auto",
-                                      color: "#fff",
-                                    }}
-                                  >
-                                    {item1.size}
-                                  </Button>
-                                </div>
-                              )}
-                            </div>
+                    <div className="flex items-center justify-end gap-3">
+                      <span className="text-gray-600">Thành tiền:</span>
+                      <span className="text-[#ff5252] font-bold text-lg">
+                        {product.price.toLocaleString()} đ
+                      </span>
+                    </div>
+                  </div>
 
-                            <div className="flex items-center font-[500]">
-                              <div className="priceNew text-[#ff5252] ">
-                                {item1.price.toLocaleString()} đ
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        <hr />
-                        <div className="flex items-center justify-end mt-2">
-                          <div>Thành tiền:</div>
-                          <span className="ml-3 text-[#ff5252] font-[600]">
-                            {item1.price.toLocaleString()} đ
-                          </span>
-                        </div>
-
-                        <OrderButton
-                          item={item1}
-                          onSuccess={() => fetchData()}
-                        />
-                      </div>
-                    ))}
-                </React.Fragment>
-              ))
-            ) : (
-              <div className="flex md:w-[500px] w-full h-[200px] bg-white items-center justify-center text-gray-500 text-[18px] italic">
-                Hiện chưa có đơn hàng nào!
-              </div>
-            )}
-          </>
-        )}
+                  <div className="px-5 pb-5 flex justify-end">
+                    <OrderButton item={product} onSuccess={() => fetchData()} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

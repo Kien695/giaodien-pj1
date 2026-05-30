@@ -29,6 +29,7 @@ export default function CheckoutResult() {
               "Thanh toán thành công! Vui lòng kiểm tra đơn hàng của bạn." ||
                 res.message,
             );
+            context.setCountCart(0);
           } else {
             setTitle("Thanh toán thất bại!" || res.message);
             setStatus("error");
@@ -41,6 +42,7 @@ export default function CheckoutResult() {
           if (res.data.vnp_ResponseCode == "00") {
             sessionStorage.removeItem("paymentMethod");
             setStatus("success");
+            context.setCountCart(0);
             setTitle(
               "Thanh toán thành công! Vui lòng kiểm tra đơn hàng của bạn." ||
                 res.message,
@@ -70,25 +72,69 @@ export default function CheckoutResult() {
     );
   }
   return (
-    <div className="flex flex-col gap-3 justify-center items-center py-10 ">
-      {status == "success" ? (
-        <div>
-          <img src={success} alt="" className="w-[200px]" />
+    <div className="min-h-[70vh] flex justify-center items-center px-4">
+      <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 w-full max-w-md text-center">
+        <img
+          src={status === "success" ? success : error}
+          alt=""
+          className="w-[120px] mx-auto"
+        />
+
+        <h2
+          className={`mt-4 text-2xl font-bold ${
+            status === "success" ? "text-green-600" : "text-red-500"
+          }`}
+        >
+          {status === "success"
+            ? "Thanh toán thành công"
+            : "Thanh toán thất bại"}
+        </h2>
+
+        <p className="mt-2 text-gray-500 text-sm">{title}</p>
+
+        {status === "success" && (
+          <div className="mt-4 bg-green-50 border border-green-100 rounded-lg p-3 text-sm text-green-700">
+            Đơn hàng của bạn đã được ghi nhận và đang chờ xử lý.
+          </div>
+        )}
+
+        {status === "failed" && (
+          <div className="mt-4 bg-red-50 border border-red-100 rounded-lg p-3 text-sm text-red-600">
+            Giao dịch không thành công. Vui lòng thử lại hoặc chọn phương thức
+            thanh toán khác.
+          </div>
+        )}
+
+        <div className="flex gap-3 mt-6">
+          <Link to="/" className="flex-1">
+            <Button variant="outlined" className="w-full !rounded-lg">
+              <MdOutlineAssignmentReturn className="mr-1" />
+              Trang chủ
+            </Button>
+          </Link>
+
+          {status === "success" ? (
+            <Link to="/order" className="flex-1">
+              <Button
+                variant="contained"
+                color="success"
+                className="w-full !rounded-lg"
+              >
+                Xem đơn hàng
+              </Button>
+            </Link>
+          ) : (
+            <Button
+              variant="contained"
+              color="error"
+              className="flex-1 !rounded-lg"
+              onClick={() => navigate(-1)}
+            >
+              Thử lại
+            </Button>
+          )}
         </div>
-      ) : (
-        <div>
-          <img src={error} alt="" className="w-[150px]" />
-        </div>
-      )}
-      <div className="font-[600] md:text-[18px] text-[15px] text-[#ff5252] text-center">
-        {title}
       </div>
-      <Button>
-        <Link to="/" className="text-[12px] flex items-center gap-1">
-          <MdOutlineAssignmentReturn className="text-[18px]" />
-          Quay về trang chủ
-        </Link>
-      </Button>
     </div>
   );
 }

@@ -93,6 +93,7 @@ export default function Address() {
   }, [selectedDistrict]);
   const handleSubmit = async (e) => {
     e.preventDefault();
+   
     try {
       const res = await patchData("/api/address/add", formInput);
       if (res.success) {
@@ -124,26 +125,33 @@ export default function Address() {
             <div className="flex gap-3 ">
               <div className="flex items-end">Tỉnh/thành phố:</div>
               <Select
+                size="small"
                 value={formInput.provinceCode || ""}
                 onChange={(e) => {
                   const value = e.target.value;
-                  const selected = provinces.find((p) => p.code === value);
-                  setSelectedProvince(value);
+                  const selected = provinces.find(
+                    (p) => String(p.code) === value,
+                  );
+
                   setFormInput({
                     ...formInput,
                     province: selected?.name || "",
                     provinceCode: value,
+                    district: "",
+                    districtCode: "",
+                    ward: "",
+                    wardCode: "",
                   });
+
+                  setSelectedProvince(value);
                 }}
-                size="small"
-                displayEmpty
-                className="w-full sm:w-[200px]"
               >
                 <MenuItem value="">
                   <em>Chọn tỉnh/thành phố</em>
                 </MenuItem>
+
                 {provinces.map((p) => (
-                  <MenuItem key={p.code} value={p.code}>
+                  <MenuItem key={p.code} value={String(p.code)}>
                     {p.name}
                   </MenuItem>
                 ))}
@@ -152,26 +160,31 @@ export default function Address() {
             <div className="flex gap-3">
               <div className="flex items-end">Quận/huyện:</div>
               <Select
+                size="small"
                 value={formInput.districtCode || ""}
                 onChange={(e) => {
                   const value = e.target.value;
-                  const selected = districts.find((p) => p.code === value);
-                  setSelectedDistrict(value);
+                  const selected = districts.find(
+                    (p) => String(p.code) === value,
+                  );
+
                   setFormInput({
                     ...formInput,
                     district: selected?.name || "",
                     districtCode: value,
+                    ward: "",
+                    wardCode: "",
                   });
+
+                  setSelectedDistrict(value);
                 }}
-                size="small"
-                displayEmpty
-                className="w-full sm:w-[200px]"
               >
                 <MenuItem value="">
                   <em>Chọn quận/huyện</em>
                 </MenuItem>
+
                 {districts.map((p) => (
-                  <MenuItem key={p.code} value={p.code}>
+                  <MenuItem key={p.code} value={String(p.code)}>
                     {p.name}
                   </MenuItem>
                 ))}
@@ -181,26 +194,27 @@ export default function Address() {
             <div className="flex gap-3">
               <div className="flex items-end">Phường/xã: </div>
               <Select
+                size="small"
                 value={formInput.wardCode || ""}
                 onChange={(e) => {
                   const value = e.target.value;
-                  const selected = wards.find((p) => p.code === value);
-                  setSelectedWard(value); //
+                  const selected = wards.find((p) => String(p.code) === value);
+
                   setFormInput({
                     ...formInput,
                     ward: selected?.name || "",
                     wardCode: value,
                   });
+
+                  setSelectedWard(value);
                 }}
-                size="small"
-                displayEmpty
-                className="w-full sm:w-[200px]"
               >
                 <MenuItem value="">
                   <em>Chọn phường/xã</em>
                 </MenuItem>
+
                 {wards.map((p) => (
-                  <MenuItem key={p.code} value={p.code}>
+                  <MenuItem key={p.code} value={String(p.code)}>
                     {p.name}
                   </MenuItem>
                 ))}

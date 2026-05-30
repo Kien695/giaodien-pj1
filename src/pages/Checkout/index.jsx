@@ -382,39 +382,79 @@ export default function Checkout() {
               </div>
               {paymentMethod === "card" && (
                 <div className="mt-5">
-                  <div className="text-[14px] font-[500] mb-3">
-                    Thanh toán bằng:
+                  <div className="text-[15px] font-semibold mb-3">
+                    Chọn cổng thanh toán
                   </div>
-                  <div className="flex space-x-4">
+
+                  <div className="grid grid-cols-2 gap-4">
                     {[
-                      { value: "vn-pay", img: vnPay, alt: "VN Pay" },
-                      { value: "mo-mo", img: moMo, alt: "Mo Mo" },
+                      {
+                        value: "vn-pay",
+                        img: vnPay,
+                        alt: "VN Pay",
+                        desc: "ATM / Internet Banking",
+                      },
+                      {
+                        value: "mo-mo",
+                        img: moMo,
+                        alt: "MoMo",
+                        desc: "Ví điện tử MoMo",
+                      },
                     ].map((item) => (
                       <label
                         key={item.value}
-                        className="relative cursor-pointer"
-                        onChange={(e) => setSelectedCardMethod(e.target.value)}
+                        className={`
+            relative flex items-center gap-3 p-4 rounded-xl border cursor-pointer
+            transition-all duration-200 bg-white
+            ${
+              selectedCardMethod === item.value
+                ? "border-red-500 ring-2 ring-red-100 shadow-md"
+                : "border-gray-200 hover:border-red-300 hover:shadow-sm"
+            }
+          `}
                       >
-                        {/* Radio bị ẩn */}
                         <input
                           type="radio"
                           name="payment"
                           value={item.value}
-                          className="peer absolute opacity-0 w-0 h-0"
+                          checked={selectedCardMethod === item.value}
+                          onChange={(e) =>
+                            setSelectedCardMethod(e.target.value)
+                          }
+                          className="hidden"
                         />
-                        {/* Hình ảnh */}
-                        <img
-                          src={item.img}
-                          alt={item.alt}
-                          className="w-[80px] border border-gray-200 rounded"
-                        />
-                        {/* Radio hiển thị trên góc */}
-                        <span className="absolute top-0 left-0 w-4 h-4 border border-gray-400 rounded-full bg-white flex items-center justify-center peer-checked:bg-red-500 z-[10]">
-                          {/* Dot bên trong khi checked */}
-                          <span className="w-2 h-2  bg-red-500 rounded-full hidden peer-checked:block "></span>
-                        </span>
-                        {/* Lớp phủ mờ khi chọn */}
-                        <div className="absolute inset-0 bg-black opacity-0 rounded-md peer-checked:opacity-20 transition-opacity"></div>
+
+                        <div className="w-[56px] h-[56px] rounded-lg border border-gray-100 flex items-center justify-center bg-gray-50">
+                          <img
+                            src={item.img}
+                            alt={item.alt}
+                            className="w-[42px] h-[42px] object-contain"
+                          />
+                        </div>
+
+                        <div className="flex-1">
+                          <div className="text-[14px] font-semibold text-gray-800">
+                            {item.alt}
+                          </div>
+                          <div className="text-[12px] text-gray-500 mt-1">
+                            {item.desc}
+                          </div>
+                        </div>
+
+                        <div
+                          className={`
+              w-5 h-5 rounded-full border flex items-center justify-center
+              ${
+                selectedCardMethod === item.value
+                  ? "border-red-500 bg-red-500"
+                  : "border-gray-300 bg-white"
+              }
+            `}
+                        >
+                          {selectedCardMethod === item.value && (
+                            <div className="w-2 h-2 bg-white rounded-full" />
+                          )}
+                        </div>
                       </label>
                     ))}
                   </div>
