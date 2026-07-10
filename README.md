@@ -1,12 +1,29 @@
-# React + Vite
+## Website thương mại điện tử (Client)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Xây dựng nền tảng thương mại điện tử cho khách hàng với các chức năng mua sắm trực tuyến, quản lý giỏ hàng, thanh toán và theo dõi đơn hàng.
 
-Currently, two official plugins are available:
+### Chức năng chính:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Xây dựng hệ thống đăng nhập, đăng ký và xác thực người dùng bằng JWT và Oauth20.
+- Phát triển chức năng tìm kiếm, lọc và hiển thị sản phẩm.
+- Xây dựng luồng giỏ hàng, đặt hàng và thanh toán VN Pay.
+- Quản lý lịch sử đơn hàng và thông tin cá nhân người dùng.
+- Tích hợp Cloudinary để lưu trữ và quản lý hình ảnh.
+- Thông báo real-time khi cập nhật đơn hàng bên admin
 
-## Expanding the ESLint configuration
+### Công nghệ:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+React.js,TailwindCSS, Material UI, Axios
+
+### Thông tin thẻ test
+
+| Thông tin | Giá trị |
+| Ngân hàng | NCB |
+| Số thẻ | 9704198526191432198 |
+| Tên chủ thẻ | NGUYEN VAN A |
+| Ngày phát hành | 07/15 |
+| Mật khẩu OTP | 123456 |
+
+## Api
+
+Có để trong file env có đẩy lên github

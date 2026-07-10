@@ -91,6 +91,7 @@ export default function App() {
     }
 
     socketClient.on("NOTI_STATUS", (data) => {
+      console.log(data);
       setNotification((prev) => [data, ...prev]);
       setDot(1);
     });
